@@ -22,16 +22,8 @@ function Referent_Data_Base(Data_base, filename)
 function One_Case(BaseName, N)
 работает для CSE
 
-
-
-
-
-
-
-
-
-
-
+Функция Определения всех параметров
+function all_the(BaseName, N)
 Функция Function_P.jl
 Sign_Channel
 All_Ref_QRS

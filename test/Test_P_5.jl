@@ -1,10 +1,11 @@
 using Plots, StructArrays, Tables, CSV#, PlotlyBase, PlotlyKaleido
-
+using XLSX, DataFrames
 plotly()
 include("Function_P.jl")
 include(".env")
 include("../src/readfiles.jl");
 include("../src/plots.jl");
+
 
 mutable struct Markup_Left_Right_Front_Wave_P_amp_2
     Amp::Float64
@@ -122,7 +123,7 @@ function all_the(BaseName, N)
 #    return Ref_qrs
 
     signal_without_qrs = Zero_qrs(Ref_qrs, signals_channel, start_qrs, end_qrs)
-   
+
    
     #Проверка графиков
     #График Исходного сигнала, Сигнал без QRS (1 отведеление)
@@ -147,9 +148,9 @@ function all_the(BaseName, N)
     plot_vertical_ref(All_left_right, signal_const[1], signal_without_qrs[1], all_graph_butter[1], all_graph_diff[1]) 
     
 
-    All_Points_Min_Max = All_points_with_channels_max_min(All_left_right, all_graph_diff, RADIUS_LOCAL)[1]
-    @info "все точки мин мах на всех отведениях и участках: $All_Points_Min_Max"
-    Massiv_Points_channel = Sort_points_with_channel(All_points_with_channels_max_min(All_left_right, all_graph_diff, RADIUS_LOCAL))
+    All_Points_Min_Max = All_points_with_channels_max_min(All_left_right, all_graph_diff, RADIUS_LOCAL)
+    @info "все точки мин мах на всех отведениях и участках: $(All_Points_Min_Max[1])"
+    Massiv_Points_channel = Sort_points_with_channel(All_Points_Min_Max)
     #@info "Massiv_Points_channel[1] = $(Massiv_Points_channel[1])"
     
     Massiv_Amp_all_channels = amp_all_cannel(Massiv_Points_channel, all_graph_diff, koef, RADIUS)
@@ -289,14 +290,25 @@ end
 
 
 #Проверка графиков
-all_the("CSE", 1)
+BD = "CSE" #(base data)
+n = 15 #(number file)
+CC = 1 #(Current channel)
+NF, RBD = Position_Data_Base(BD) #(name file); (raw base data)
+plot_channel_points("CSE", n, CC, :(+))
+title!("CSE $(NF[n])")
+#savefig("pictures_by_channel_CSE/$(NF[n])-$CC.png")
+
+plot_all_channels_points("CSE", n)
+
+
+all_the("CSE", n)
 plot!()
-
-
-all_the("CSE", 2)
-plot_channel_points("CSE", 3, 6, +)
-
-
-plot_const_signal("CSE", 1)
+plot_const_signal("CSE", n)
 
 stop
+
+
+#Надо бы сделать проверочку... =(
+#Надо сделать сохранение картинок =(
+#Надо сделать файл, в котором говориться попадает или нет =(
+
