@@ -10,9 +10,27 @@
 Файл Test_P_5.jl - файл на 10.07
 
 Описание Test_P_5.jl
+Область рассмотрения проекта
 function Position_Data_Base(Type_Data_base)
 работет для CSE, CTS
 
+Hеферентная разметка для данной базы данных
 function Referent_Data_Base(Data_base, filename)
 работает для CSE, CTS
 
+Функция считывания сигнала
+function One_Case(BaseName, N)
+работает для CSE
+
+
+
+
+
+
+
+
+
+
+
+Функция Function_P.jl
+Sign_Channel

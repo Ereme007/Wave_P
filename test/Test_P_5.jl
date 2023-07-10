@@ -49,7 +49,7 @@ end
 
 #Функция считывания сигнала
 #Вход - Имя базы данных ("CSE"), номер файла (12)
-#Выход - 
+#Выход - Сигнал, частота, дата(-), вектор "unit"(-) 
 function One_Case(BaseName, N)
 #проверка на ошибок для Базы данных
     Names_files, Raw_Base_Date = Position_Data_Base(BaseName)
@@ -67,8 +67,27 @@ function One_Case(BaseName, N)
     end
 
     #Считываем сигнал
-    return signals, fs, _, _ = readbin("$Raw_Base_Date/$(File_Name)") 
+    signals, fs, time, cor = readbin("$Raw_Base_Date/$(File_Name)") 
+    return signals, fs, time, cor, Ref_File
 end
 
+#Описание
+#Вход - Имя базы данных ("CSE"); номер файла (12)
+#Выход - 
+function all_the(BaseName, N)
+    Signal, Frequency, _, _, Ref_File = One_Case(BaseName, N)
 
+    Referents_by_File = _read_ref(N)
+    start_qrs = floor(Int64, Ref_File.QRS_onset) #начало комплекса QRS (INT)
+    end_qrs = floor(Int64, Ref_File.QRS_end) #конец комплекса QRS (INT)
+    #@info "start_qrs = $start_qrs"
+    #@info "end_qrs = $end_qrs"
+
+    #Сигнал для обработки (массив)
+    signals_channel = Sign_Channel(Signal) #12 каналов
+    #Неизменный сигнал (массив)
+    signals_const = Sign_Channel(Signal) #12 каналов
+
+    #return signals_const
+end
 
