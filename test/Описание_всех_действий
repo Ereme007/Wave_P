@@ -1,0 +1,18 @@
+Как описать функцию?
+1) Смысл
+2) Значения на вход
+3) Значения на выходе
+
+
+Смысл файлов:
+Файл .env - файл с глобальными константами
+Файл Function_P.jl - все вспомогательные функции (исключение: plot...)
+Файл Test_P_5.jl - файл на 10.07
+
+Описание Test_P_5.jl
+function Position_Data_Base(Type_Data_base)
+работет для CSE, CTS
+
+function Referent_Data_Base(Data_base, filename)
+работает для CSE, CTS
+
