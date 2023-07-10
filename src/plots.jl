@@ -169,6 +169,8 @@ function show_record(
 	_show_signals_mark(signals, ref)
 end
 
+
+
 function show_record_CTS(
     nr;
     binpath = raw"\\incart.local\FS\GUEST\Yuly\ГОСТ51\bin\CTS",
