@@ -100,7 +100,7 @@ function plot_vertical_ref(line, channels...; label::String = "")
             sig = channels[i]
             p = plot(sig, label = :none);
             push!(pls, p)
-            vline!([line])
+            vline!([line], lc=:black)#, ls=:dot)
         end
         p = plot(
             pls...,

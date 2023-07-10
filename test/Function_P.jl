@@ -76,6 +76,10 @@ end
 #На вход границы qrs и границы сигнала, на выход все рефенетнаые границы qrs 
 #Верно только для искусственнного сигнала
 function All_Ref_QRS(signals, start_qrs, end_qrs, start_sig, end_sig) 
+  #  @info "length(signals) = $(length(signals))"
+  #  @info "length(signals) = $(length(signals))"
+  #  @info "length(signals) = $(length(signals))"
+    
     Distance = end_sig - start_sig
     dur_qrs = end_qrs - start_qrs
     All_ref_qrs = Int64[]
@@ -88,10 +92,12 @@ function All_Ref_QRS(signals, start_qrs, end_qrs, start_sig, end_sig)
     while (index < length(signals))
         push!(All_ref_qrs, index)
         
-        if(index + dur_qrs < length(signals, signals))
+        if(index + dur_qrs < length(signals))
             push!(All_ref_qrs, index + dur_qrs)
         end
+      #  @info "index = $index"
         index = index + Distance + 1
+      #  @info "index + Distance + 1 = $index"
     end
     return All_ref_qrs
 end

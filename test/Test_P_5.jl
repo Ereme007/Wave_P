@@ -75,19 +75,51 @@ end
 #Вход - Имя базы данных ("CSE"); номер файла (12)
 #Выход - 
 function all_the(BaseName, N)
-    Signal, Frequency, _, _, Ref_File = One_Case(BaseName, N)
+    Signal_const, _, _, _, _ = One_Case(BaseName, N)
+    Signal_copy, Frequency, _, _, Ref_File = One_Case(BaseName, N)
+    koef  = 1000/Frequency
 
     Referents_by_File = _read_ref(N)
     start_qrs = floor(Int64, Ref_File.QRS_onset) #начало комплекса QRS (INT)
-    end_qrs = floor(Int64, Ref_File.QRS_end) #конец комплекса QRS (INT)
+    end_qrs = floor(Int64, Ref_File.QRS_end) #конец комплекса QRS (INT) 
     #@info "start_qrs = $start_qrs"
     #@info "end_qrs = $end_qrs"
 
-    #Сигнал для обработки (массив)
-    signals_channel = Sign_Channel(Signal) #12 каналов
-    #Неизменный сигнал (массив)
-    signals_const = Sign_Channel(Signal) #12 каналов
 
+   # Copy_Sig = clone(Signal)
+   # @info "Copy_Sig = $Signal"
+    #Неизменный сигнал (массив)
+    signal_const = Sign_Channel(Signal_const) #12 каналов
+    #Сигнал для обработки (массив)
+    signals_channel = Sign_Channel(Signal_copy) #12 каналов
+
+#   Start_Sig = 1
+#End_Sig = length(signals_channel[1])
+#
     #return signals_const
+    Ref_qrs = All_Ref_QRS(signals_channel[1], start_qrs, end_qrs, Referents_by_File.ibeg, Referents_by_File.iend)
+   # @info "Ref_qrs = $Ref_qrs"
+    #return start_qrs, end_qrs, Referents_by_File.ibeg, Referents_by_File.iend
+#    return Ref_qrs
+
+    signal_without_qrs = Zero_qrs(Ref_qrs, signals_channel, start_qrs, end_qrs)
+   
+   
+    #Проверка графиков
+    #График Исходного сигнала, Сигнал без QRS (1 отведеление)
+    #plot_vertical(signal_const[1], signal_without_qrs[1])
+
+    Left, Right = Segment_left_right_P(Frequency, Ref_qrs, Referents_by_File.ibeg, Referents_by_File.iend)
+    All_left_right = [Left, Right]
+
+    all_graph_butter = Graph_my_butter(signal_without_qrs, Frequency)
+    
+    #Проверка графиков
+    #График Исходного сигнала, Сигнал без QRS, Отфильтрованный сигнал (1 отведение)
+    #plot_vertical(signal_const[1], signal_without_qrs[1], all_graph_butter[1])
+    #График с разметкой областью поиска P
+    #plot_vertical_ref(All_left_right, signal_const[1], signal_without_qrs[1], all_graph_butter[1])
+    
+    
 end
 

@@ -34,3 +34,8 @@ function One_Case(BaseName, N)
 
 Функция Function_P.jl
 Sign_Channel
+All_Ref_QRS
+
+
+Дополнения:
+start_qrs, end_qrs, Referents_by_File.ibeg, Referents_by_File.iend #как-то странно?!.
