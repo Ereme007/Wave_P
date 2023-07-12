@@ -195,6 +195,43 @@ plot_vertical(Mass_plots[1], Mass_plots[2], Mass_plots[3], Mass_plots[4], Mass_p
 #plot_vertical(Mass_plots[1], Mass_plots[2])
 end
 
+
+function plot_all_channels_const_signal(BaseName, N)
+    Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
+
+    @info "start"
+    Mass_plots = []
+    for Channel in 1:12 
+        plot_plot = (
+            plot(Signal_const[Channel]);
+            size_mass = length(Massiv_Amp_all_channels[Channel]);
+            for Selection in 1:size_mass
+            # Selection = 1 ;
+                vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red);
+#Left = Massiv_Amp_all_channels[Channel][Selection][2]
+#Right =  Massiv_Amp_all_channels[Channel][Selection][3]
+#scatter!([Left, Right], [Signal_const[Channel][Left], Signal_const[Channel][Right]])
+                Current_amp = Massiv_Amp_all_channels[Channel][Selection]
+                Amp_extrem = Current_amp[1];
+                Left_extrem = floor(Int64, Current_amp[2]);
+                Right_extrem =  floor(Int64, Current_amp[3]);
+#Massiv_Points_channel[Channel][Selection][Left_extrem]
+#Massiv_Points_channel[Channel][Selection][Right_extrem]
+                Current_points = Massiv_Points_channel[Channel][Selection]
+                Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);
+#Points_fronts.Left
+#Points_fronts.Right
+                scatter!([Points_fronts.Left, Points_fronts.Right], [Signal_const[Channel][Points_fronts.Left], Signal_const[Channel][Points_fronts.Right]]);
+            end;
+            plot!(title = "Отведение $Channel", legend=false)
+        )
+
+    push!(Mass_plots, plot_plot)
+end
+plot_vertical(Mass_plots[1], Mass_plots[2], Mass_plots[3], Mass_plots[4], Mass_plots[5], Mass_plots[6], Mass_plots[7], Mass_plots[8], Mass_plots[9], Mass_plots[10], Mass_plots[11], Mass_plots[12]);
+#plot_vertical(Mass_plots[1], Mass_plots[2])
+end
+
 #===================================================================================================
 =#
 
@@ -255,7 +292,8 @@ function plot_channel_points(BaseName, N, Current_channel, Charr)
             Right_extrem =  floor(Int64, Mass_amp[3]);
 #Massiv_Points_channel[Current_channel][Selection][Left_extrem]
 #Massiv_Points_channel[Current_channel][Selection][Right_extrem]
-            Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Massiv_Points_channel[Current_channel][Selection][Left_extrem], Massiv_Points_channel[Current_channel][Selection][Right_extrem]);
+            Mass_points = Massiv_Points_channel[Current_channel][Selection]
+            Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Mass_points[Left_extrem], Mass_points[Right_extrem]);
 #Points_fronts.Left
 #Points_fronts.Right
                 scatter!([Points_fronts.Left, Points_fronts.Right], [Signal_const[Current_channel][Points_fronts.Left], Signal_const[Current_channel][Points_fronts.Right]]);
@@ -287,28 +325,34 @@ end
     
 
 
-function plot_const_signal(BaseName, N)
+function plot_const_signal(BaseName, N, Current_chanel)
 Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
-plot(Signal_const[1])
+plot(Signal_const[Current_chanel], label = "Исх сиг $BaseName отведение $Current_chanel")
 end
 
 
 #Проверка графиков
 BD = "CSE" #(base data)
-n = 15 #(number file)
+n = 2 #(number file)
 CC = 1 #(Current channel)
 NF, RBD = Position_Data_Base(BD) #(name file); (raw base data)
+
+#График исходного сигнала и сигнала "детекции"
 plot_channel_points("CSE", n, CC, :(+))
 title!("CSE $(NF[n])")
 #savefig("pictures_by_channel_CSE/$(NF[n])-$CC.png")
 
+
+#сигнал детекции на 12 отведениях
 plot_all_channels_points("CSE", n)
 
-
+#исходный сигнал на 12 каналах
+plot_all_channels_const_signal("CSE", n)
+plot!()
 
 all_the("CSE", n)
 plot!()
-plot_const_signal("CSE", n)
+plot_const_signal("CSE", n, 5)
 
 stop
 
