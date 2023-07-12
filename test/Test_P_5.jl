@@ -87,7 +87,7 @@ function One_Case(BaseName, N)
     end
 
     #Считываем сигнал
-    signals, fs, time, cor = readbin("$Raw_Base_Date/$(File_Name)") 
+    signals, fs, time, cor = readbin("$(Raw_Base_Date)/$(File_Name)") 
     return signals, fs, time, cor, Ref_File
 end
 
@@ -167,18 +167,21 @@ function plot_all_channels_points(BaseName, N)
     for Channel in 1:12 
         plot_plot = (
             plot(all_graph_diff[Channel]);
-            for Selection in 1:length(Massiv_Amp_all_channels[Channel])
+            size_mass = length(Massiv_Amp_all_channels[Channel]);
+            for Selection in 1:size_mass
             # Selection = 1 ;
                 vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red);
 #Left = Massiv_Amp_all_channels[Channel][Selection][2]
 #Right =  Massiv_Amp_all_channels[Channel][Selection][3]
 #scatter!([Left, Right], [all_graph_diff[Channel][Left], all_graph_diff[Channel][Right]])
-                Amp_extrem = Massiv_Amp_all_channels[Channel][Selection][1];
-                Left_extrem = floor(Int64, Massiv_Amp_all_channels[Channel][Selection][2]);
-                Right_extrem =  floor(Int64, Massiv_Amp_all_channels[Channel][Selection][3]);
+                Current_amp = Massiv_Amp_all_channels[Channel][Selection]
+                Amp_extrem = Current_amp[1];
+                Left_extrem = floor(Int64, Current_amp[2]);
+                Right_extrem =  floor(Int64, Current_amp[3]);
 #Massiv_Points_channel[Channel][Selection][Left_extrem]
 #Massiv_Points_channel[Channel][Selection][Right_extrem]
-                Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Massiv_Points_channel[Channel][Selection][Left_extrem], Massiv_Points_channel[Channel][Selection][Right_extrem]);
+                Current_points = Massiv_Points_channel[Channel][Selection]
+                Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);
 #Points_fronts.Left
 #Points_fronts.Right
                 scatter!([Points_fronts.Left, Points_fronts.Right], [all_graph_diff[Channel][Points_fronts.Left], all_graph_diff[Channel][Points_fronts.Right]]);
@@ -192,8 +195,6 @@ plot_vertical(Mass_plots[1], Mass_plots[2], Mass_plots[3], Mass_plots[4], Mass_p
 #plot_vertical(Mass_plots[1], Mass_plots[2])
 end
 
-
-
 #===================================================================================================
 =#
 
@@ -204,11 +205,11 @@ function plot_channel_points(BaseName, N, Current_channel, Charr)
     #for Channel in 1:12
     plot_front_sig = (
         plot(all_graph_diff[Current_channel]);
-
-        for Selection in 1:length(Massiv_Amp_all_channels[Current_channel])
+        size_mass = length(Massiv_Amp_all_channels[Current_channel]);
+        for Selection in 1:size_mass
             if(Charr == +)
                 poi = Massiv_Points_channel[Current_channel][Selection]
-                @info "points $poi"
+                #@info "points $poi"
                 scatter!(poi, all_graph_diff[Current_channel][poi])
             end;
    # Selection = 1 ;
@@ -216,12 +217,14 @@ function plot_channel_points(BaseName, N, Current_channel, Charr)
 #Left = Massiv_Amp_all_channels[Current_channel][Selection][2]
 #Right =  Massiv_Amp_all_channels[Current_channel][Selection][3]
 #scatter!([Left, Right], [all_graph_diff[Current_channel][Left], all_graph_diff[Current_channel][Right]])
-            Amp_extrem = Massiv_Amp_all_channels[Current_channel][Selection][1];
-            Left_extrem = floor(Int64, Massiv_Amp_all_channels[Current_channel][Selection][2]);
-            Right_extrem =  floor(Int64, Massiv_Amp_all_channels[Current_channel][Selection][3]);
+            Current_amp = Massiv_Amp_all_channels[Current_channel][Selection]
+            Amp_extrem = Current_amp[1];
+            Left_extrem = floor(Int64, Current_amp[2]);
+            Right_extrem =  floor(Int64, Current_amp[3]);
 #Massiv_Points_channel[Current_channel][Selection][Left_extrem]
 #Massiv_Points_channel[Current_channel][Selection][Right_extrem]
-            Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Massiv_Points_channel[Current_channel][Selection][Left_extrem], Massiv_Points_channel[Current_channel][Selection][Right_extrem]);
+            Current_points = Massiv_Points_channel[Current_channel][Selection]
+            Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);
 #Points_fronts.Left
 #Points_fronts.Right
             scatter!([Points_fronts.Left, Points_fronts.Right], [all_graph_diff[Current_channel][Points_fronts.Left], all_graph_diff[Current_channel][Points_fronts.Right]]);
@@ -239,16 +242,17 @@ function plot_channel_points(BaseName, N, Current_channel, Charr)
       #  Current_channel = 1    
     plot_const_sug = (
         plot(Signal_const[Current_channel]);
-
-        for Selection in 1:length(Massiv_Amp_all_channels[Current_channel])
+        size_mass = length(Massiv_Amp_all_channels[Current_channel]);
+        for Selection in 1:size_mass
    # Selection = 1 ;
             vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red);
 #Left = Massiv_Amp_all_channels[Current_channel][Selection][2]
 #Right =  Massiv_Amp_all_channels[Current_channel][Selection][3]
 #scatter!([Left, Right], [all_graph_diff[Current_channel][Left], all_graph_diff[Current_channel][Right]])
-            Amp_extrem = Massiv_Amp_all_channels[Current_channel][Selection][1];
-            Left_extrem = floor(Int64, Massiv_Amp_all_channels[Current_channel][Selection][2]);
-            Right_extrem =  floor(Int64, Massiv_Amp_all_channels[Current_channel][Selection][3]);
+            Mass_amp = Massiv_Amp_all_channels[Current_channel][Selection]
+            Amp_extrem = Mass_amp[1];
+            Left_extrem = floor(Int64, Mass_amp[2]);
+            Right_extrem =  floor(Int64, Mass_amp[3]);
 #Massiv_Points_channel[Current_channel][Selection][Left_extrem]
 #Massiv_Points_channel[Current_channel][Selection][Right_extrem]
             Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Massiv_Points_channel[Current_channel][Selection][Left_extrem], Massiv_Points_channel[Current_channel][Selection][Right_extrem]);
@@ -299,6 +303,7 @@ title!("CSE $(NF[n])")
 #savefig("pictures_by_channel_CSE/$(NF[n])-$CC.png")
 
 plot_all_channels_points("CSE", n)
+
 
 
 all_the("CSE", n)
