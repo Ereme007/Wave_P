@@ -1,6 +1,6 @@
 using Plots, StructArrays, Tables, CSV#, PlotlyBase, PlotlyKaleido
 using XLSX, DataFrames
-plotly()
+#plotly()
 include("Function_P.jl")
 include(".env")
 include("../src/readfiles.jl");
@@ -265,7 +265,7 @@ function plot_channel_points(BaseName, N, Current_channel, Charr)
 #Points_fronts.Left
 #Points_fronts.Right
             scatter!([Points_fronts.Left, Points_fronts.Right], [all_graph_diff[Current_channel][Points_fronts.Left], all_graph_diff[Current_channel][Points_fronts.Right]]);
-            @info "Left = $(Points_fronts.Left)  Right = $(Points_fronts.Right)"
+           # @info "Left = $(Points_fronts.Left)  Right = $(Points_fronts.Right)"
         end;
 
         plot!(title = "Отведение $Current_channel", legend=false)
@@ -333,16 +333,19 @@ end
 
 #Проверка графиков
 BD = "CSE" #(base data)
-n = 2 #(number file)
+
+
+for n in 71:125 #до 125
+#n = 1 #(number file)
 CC = 1 #(Current channel)
 NF, RBD = Position_Data_Base(BD) #(name file); (raw base data)
-
+#выскок на 23 инт 57 67 70
 #График исходного сигнала и сигнала "детекции"
 plot_channel_points("CSE", n, CC, :(+))
 title!("CSE $(NF[n])")
-#savefig("pictures_by_channel_CSE/$(NF[n])-$CC.png")
-
-
+savefig("pictures_by_channel_CSE/$(NF[n])-$CC.png")
+@info "end $n"
+end
 #сигнал детекции на 12 отведениях
 plot_all_channels_points("CSE", n)
 
@@ -361,3 +364,25 @@ stop
 #Надо сделать сохранение картинок =(
 #Надо сделать файл, в котором говориться попадает или нет =(
 
+
+struct Ref_bound
+    left::Int64
+    right::Int64
+end
+
+struct My_bound
+    left::Int64
+    right::Int64
+end
+
+function Check(Mass_ref, Mass_points)
+all_Ref_bound = []
+all_My_bound = []
+step1_ref = Ref_bound(Mass_ref[1], Mass_ref[2])
+step1_my = My_bound(Mass_points[1], Mass_points[2])
+push!(all_Ref_bound, step1_ref)
+push!(all_My_bound, step1_my)
+return all_Ref_bound, all_My_bound
+end
+
+one, two = Check([1 , 6], [2, 5])
