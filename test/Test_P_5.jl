@@ -315,7 +315,7 @@ function plot_channel_points(BaseName, N, Current_channel, Charr)
                 scatter!([Points_fronts.Left, Points_fronts.Right], [Signal_const[Current_channel][Points_fronts.Left], Signal_const[Current_channel][Points_fronts.Right]]);
                 
               #  if(Current_channel == 12)
-               # @info "Отведение(1) $Current_channel left = $(Signal_const[Current_channel][Points_fronts.Left]), Right = $(Signal_const[Current_channel][Points_fronts.Right])"
+              #  @info "Отведение(1) $Current_channel left = $(Signal_const[Current_channel][Points_fronts.Left]), Right = $(Signal_const[Current_channel][Points_fronts.Right])"
               #  end
               
         end;
@@ -340,18 +340,20 @@ end
 
     
 
-
+#Функция строит исходный сигнал на заданном отведении
+#Вход - имя базы данных (BaseName); номер файла (N); Текущее отведение (Current_chanel)
+#Выход - NO
 function plot_const_signal(BaseName, N, Current_chanel)
 Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
 plot(Signal_const[Current_chanel], label = "Исх сиг $BaseName отведение $Current_chanel")
 end
 
 
-#Проверка графиков
+#Проверка графиков и сохранение
 BD = "CSE" #(base data)
 
 AAmmpp = []
-for n in 1:125 #до 125
+for n in 1:125 #База данных CSE имеет 125 файлов
 if ((n == 70) || (n == 67))#(number file)
     n = n + 1
 end
