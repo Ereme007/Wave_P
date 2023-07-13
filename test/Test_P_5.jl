@@ -46,12 +46,15 @@ end
 #Референтная разметка для данной базы данных
 #Вход - имя базы данных ("CSE") наименование файла ("MA1_001")
 #Выход - Data_base (имя базы данных); ref_file (референтная разметка для данного файла); ref_all_file (референтная разметка для всех файлов); raw_ref (путь к референтной разметке)
+Referent_Data_Base("CTS", a[1])
 function Referent_Data_Base(Data_base, filename)
     if (Data_base == "CSE" || Data_base == "CTS")
         if(Data_base == "CSE")
             raw_ref = Raw_CSE_Ref_Incart
-        else
+        elseif(Data_base == "CTS")
             raw_ref = Raw_CTS_Ref_Incart
+        else
+            return false;
         end
 
    #     @info "$Data_base" 
@@ -96,7 +99,15 @@ end
 #Выход - Изначальный сигнал (Signal_const); массив амплитуды, левой и правой границы зубца Р (Massiv_Amp_all_channels);
         #массив всех экстремумов (Massiv_Points_channel); дифференцированный сигнал (all_graph_diff); 
         #референтные для текущего файла (Referents_by_File)
-function all_the(BaseName, N)
+      #=  cc = 4
+        Signal_const_CTS, _, _, _, Ref_File = One_Case("CTS", cc)
+        signal_const_CTS = Sign_Channel(Signal_const_CTS)
+        plot(signal_const_CTS[1])
+        Referents_by_File = _read_ref(cc)
+        start_qrs = floor(Int64, Ref_File.QRS_onset)
+        all_the("CTS", cc)
+     =#   
+        function all_the(BaseName, N)
     Signal_const, _, _, _, _ = One_Case(BaseName, N)
     Signal_copy, Frequency, _, _, Ref_File = One_Case(BaseName, N)
     koef  = 1000/Frequency
