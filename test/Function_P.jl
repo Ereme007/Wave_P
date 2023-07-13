@@ -160,7 +160,7 @@ function Segment_left_right_P(fs, All_ref_qrs, all_strat, all_end)
     left_p, right_p = Int64[], Int64[]
     #первая итерация!!
     first_P_right = All_ref_qrs[1]
-    first_P_left = All_ref_qrs[1] - (all_end - all_strat) / 2
+    first_P_left = floor(Int64, All_ref_qrs[1] - (all_end - all_strat) / 2)
 
     if (first_P_left < 0)
         first_P_left = 1

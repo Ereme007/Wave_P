@@ -1,6 +1,6 @@
 using Plots, StructArrays, Tables, CSV#, PlotlyBase, PlotlyKaleido
 using XLSX, DataFrames
-#plotly()
+plotly()
 include("Function_P.jl")
 include(".env")
 include("../src/readfiles.jl");
@@ -93,7 +93,9 @@ end
 
 #Описание
 #Вход - Имя базы данных ("CSE"); номер файла (12)
-#Выход - 
+#Выход - Изначальный сигнал (Signal_const); массив амплитуды, левой и правой границы зубца Р (Massiv_Amp_all_channels);
+        #массив всех экстремумов (Massiv_Points_channel); дифференцированный сигнал (all_graph_diff); 
+        #референтные для текущего файла (Referents_by_File)
 function all_the(BaseName, N)
     Signal_const, _, _, _, _ = One_Case(BaseName, N)
     Signal_copy, Frequency, _, _, Ref_File = One_Case(BaseName, N)
@@ -128,7 +130,6 @@ function all_the(BaseName, N)
     #Проверка графиков
     #График Исходного сигнала, Сигнал без QRS (1 отведеление)
     #plot_vertical(signal_const[1], signal_without_qrs[1])
-
     Left, Right = Segment_left_right_P(Frequency, Ref_qrs, Referents_by_File.ibeg, Referents_by_File.iend)
     All_left_right = [Left, Right]
 
@@ -154,15 +155,18 @@ function all_the(BaseName, N)
     #@info "Massiv_Points_channel[1] = $(Massiv_Points_channel[1])"
     
     Massiv_Amp_all_channels = amp_all_cannel(Massiv_Points_channel, all_graph_diff, koef, RADIUS)
-    @info "Massiv_Amp_all_channels[1] = $(Massiv_Amp_all_channels[1])"
+    #@info "Massiv_Amp_all_channels[1] = $(Massiv_Amp_all_channels[1])"
     return Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel,  all_graph_diff, Referents_by_File
 end
 
 
+
+#Функция, строящая график на дифференцированном сигнале, границы P из реферетного файла и найденные границы зубца Р
+#Вход - имя базы данных (BaseName); номер файла (N)
+#Выход - NO
 function plot_all_channels_points(BaseName, N)
     Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
 
-    @info "start"
     Mass_plots = []
     for Channel in 1:12 
         plot_plot = (
@@ -196,17 +200,21 @@ plot_vertical(Mass_plots[1], Mass_plots[2], Mass_plots[3], Mass_plots[4], Mass_p
 end
 
 
+#Функция, строящая график исходного сигнала на 12 отведениях с реф разметкой и моей детекцией зубца Р.
+#Вход - Имя базы данных (BaseName); номер файла (N)
+#Выход - график исходного сигнала на 12 отведениях с реф разметок Р и моим определением границ зубца Р
+plot_all_channels_const_signal("CSE", 1)
 function plot_all_channels_const_signal(BaseName, N)
     Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
 
-    @info "start"
+    #@info "start"
     Mass_plots = []
     for Channel in 1:12 
         plot_plot = (
             plot(Signal_const[Channel]);
             size_mass = length(Massiv_Amp_all_channels[Channel]);
             for Selection in 1:size_mass
-            # Selection = 1 ;
+            # Selection = 1;
                 vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red);
 #Left = Massiv_Amp_all_channels[Channel][Selection][2]
 #Right =  Massiv_Amp_all_channels[Channel][Selection][3]
@@ -235,16 +243,21 @@ end
 #===================================================================================================
 =#
 
+
+#Функция
+#Вход - Имя базы данных (BaseName); номер файла (N); текущее отведение (Current_channel); Символ-флаг, если р то рисуем все экстремумы (Charr) 
+#Выход - (сейчас!) значение амплитуды и файла 
 function plot_channel_points(BaseName, N, Current_channel, Charr)
     Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)    
 #Current_channel = 1
     Mass_plots = []
+    Out_AMP = 0
     #for Channel in 1:12
     plot_front_sig = (
         plot(all_graph_diff[Current_channel]);
         size_mass = length(Massiv_Amp_all_channels[Current_channel]);
         for Selection in 1:size_mass
-            if(Charr == +)
+            if(Charr == 'p')
                 poi = Massiv_Points_channel[Current_channel][Selection]
                 #@info "points $poi"
                 scatter!(poi, all_graph_diff[Current_channel][poi])
@@ -256,6 +269,7 @@ function plot_channel_points(BaseName, N, Current_channel, Charr)
 #scatter!([Left, Right], [all_graph_diff[Current_channel][Left], all_graph_diff[Current_channel][Right]])
             Current_amp = Massiv_Amp_all_channels[Current_channel][Selection]
             Amp_extrem = Current_amp[1];
+            Out_AMP = Amp_extrem;
             Left_extrem = floor(Int64, Current_amp[2]);
             Right_extrem =  floor(Int64, Current_amp[3]);
 #Massiv_Points_channel[Current_channel][Selection][Left_extrem]
@@ -276,7 +290,8 @@ function plot_channel_points(BaseName, N, Current_channel, Charr)
     Mass_plots_signal = []
     @info "Mass_plots_signal = $Mass_plots_signal"
         #for Current_channel in 1:12
-      #  Current_channel = 1    
+      #  Current_channel = 1
+          
     plot_const_sug = (
         plot(Signal_const[Current_channel]);
         size_mass = length(Massiv_Amp_all_channels[Current_channel]);
@@ -290,6 +305,7 @@ function plot_channel_points(BaseName, N, Current_channel, Charr)
             Amp_extrem = Mass_amp[1];
             Left_extrem = floor(Int64, Mass_amp[2]);
             Right_extrem =  floor(Int64, Mass_amp[3]);
+            
 #Massiv_Points_channel[Current_channel][Selection][Left_extrem]
 #Massiv_Points_channel[Current_channel][Selection][Right_extrem]
             Mass_points = Massiv_Points_channel[Current_channel][Selection]
@@ -319,7 +335,7 @@ function plot_channel_points(BaseName, N, Current_channel, Charr)
 
 
     #plot!(title = "Отведение $Current_channel, файл $BaseName")
-  # return plot_front_sig
+   return Out_AMP
 end
 
     
@@ -334,18 +350,27 @@ end
 #Проверка графиков
 BD = "CSE" #(base data)
 
-
-for n in 71:125 #до 125
-#n = 1 #(number file)
+AAmmpp = []
+for n in 1:125 #до 125
+if ((n == 70) || (n == 67))#(number file)
+    n = n + 1
+end
+#n = 1
 CC = 1 #(Current channel)
 NF, RBD = Position_Data_Base(BD) #(name file); (raw base data)
-#выскок на 23 инт 57 67 70
+#выскок на 23 инт 57 
+# тут лажааа 67 70
 #График исходного сигнала и сигнала "детекции"
-plot_channel_points("CSE", n, CC, :(+))
+aa = plot_channel_points("CSE", n, CC, 'p')
+push!(AAmmpp, [n, aa])
 title!("CSE $(NF[n])")
-savefig("pictures_by_channel_CSE/$(NF[n])-$CC.png")
+#savefig("pictures_by_channel_CSE/$(NF[n])-$CC.png")
 @info "end $n"
 end
+
+
+
+
 #сигнал детекции на 12 отведениях
 plot_all_channels_points("CSE", n)
 
@@ -353,9 +378,9 @@ plot_all_channels_points("CSE", n)
 plot_all_channels_const_signal("CSE", n)
 plot!()
 
-all_the("CSE", n)
+all_the("CSE", 70)
 plot!()
-plot_const_signal("CSE", n, 5)
+plot_const_signal("CSE", 70, 1)
 
 stop
 
