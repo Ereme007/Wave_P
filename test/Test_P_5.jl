@@ -46,7 +46,7 @@ end
 #Референтная разметка для данной базы данных
 #Вход - имя базы данных ("CSE") наименование файла ("MA1_001")
 #Выход - Data_base (имя базы данных); ref_file (референтная разметка для данного файла); ref_all_file (референтная разметка для всех файлов); raw_ref (путь к референтной разметке)
-Referent_Data_Base("CTS", a[1])
+Referent_Data_Base("CSE", a[1])
 function Referent_Data_Base(Data_base, filename)
     if (Data_base == "CSE" || Data_base == "CTS")
         if(Data_base == "CSE")
@@ -107,7 +107,7 @@ end
         start_qrs = floor(Int64, Ref_File.QRS_onset)
         all_the("CTS", cc)
      =#   
-        function all_the(BaseName, N)
+function all_the(BaseName, N)
     Signal_const, _, _, _, _ = One_Case(BaseName, N)
     Signal_copy, Frequency, _, _, Ref_File = One_Case(BaseName, N)
     koef  = 1000/Frequency
@@ -357,6 +357,17 @@ end
 function plot_const_signal(BaseName, N, Current_chanel)
 Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
 plot(Signal_const[Current_chanel], label = "Исх сиг $BaseName отведение $Current_chanel")
+size_mass = length(Massiv_Amp_all_channels[Current_chanel]);
+for Selection in 1:size_mass
+vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red);
+Current_amp = Massiv_Amp_all_channels[Current_chanel][Selection];
+Amp_extrem = Current_amp[1];
+Left_extrem = floor(Int64, Current_amp[2]);
+Right_extrem =  floor(Int64, Current_amp[3]);
+Current_points = Massiv_Points_channel[Current_chanel][Selection]
+Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);
+scatter!([Points_fronts.Left, Points_fronts.Right], [Signal_const[Current_chanel][Points_fronts.Left], Signal_const[Current_chanel][Points_fronts.Right]]);
+end
 end
 
 
@@ -383,6 +394,7 @@ end
 
 
 
+n = 1
 
 #сигнал детекции на 12 отведениях
 plot_all_channels_points("CSE", n)
@@ -393,8 +405,8 @@ plot!()
 
 all_the("CSE", 70)
 plot!()
-plot_const_signal("CSE", 70, 1)
-
+plot_const_signal("CSE", n, 9)
+plot!(legend=false)
 stop
 
 
