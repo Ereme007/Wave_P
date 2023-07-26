@@ -325,8 +325,8 @@ function All_points_with_channels_max_min(All_left_right, Signal, RADIUS_LOCAL)
             Min_l = new_localmin(Signal[channel][Start:End], RADIUS_LOCAL)
 
             if (i == 1)
-                @info Min_l
-                @info Max_l
+           #     @info Min_l
+           #     @info Max_l
             end
 
             #if (Min_l[1] != 0)

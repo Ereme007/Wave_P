@@ -46,7 +46,7 @@ end
 #Референтная разметка для данной базы данных
 #Вход - имя базы данных ("CSE") наименование файла ("MA1_001")
 #Выход - Data_base (имя базы данных); ref_file (референтная разметка для данного файла); ref_all_file (референтная разметка для всех файлов); raw_ref (путь к референтной разметке)
-Referent_Data_Base("CSE", a[1])
+#Referent_Data_Base("CSE", a[1])
 function Referent_Data_Base(Data_base, filename)
     if (Data_base == "CSE" || Data_base == "CTS")
         if(Data_base == "CSE")
@@ -106,7 +106,8 @@ end
         Referents_by_File = _read_ref(cc)
         start_qrs = floor(Int64, Ref_File.QRS_onset)
         all_the("CTS", cc)
-     =#   
+     =# 
+      
 function all_the(BaseName, N)
     Signal_const, _, _, _, _ = One_Case(BaseName, N)
     Signal_copy, Frequency, _, _, Ref_File = One_Case(BaseName, N)
@@ -136,7 +137,7 @@ function all_the(BaseName, N)
 #    return Ref_qrs
 
     signal_without_qrs = Zero_qrs(Ref_qrs, signals_channel, start_qrs, end_qrs)
-
+    
    
     #Проверка графиков
     #График Исходного сигнала, Сигнал без QRS (1 отведеление)
@@ -157,7 +158,7 @@ function all_the(BaseName, N)
     all_graph_diff = Graph_diff(all_graph_butter, dist)
     #Проверка графика
     #График с разметкой областью поиска P, график Исходного сигнала, Сигнал без QRS, Отфильтрованный сигнал, Дифференц сигнал (1 отведение)
-    plot_vertical_ref(All_left_right, signal_const[1], signal_without_qrs[1], all_graph_butter[1], all_graph_diff[1]) 
+   # plot_vertical_ref(All_left_right, signal_const[Ch], signal_without_qrs[Ch], all_graph_butter[Ch], all_graph_diff[Ch]) 
     
 
     All_Points_Min_Max = All_points_with_channels_max_min(All_left_right, all_graph_diff, RADIUS_LOCAL)
@@ -167,6 +168,7 @@ function all_the(BaseName, N)
     
     Massiv_Amp_all_channels = amp_all_cannel(Massiv_Points_channel, all_graph_diff, koef, RADIUS)
     #@info "Massiv_Amp_all_channels[1] = $(Massiv_Amp_all_channels[1])"
+    @info "Ref_qrs = $(Ref_qrs)"
     return Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel,  all_graph_diff, Referents_by_File
 end
 
@@ -214,7 +216,6 @@ end
 #Функция, строящая график исходного сигнала на 12 отведениях с реф разметкой и моей детекцией зубца Р.
 #Вход - Имя базы данных (BaseName); номер файла (N)
 #Выход - график исходного сигнала на 12 отведениях с реф разметок Р и моим определением границ зубца Р
-plot_all_channels_const_signal("CSE", 1)
 function plot_all_channels_const_signal(BaseName, N)
     Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
 
@@ -250,6 +251,47 @@ end
 plot_vertical(Mass_plots[1], Mass_plots[2], Mass_plots[3], Mass_plots[4], Mass_plots[5], Mass_plots[6], Mass_plots[7], Mass_plots[8], Mass_plots[9], Mass_plots[10], Mass_plots[11], Mass_plots[12]);
 #plot_vertical(Mass_plots[1], Mass_plots[2])
 end
+
+function plot_one_channels_const_signal(BaseName, N, CH)
+    Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
+
+    #@info "start"
+    Mass_plots = []
+   # for Channel in 1:12 
+        plot_plot = (
+            plot(Signal_const[CH]);
+            size_mass = length(Massiv_Amp_all_channels[CH]);
+            for Selection in 1:size_mass
+            # Selection = 1;
+                vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red);
+#Left = Massiv_Amp_all_channels[CH][Selection][2]
+#Right =  Massiv_Amp_all_channels[CH][Selection][3]
+#scatter!([Left, Right], [Signal_const[CH][Left], Signal_const[Channel][Right]])
+                Current_amp = Massiv_Amp_all_channels[CH][Selection]
+                Amp_extrem = Current_amp[1];
+                Left_extrem = floor(Int64, Current_amp[2]);
+                Right_extrem =  floor(Int64, Current_amp[3]);
+#Massiv_Points_channel[CH][Selection][Left_extrem]
+#Massiv_Points_channel[CH][Selection][Right_extrem]
+                Current_points = Massiv_Points_channel[CH][Selection]
+                Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);
+#Points_fronts.Left
+#Points_fronts.Right
+                scatter!([Points_fronts.Left, Points_fronts.Right], [Signal_const[CH][Points_fronts.Left], Signal_const[CH][Points_fronts.Right]]);
+            end;
+            plot!(title = "Отведение $CH", legend=false)
+        )
+
+    push!(Mass_plots, plot_plot)
+end
+
+plot_one_channels_const_signal("CSE", 1, 1)
+plot!()
+
+#plot_vertical(Mass_plots[1], Mass_plots[2], Mass_plots[3], Mass_plots[4], Mass_plots[5], Mass_plots[6], Mass_plots[7], Mass_plots[8], Mass_plots[9], Mass_plots[10], Mass_plots[11], Mass_plots[12]);
+#plot_vertical(Mass_plots[1], Mass_plots[2])
+#end
+
 
 #===================================================================================================
 =#
@@ -372,6 +414,7 @@ end
 
 
 #Проверка графиков и сохранение
+
 BD = "CSE" #(base data)
 
 AAmmpp = []
@@ -380,7 +423,7 @@ if ((n == 70) || (n == 67))#(number file)
     n = n + 1
 end
 #n = 1
-CC = 1 #(Current channel)
+CC = 3 #(Current channel)
 NF, RBD = Position_Data_Base(BD) #(name file); (raw base data)
 #выскок на 23 инт 57 
 # тут лажааа 67 70
