@@ -222,6 +222,7 @@ function plot_all_channels_const_signal(BaseName, N)
     #@info "start"
     Mass_plots = []
     for Channel in 1:12 
+        co = 1
         plot_plot = (
             plot(Signal_const[Channel]);
             size_mass = length(Massiv_Amp_all_channels[Channel]);
@@ -242,7 +243,12 @@ function plot_all_channels_const_signal(BaseName, N)
 #Points_fronts.Left
 #Points_fronts.Right
                 scatter!([Points_fronts.Left, Points_fronts.Right], [Signal_const[Channel][Points_fronts.Left], Signal_const[Channel][Points_fronts.Right]]);
+            if (co == 1)
+                @info "Amp_extrem[$Channel] = $(Points_fronts.Amp)";
+            co = 2
+            end
             end;
+            
             plot!(title = "Отведение $Channel", legend=false)
         )
 
@@ -251,13 +257,20 @@ end
 plot_vertical(Mass_plots[1], Mass_plots[2], Mass_plots[3], Mass_plots[4], Mass_plots[5], Mass_plots[6], Mass_plots[7], Mass_plots[8], Mass_plots[9], Mass_plots[10], Mass_plots[11], Mass_plots[12]);
 #plot_vertical(Mass_plots[1], Mass_plots[2])
 end
-
+plot_all_channels_const_signal("CSE", 1)
+xlims!(938, 1085)
+#=
+Функция построение графика одного основного сигнала по определённому каналу
+Вход: Наименование базы данных (BaseName); Порядковый номер сигнала (N); Отведение (CH) 
+Выход: NULL (функция построение графика)
+P.S. После запуска функции необходимо написать plot!()
+=#
 function plot_one_channels_const_signal(BaseName, N, CH)
     Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
 
     #@info "start"
     Mass_plots = []
-   # for Channel in 1:12 
+    #for Channel in 1:12 
         plot_plot = (
             plot(Signal_const[CH]);
             size_mass = length(Massiv_Amp_all_channels[CH]);
@@ -413,28 +426,68 @@ end
 end
 
 
+
+function Only_Left_Right_Edge(BaseName, N)
+    Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
+    size_mass = length(Massiv_Amp_all_channels[Current_chanel]);
+    Selection_Edge = []
+    for Selection in 1:size_mass
+        for Current_chanel in 1:12
+          Current_amp = Massiv_Amp_all_channels[Current_chanel][Selection];
+           Amp_extrem = Current_amp[1];
+            Left_extrem = floor(Int64, Current_amp[2]);
+            Right_extrem =  floor(Int64, Current_amp[3]);
+            Current_points = Massiv_Points_channel[Current_chanel][Selection]
+            Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);
+            #Тут Функцию по КАК РАЗ поканально в одной секции
+            #push!(Selection_Edge, Points_fronts)
+        end
+        #push!(Selection_Edge, Points_fronts)
+    end
+    #return Selection_Edge
+
+    left = []
+    right = []
+    for Selection in 1:size_mass
+        push!(left, Selection_Edge[Selection].Left)
+        push!(right, Selection_Edge[Selection].Right)
+    end
+    return left, right 
+end
+
+#L, R = Only_Left_Right_Edge("CSE", 1, 1)
+#L
+
 #Проверка графиков и сохранение
 
 BD = "CSE" #(base data)
+n = 1
 
 AAmmpp = []
-for n in 1:125 #База данных CSE имеет 125 файлов
+#for n in 1:125 #База данных CSE имеет 125 файлов
 if ((n == 70) || (n == 67))#(number file)
     n = n + 1
 end
-#n = 1
 CC = 3 #(Current channel)
 NF, RBD = Position_Data_Base(BD) #(name file); (raw base data)
 #выскок на 23 инт 57 
 # тут лажааа 67 70
 #График исходного сигнала и сигнала "детекции"
 aa = plot_channel_points("CSE", n, CC, 'p')
+plot!()
 push!(AAmmpp, [n, aa])
 title!("CSE $(NF[n])")
 #savefig("pictures_by_channel_CSE/$(NF[n])-$CC.png")
 @info "end $n"
-end
+#end
 
+
+Signal_const1, Massiv_Amp_all_channels1, Massiv_Points_channel1, all_graph_diff1, Referents_by_File1 = all_the("CSE", 1)
+Signal_const1
+Massiv_Amp_all_channels1
+Massiv_Points_channel1
+plot(all_graph_diff1[1])
+Referents_by_File1
 
 
 n = 1
@@ -446,18 +499,18 @@ plot_all_channels_points("CSE", n)
 plot_all_channels_const_signal("CSE", n)
 plot!()
 
-all_the("CSE", 70)
+all_the("CSE", 20)
 plot!()
 plot_const_signal("CSE", n, 9)
 plot!(legend=false)
-stop
+#stop
 
 
 #Надо бы сделать проверочку... =(
 #Надо сделать сохранение картинок =(
 #Надо сделать файл, в котором говориться попадает или нет =(
 
-
+#=
 struct Ref_bound
     left::Int64
     right::Int64
@@ -478,4 +531,4 @@ push!(all_My_bound, step1_my)
 return all_Ref_bound, all_My_bound
 end
 
-one, two = Check([1 , 6], [2, 5])
+one, two = Check([1 , 6], [2, 5])=#
