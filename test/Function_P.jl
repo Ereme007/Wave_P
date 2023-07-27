@@ -174,7 +174,7 @@ function Segment_left_right_P(fs, All_ref_qrs, all_strat, all_end)
         push!(right_p, first_P_left + (fs))
     end
 
-    #некст итерации i+2
+    #следующая итерации i+2
     i = 3
     while (i < length(All_ref_qrs))
         #левая
@@ -615,3 +615,7 @@ function Second_Diff_Right_Left(signal, channel, Left, Start_signal)
     return Index
 
 end
+
+
+
+

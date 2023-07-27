@@ -2,28 +2,10 @@ using Plots, StructArrays, Tables, CSV#, PlotlyBase, PlotlyKaleido
 using XLSX, DataFrames
 plotly()
 include("Function_P.jl")
+include("Markup_function_P.jl")
 include(".env")
 include("../src/readfiles.jl");
 include("../src/plots.jl");
-
-
-mutable struct Markup_Left_Right_Front_Wave_P_amp_2
-    Amp::Float64
-    Left::Int     
-    Right::Int
-
-
-    function Markup_Left_Right_Front_Wave_P_amp_2()
-        new(0, 0, 0)
-    end
-
-    function Markup_Left_Right_Front_Wave_P_amp_2(amp, left, right)
-        new(amp, left, right)
-    end
-end
-
-markup_front_wave_P_amp = Dict{String, Markup_Left_Right_Front_Wave_P_amp_2}()
-
 
 
 #Область рассмотрения проекта
@@ -280,7 +262,9 @@ function plot_one_channels_const_signal(BaseName, N, CH)
 #Left = Massiv_Amp_all_channels[CH][Selection][2]
 #Right =  Massiv_Amp_all_channels[CH][Selection][3]
 #scatter!([Left, Right], [Signal_const[CH][Left], Signal_const[Channel][Right]])
-                Current_amp = Massiv_Amp_all_channels[CH][Selection]
+
+Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[CH][Selection], Massiv_Points_channel[CH][Selection])
+              #=  Current_amp = Massiv_Amp_all_channels[CH][Selection]
                 Amp_extrem = Current_amp[1];
                 Left_extrem = floor(Int64, Current_amp[2]);
                 Right_extrem =  floor(Int64, Current_amp[3]);
@@ -290,6 +274,7 @@ function plot_one_channels_const_signal(BaseName, N, CH)
                 Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);
 #Points_fronts.Left
 #Points_fronts.Right
+=#
                 scatter!([Points_fronts.Left, Points_fronts.Right], [Signal_const[CH][Points_fronts.Left], Signal_const[CH][Points_fronts.Right]]);
             end;
             plot!(title = "Отведение $CH", legend=false)
@@ -333,6 +318,8 @@ function plot_channel_points(BaseName, N, Current_channel, Charr)
 #Left = Massiv_Amp_all_channels[Current_channel][Selection][2]
 #Right =  Massiv_Amp_all_channels[Current_channel][Selection][3]
 #scatter!([Left, Right], [all_graph_diff[Current_channel][Left], all_graph_diff[Current_channel][Right]])
+Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Current_channel][Selection], Massiv_Points_channel[Current_channel][Selection])
+#=
             Current_amp = Massiv_Amp_all_channels[Current_channel][Selection]
             Amp_extrem = Current_amp[1];
             Out_AMP = Amp_extrem;
@@ -344,6 +331,7 @@ function plot_channel_points(BaseName, N, Current_channel, Charr)
             Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);
 #Points_fronts.Left
 #Points_fronts.Right
+=#
             scatter!([Points_fronts.Left, Points_fronts.Right], [all_graph_diff[Current_channel][Points_fronts.Left], all_graph_diff[Current_channel][Points_fronts.Right]]);
            # @info "Left = $(Points_fronts.Left)  Right = $(Points_fronts.Right)"
         end;
@@ -426,38 +414,6 @@ end
 end
 
 
-
-function Only_Left_Right_Edge(BaseName, N)
-    Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
-    size_mass = length(Massiv_Amp_all_channels[Current_chanel]);
-    Selection_Edge = []
-    for Selection in 1:size_mass
-        for Current_chanel in 1:12
-          Current_amp = Massiv_Amp_all_channels[Current_chanel][Selection];
-           Amp_extrem = Current_amp[1];
-            Left_extrem = floor(Int64, Current_amp[2]);
-            Right_extrem =  floor(Int64, Current_amp[3]);
-            Current_points = Massiv_Points_channel[Current_chanel][Selection]
-            Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);
-            #Тут Функцию по КАК РАЗ поканально в одной секции
-            #push!(Selection_Edge, Points_fronts)
-        end
-        #push!(Selection_Edge, Points_fronts)
-    end
-    #return Selection_Edge
-
-    left = []
-    right = []
-    for Selection in 1:size_mass
-        push!(left, Selection_Edge[Selection].Left)
-        push!(right, Selection_Edge[Selection].Right)
-    end
-    return left, right 
-end
-
-#L, R = Only_Left_Right_Edge("CSE", 1, 1)
-#L
-
 #Проверка графиков и сохранение
 
 BD = "CSE" #(base data)
@@ -510,25 +466,5 @@ plot!(legend=false)
 #Надо сделать сохранение картинок =(
 #Надо сделать файл, в котором говориться попадает или нет =(
 
-#=
-struct Ref_bound
-    left::Int64
-    right::Int64
-end
 
-struct My_bound
-    left::Int64
-    right::Int64
-end
 
-function Check(Mass_ref, Mass_points)
-all_Ref_bound = []
-all_My_bound = []
-step1_ref = Ref_bound(Mass_ref[1], Mass_ref[2])
-step1_my = My_bound(Mass_points[1], Mass_points[2])
-push!(all_Ref_bound, step1_ref)
-push!(all_My_bound, step1_my)
-return all_Ref_bound, all_My_bound
-end
-
-one, two = Check([1 , 6], [2, 5])=#
