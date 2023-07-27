@@ -615,7 +615,3 @@ function Second_Diff_Right_Left(signal, channel, Left, Start_signal)
     return Index
 
 end
-
-
-
-
