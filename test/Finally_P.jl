@@ -308,7 +308,7 @@ Right_p = Ref_P[channel][Selection][2]
 
 #All (Test1)
 #MV
-Delta(Left_p, Right_p, Value_Left_Edge_All_MV, Value_Right_Edge_All_MV)
+#Delta(Left_p, Right_p, Value_Left_Edge_All_MV, Value_Right_Edge_All_MV)
 #Dist_Left_ref_method_MV = Value_Left_edge_Filtr_MV - Left_p
 #Dist_Right_ref_method_MV = Right_p - Value_Right_edge_Filtr_MV
 #MD
