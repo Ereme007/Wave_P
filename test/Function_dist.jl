@@ -42,6 +42,7 @@ function All_Ref_QRS(signals, start_qrs, end_qrs, start_sig, end_sig)
         index = index + Distance + 1
         #  @info "index + Distance + 1 = $index"
     end
+    
     return All_ref_qrs
 end
 
@@ -116,18 +117,24 @@ function Mean_value(Massiv_points)
 end
 
 
-
+#Фильтр, который рассматривает все точки на 12ти отведениях
+#Вход - границы на всех отведениях
+#Вызод - границы, разбитые на левую и правую часть с помощью данного фильтра
 function Test1(Selection_Edge) 
     left = []
     right = []   
+    
     for Selection in 1:12
         push!(left, Selection_Edge[Selection].Left)
         push!(right, Selection_Edge[Selection].Right)
     end
+    
     return left, right
 end
 
-
+#Фильтр, который рассматривает некоторые точки на 12ти отведениях (без "всплесков")
+#Вход - границы на всех отведениях
+#Вызод - границы, разбитые на левую и правую часть с помощью данного фильтра
 function Test2(Selection_Edge)
     Selection = 1
     left = []
@@ -136,52 +143,60 @@ function Test2(Selection_Edge)
     Curr_Sel_right = 2
     push!(left, Selection_Edge[Selection].Left)
     push!(right, Selection_Edge[Selection].Right)
+    
     for Selection in 2:12
         # @info "abs(left[Selection-1] - left[Selection]) = $(abs(left[Selection-1] - left[Selection-1]))"
         # @info "Sel = $(left[Selection-1])"
          if(abs(left[Curr_Sel_left-1] - Selection_Edge[Selection].Left) < 78)
-         push!(left, Selection_Edge[Selection].Left)
-         Curr_Sel_left = Curr_Sel_left + 1
+            push!(left, Selection_Edge[Selection].Left)
+            Curr_Sel_left = Curr_Sel_left + 1
          end
+         
          if(abs(right[Curr_Sel_right-1] - Selection_Edge[Selection].Right) < 78)
-         push!(right, Selection_Edge[Selection].Right)
-         Curr_Sel_right = Curr_Sel_right + 1
+            push!(right, Selection_Edge[Selection].Right)
+            Curr_Sel_right = Curr_Sel_right + 1
          end
      end 
+     
      return left, right
 end
 
 function Test1_MV(Selection_Edge)
     Left_Edge_All, Right_Edge_All = Test1(Selection_Edge)
     _, Index_Left_Edge_All, Value_Left_Edge_All_MV = Mean_value(Left_Edge_All)
-_, Index_Right_Edge_All, Value_Right_Edge_All_MV = Mean_value(Right_Edge_All)
-return Value_Left_Edge_All_MV, Value_Right_Edge_All_MV
+    _, Index_Right_Edge_All, Value_Right_Edge_All_MV = Mean_value(Right_Edge_All)
+
+    return Value_Left_Edge_All_MV, Value_Right_Edge_All_MV
 end
 
 function Test2_MV(Selection_Edge)
-Left_edge_Filtr, Right_edge_Filtr = Test2(Selection_Edge)
-_, Index_Left_edge_Filtr, Value_Left_edge_Filtr_MV = Mean_value(Left_edge_Filtr)
-_, Index_Right_edge_Filtr, Value_Right_edge_Filtr_MV = Mean_value(Right_edge_Filtr)
-return Value_Left_edge_Filtr_MV, Value_Right_edge_Filtr_MV
+    Left_edge_Filtr, Right_edge_Filtr = Test2(Selection_Edge)
+    _, Index_Left_edge_Filtr, Value_Left_edge_Filtr_MV = Mean_value(Left_edge_Filtr)
+    _, Index_Right_edge_Filtr, Value_Right_edge_Filtr_MV = Mean_value(Right_edge_Filtr)
+
+    return Value_Left_edge_Filtr_MV, Value_Right_edge_Filtr_MV
 end
 
 function Test1_MD(Selection_Edge)
-Left_Edge_All, Right_Edge_All = Test1(Selection_Edge)
-_, Index_Left_Edge_All, Value_Left_Edge_All_MD = Min_dist_to_all_points(Left_Edge_All)
-_, Index_Right_Edge_All, Value_Right_Edge_All_MD = Min_dist_to_all_points(Right_Edge_All)
-return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD
+    Left_Edge_All, Right_Edge_All = Test1(Selection_Edge)
+    _, Index_Left_Edge_All, Value_Left_Edge_All_MD = Min_dist_to_all_points(Left_Edge_All)
+    _, Index_Right_Edge_All, Value_Right_Edge_All_MD = Min_dist_to_all_points(Right_Edge_All)
+
+    return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD
 end
 
 function Test2_MD(Selection_Edge)
     Left_edge_Filtr, Right_edge_Filtr = Test2(Selection_Edge)
     _, Index_Left_edge_Filtr, Value_Left_edge_Filtr_MD = Min_dist_to_all_points(Left_edge_Filtr)
     _, Index_Right_edge_Filtr, Value_Right_edge_Filtr_MD = Min_dist_to_all_points(Right_edge_Filtr)
+
     return Value_Left_edge_Filtr_MD, Value_Right_edge_Filtr_MD
 end
 
 function Delta(Ref_P_L,Ref_P_R, P_L, P_R)
     delta_L = P_L - Ref_P_L
     delta_R = Ref_P_R - P_R
+
     return delta_L, delta_R
 end
 
