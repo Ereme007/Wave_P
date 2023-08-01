@@ -5,12 +5,12 @@ include("Markup_function_P.jl")
 #Вход - количество областей поисак P
 function Function_Ref_P(ALL_SELECTION, Referents_by_File)
     Ref_P = []
-    size_mass = length(ALL_SELECTION);
-    for Selection in 1:size_mass
-# Selection = 1;
+    
+    for Selection in 1:ALL_SELECTION
         k = ([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ]);
-    push!(Ref_P, k)
+        push!(Ref_P, k)
     end
+    
     return Ref_P
 end
 
