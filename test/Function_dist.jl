@@ -224,9 +224,9 @@ Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge)
 
 Left_p = Ref_P[channel][Selection][1]
 Right_p = Ref_P[channel][Selection][2]
-#MD
+#MD All
 Left_Test_1, Right_Test_1 = Delta(Left_p, Right_p, Value_Left_Edge_All_MD, Value_Right_Edge_All_MD)
-#MD
+#MD Filter
 Left_Test_2, Right_Test_2 = Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD)
 return Number_File, Names_files[Number_File], Left_Test_1, Right_Test_1, Left_Test_2, Right_Test_2
 end

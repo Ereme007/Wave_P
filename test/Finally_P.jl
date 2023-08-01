@@ -324,13 +324,3 @@ Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MV, Value_Right_Edge_Filtr_MV)
 Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD)
 #Dist_Left_ref_method_MD = Value_Left_edge_Filtr_MD - Left_p
 #Dist_Right_ref_method_MD = Right_p - Value_Right_edge_Filtr_MD
-
-
-
-#Запись в файл
-
-
-x = [1, 2]
-y = [1.3, 4]
-plot(x, y,size = (800, 1000), xlim=[0,3])
-plot(x, y, ylim=[0,3])
