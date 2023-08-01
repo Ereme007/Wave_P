@@ -82,13 +82,13 @@ function plot_vertical(channels...; label::String = "")
             # frame=:none,
             layout = (length(channels), 1),
             title = label,
-            # margin=0*Plots.mm,
+             margin=0*Plots.mm,
             # widen=false,
             # ticks = false,
             # frame=:none,
             # legend_position = :topright)
         )
-        plot!(size = (800, 500))
+        plot!(size = (1000, 600))
         return p
 end
 
