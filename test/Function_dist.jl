@@ -48,7 +48,7 @@ end
 
 #Функция, которая ищет точку, которая равноудалена от всех остальных точек
 #Вход - Массив точек
-#Выход - максимальная дситанция, индекс точки, значение точки
+#Выход - Максимальная дистанция, индекс точки, значение точки
 function Min_dist_to_all_points(Massiv_Edge)
     size_left = length(Massiv_Edge)
     Max = []
@@ -85,28 +85,34 @@ function Min_dist_to_all_points(Massiv_Edge)
 end
 
 
+#Не использую
+#Функция по нахождению среднего значение, потом поиска ближайшей точки для данного числа
+#Вход - Массив точек
+#Выход - Максимальная дистанция, индекс точки, значение точки
 function Mean_value(Massiv_points)
     sums = 0
     size_Massiv_points = length(Massiv_points)
-    for nn in 1:size_Massiv_points
-        sums = sums + Massiv_points[nn]
+    
+    for i in 1:size_Massiv_points
+        sums = sums + Massiv_points[i]
     end
-    sums
-    Sred = sums/size_Massiv_points
+    
+    Average_value = sums/size_Massiv_points
+    Massiv_dist_ind_val = []
+    
+    for i in 1:size_Massiv_points
+        distance = abs(Massiv_points[i] - average_value)
+        Index = i
+        value = Massiv_points[i]
+        push!(Massiv_dist_ind_val, [distance, Index, value])
+    end
 
-    DDist = []
-    for nn in 1:size_Massiv_points
-        dd = abs(Massiv_points[nn] - Sred)
-        Index =  nn
-        value = Massiv_points[nn]
-        push!(DDist, [dd, Index, value])
-    end
-    DDist
-    sort(DDist)
-    di = sort(DDist)[1][1]
-    ini = floor(Int64, sort(DDist)[1][2])
-    val = floor(Int64, sort(DDist)[1][3])
-    return di, ini, val
+    sort_massiv_points = sort(Massiv_dist_ind_val)
+    distance = sort_massiv_points[1][1]
+    index_point = floor(Int64, sort_massiv_points[1][2])
+    value_point = floor(Int64, sort_massiv_points[1][3])
+
+    return distance, index_point, value_point
 end
 
 
