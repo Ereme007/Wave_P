@@ -73,9 +73,9 @@ function Min_dist_to_all_points(Massiv_Edge)
     end
     
     sort_massiv_points = sort(Max)[1]
-    distance = ma[1]
-    index_point = ma[2]
-    value_point = ma[3]
+    distance = sort_massiv_points[1]
+    index_point = sort_massiv_points[2]
+    value_point = sort_massiv_points[3]
 
    # @info "distance = $distance"
    # @info "index_point = $index_point"
