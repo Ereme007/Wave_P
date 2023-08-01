@@ -122,7 +122,11 @@ function all_the(BaseName, N)
     
     Massiv_Amp_all_channels = amp_all_cannel(Massiv_Points_channel, all_graph_diff, koef, RADIUS)
     #@info "Massiv_Amp_all_channels[1] = $(Massiv_Amp_all_channels[1])"
-    return Names_files, Signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, All_left_right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File
+    Ref_P = []
+    for i in 1:12
+        push!(Ref_P, Function_Ref_P(Massiv_Amp_all_channels[i], Referents_by_File))
+    end
+    return Names_files, Signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, All_left_right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File
 end
 
 
