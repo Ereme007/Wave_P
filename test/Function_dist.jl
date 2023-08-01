@@ -72,7 +72,7 @@ function Min_dist_to_all_points(Massiv_Edge)
         push!(Max, [Max_dist, Index, Value])
     end
     
-    ma = sort(Max)[1]
+    sort_massiv_points = sort(Max)[1]
     distance = ma[1]
     index_point = ma[2]
     value_point = ma[3]
