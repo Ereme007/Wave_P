@@ -1,15 +1,24 @@
 include("Function_P_file.jl")
 include("Markup_function_P.jl")
+include("Function_dist.jl")
 #Функция, строящая график исходного сигнала на 12 отведениях с реф разметкой и моей детекцией зубца Р.
 #Вход - Имя базы данных (BaseName); номер файла (N)
 #Выход - график исходного сигнала на 12 отведениях с реф разметок Р и моим определением границ зубца Р
 function plot_all_channels_const_signal(BaseName, N, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
 
     Mass_plots = []
-    for Channel in 1:12 
+    for Channel in 1:12
+        poin = []
+        for i in 1:length(Massiv_Points_channel[Channel][3])
+            push!(poin, signal_const[Channel][Massiv_Points_channel[Channel][3][i]])
+        end  
+
+        Hight = sort!(poin)[length(Massiv_Points_channel[Channel][3])] + 75
+        Low = sort!(poin)[1] - 75
+
         co = 1
         plot_plot = (
-            plot(Signal_const[Channel]);
+            plot(Signal_const[Channel], ylim=[Low, Hight]);
             size_mass = length(Massiv_Amp_all_channels[Channel]);
             for Selection in 1:size_mass
             # Selection = 1;
@@ -17,7 +26,9 @@ function plot_all_channels_const_signal(BaseName, N, Signal_const, Massiv_Amp_al
 #Left = Massiv_Amp_all_channels[Channel][Selection][2]
 #Right =  Massiv_Amp_all_channels[Channel][Selection][3]
 #scatter!([Left, Right], [Signal_const[Channel][Left], Signal_const[Channel][Right]])
-                Current_amp = Massiv_Amp_all_channels[Channel][Selection]
+                
+Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Channel][Selection], Massiv_Points_channel[Channel][Selection] )
+#=Current_amp = Massiv_Amp_all_channels[Channel][Selection]
                 Amp_extrem = Current_amp[1];
                 Left_extrem = floor(Int64, Current_amp[2]);
                 Right_extrem =  floor(Int64, Current_amp[3]);
@@ -27,6 +38,7 @@ function plot_all_channels_const_signal(BaseName, N, Signal_const, Massiv_Amp_al
                 Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);
 #Points_fronts.Left
 #Points_fronts.Right
+=#
                 scatter!([Points_fronts.Left, Points_fronts.Right], [Signal_const[Channel][Points_fronts.Left], Signal_const[Channel][Points_fronts.Right]]);
             if (co == 1)
                # @info "Amp_extrem[$Channel] = $(Points_fronts.Amp)";
@@ -34,7 +46,7 @@ function plot_all_channels_const_signal(BaseName, N, Signal_const, Massiv_Amp_al
             end
             end;
             
-            plot!(title = "Отведение $Channel", legend=false)
+            plot!(title = "Отведение $Channel")#, legend=false)
         )
 
     push!(Mass_plots, plot_plot)
@@ -63,6 +75,8 @@ function plot_all_channels_points(BaseName, N, Signal_const, Massiv_Amp_all_chan
 #Left = Massiv_Amp_all_channels[Channel][Selection][2]
 #Right =  Massiv_Amp_all_channels[Channel][Selection][3]
 #scatter!([Left, Right], [all_graph_diff[Channel][Left], all_graph_diff[Channel][Right]])
+Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Channel][Selection], Massiv_Points_channel[Channel][Selection] )
+#=
                 Current_amp = Massiv_Amp_all_channels[Channel][Selection]
                 Amp_extrem = Current_amp[1];
                 Left_extrem = floor(Int64, Current_amp[2]);
@@ -70,7 +84,7 @@ function plot_all_channels_points(BaseName, N, Signal_const, Massiv_Amp_all_chan
 #Massiv_Points_channel[Channel][Selection][Left_extrem]
 #Massiv_Points_channel[Channel][Selection][Right_extrem]
                 Current_points = Massiv_Points_channel[Channel][Selection]
-                Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);
+                Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);=#
 #Points_fronts.Left
 #Points_fronts.Right
                 scatter!([Points_fronts.Left, Points_fronts.Right], [all_graph_diff[Channel][Points_fronts.Left], all_graph_diff[Channel][Points_fronts.Right]]);
@@ -88,52 +102,6 @@ end
 
 
 
-#Функция, строящая график исходного сигнала на 12 отведениях с реф разметкой и моей детекцией зубца Р.
-#Вход - Имя базы данных (BaseName); номер файла (N)
-#Выход - график исходного сигнала на 12 отведениях с реф разметок Р и моим определением границ зубца Р
-function plot_all_channels_const_signal(BaseName, N, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
-   # Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
-
-    #@info "start"
-    Mass_plots = []
-    for Channel in 1:12 
-        co = 1
-        plot_plot = (
-            plot(Signal_const[Channel]);
-            size_mass = length(Massiv_Amp_all_channels[Channel]);
-            for Selection in 1:size_mass
-            # Selection = 1;
-                vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red);
-#Left = Massiv_Amp_all_channels[Channel][Selection][2]
-#Right =  Massiv_Amp_all_channels[Channel][Selection][3]
-#scatter!([Left, Right], [Signal_const[Channel][Left], Signal_const[Channel][Right]])
-                Current_amp = Massiv_Amp_all_channels[Channel][Selection]
-                Amp_extrem = Current_amp[1];
-                Left_extrem = floor(Int64, Current_amp[2]);
-                Right_extrem =  floor(Int64, Current_amp[3]);
-#Massiv_Points_channel[Channel][Selection][Left_extrem]
-#Massiv_Points_channel[Channel][Selection][Right_extrem]
-                Current_points = Massiv_Points_channel[Channel][Selection]
-                Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);
-#Points_fronts.Left
-#Points_fronts.Right
-                scatter!([Points_fronts.Left, Points_fronts.Right], [Signal_const[Channel][Points_fronts.Left], Signal_const[Channel][Points_fronts.Right]]);
-            if (co == 1)
-               # @info "Amp_extrem[$Channel] = $(Points_fronts.Amp)";
-            co = 2
-            end
-            end;
-            
-            plot!(title = "Отведение $Channel", legend=false)
-        )
-
-    push!(Mass_plots, plot_plot)
-end
-plot_vertical(Mass_plots[1], Mass_plots[2], Mass_plots[3], Mass_plots[4], Mass_plots[5], Mass_plots[6], Mass_plots[7], Mass_plots[8], Mass_plots[9], Mass_plots[10], Mass_plots[11], Mass_plots[12]);
-#plot_vertical(Mass_plots[1], Mass_plots[2])
-end
-
-
 
 
 
@@ -142,7 +110,7 @@ end
 #Функция
 #Вход - Имя базы данных (BaseName); номер файла (N); текущее отведение (Current_channel); Символ-флаг, если р то рисуем все экстремумы (Charr) 
 #Выход - (сейчас!) значение амплитуды и файла 
-function plot_channel_points(BaseName, N, Current_channel, Charr, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
+function plot_channel_points(BaseName, N, Current_channel, Charr, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File, Ref_P)
     #Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)    
 #Current_channel = 1
     Mass_plots = []
@@ -151,6 +119,8 @@ function plot_channel_points(BaseName, N, Current_channel, Charr, Signal_const, 
     plot_front_sig = (
         plot(all_graph_diff[Current_channel]);
         size_mass = length(Massiv_Amp_all_channels[Current_channel]);
+      #  @info "$(Ref_P[Current_channel])";
+        vline!(Ref_P[Current_channel], lc=:red);
         for Selection in 1:size_mass
             if(Charr == 'p')
                 poi = Massiv_Points_channel[Current_channel][Selection]
@@ -158,7 +128,10 @@ function plot_channel_points(BaseName, N, Current_channel, Charr, Signal_const, 
                 scatter!(poi, all_graph_diff[Current_channel][poi])
             end;
    # Selection = 1 ;
-            vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red);
+   lik = Function_Ref_P(Massiv_Amp_all_channels[Current_channel], Referents_by_File);
+   
+   
+         #   vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red);
 #Left = Massiv_Amp_all_channels[Current_channel][Selection][2]
 #Right =  Massiv_Amp_all_channels[Current_channel][Selection][3]
 #scatter!([Left, Right], [all_graph_diff[Current_channel][Left], all_graph_diff[Current_channel][Right]])
