@@ -293,6 +293,7 @@ xlims!(Ref_P[1][Selection][1]-20, Ref_P[1][Selection][2]+20)
 #vline!([Value_Left_Edge_All_MV, Value_Right_Edge_All_MV]) #розовый
 vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD]) #желтый
 
+
 plot_all_channels_const_signal(Name_Data_Base, Number_File, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
 xlims!(Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50)
 #vline!([Value_Left_edge_Filtr_MV, Value_Right_edge_Filtr_MV]) #розовый
@@ -317,7 +318,7 @@ Delta(Left_p, Right_p, Value_Left_Edge_All_MD, Value_Right_Edge_All_MD)
 
 #Filtr (Test2)
 #MV
-Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MV, Value_Right_Edge_Filtr_MV)
+#Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MV, Value_Right_Edge_Filtr_MV)
 #Dist_Left_ref_method_MV = Value_Left_edge_Filtr_MV - Left_p
 #Dist_Right_ref_method_MV = Right_p - Value_Right_edge_Filtr_MV
 #MD
