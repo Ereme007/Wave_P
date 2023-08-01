@@ -128,7 +128,8 @@ function plot_channel_points(BaseName, N, Current_channel, Charr, Signal_const, 
                 scatter!(poi, all_graph_diff[Current_channel][poi])
             end;
    # Selection = 1 ;
-   lik = Function_Ref_P(Massiv_Amp_all_channels[Current_channel], Referents_by_File);
+   count_selections = length(Massiv_Amp_all_channels[Current_channel]);
+   lik = Function_Ref_P(count_selections, Referents_by_File);
    
    
          #   vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red);
