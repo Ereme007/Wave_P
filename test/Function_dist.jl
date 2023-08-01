@@ -1,8 +1,9 @@
 include("Markup_function_P.jl")
 
 
-#Функция составления реферетной разметки
+#Функция составления реферетной разметки для волны Р
 #Вход - количество областей поисак P
+#Выход - Массив реферетных значений волны P на всём сигнале
 function Function_Ref_P(ALL_SELECTION, Referents_by_File)
     Ref_P = []
     
@@ -14,7 +15,7 @@ function Function_Ref_P(ALL_SELECTION, Referents_by_File)
     return Ref_P
 end
 
-#Использован
+#Функция составления реферетной разметки для QRS
 #На вход границы qrs и границы сигнала, на выход все рефенетнаые границы qrs 
 #Верно только для искусственнного сигнала
 function All_Ref_QRS(signals, start_qrs, end_qrs, start_sig, end_sig)
@@ -44,6 +45,10 @@ function All_Ref_QRS(signals, start_qrs, end_qrs, start_sig, end_sig)
     return All_ref_qrs
 end
 
+
+#Функция, которая ищет точку, которая равноудалена от всех остальных точек
+#Вход - Массив точек
+#Выход - максимальная дситанция, индекс точки, значение точки
 function Min_dist_to_all_points(Massiv_Edge)
     size_left = length(Massiv_Edge)
     Max = []
@@ -68,11 +73,15 @@ function Min_dist_to_all_points(Massiv_Edge)
     end
     
     ma = sort(Max)[1]
-    di = ma[1]
-    ini = ma[2]
-    val = ma[3]
+    distance = ma[1]
+    index_point = ma[2]
+    value_point = ma[3]
 
-    return di, ini, val
+   # @info "distance = $distance"
+   # @info "index_point = $index_point"
+   # @info "value_point = $value_point"
+
+    return distance, index_point, value_point
 end
 
 
