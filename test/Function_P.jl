@@ -72,35 +72,6 @@ function Border_L_R(ch_names, filtered_signals, Start, Start_QRS)
     return Channel_Left, Channel_Right
 end
 
-#Использован
-#На вход границы qrs и границы сигнала, на выход все рефенетнаые границы qrs 
-#Верно только для искусственнного сигнала
-function All_Ref_QRS(signals, start_qrs, end_qrs, start_sig, end_sig)
-    #  @info "length(signals) = $(length(signals))"
-    #  @info "length(signals) = $(length(signals))"
-    #  @info "length(signals) = $(length(signals))"
-
-    Distance = end_sig - start_sig
-    dur_qrs = end_qrs - start_qrs
-    All_ref_qrs = Int64[]
-
-    push!(All_ref_qrs, start_qrs)
-    push!(All_ref_qrs, end_qrs)
-
-    index = start_qrs + Distance #+ 1
-
-    while (index < length(signals))
-        push!(All_ref_qrs, index)
-
-        if (index + dur_qrs < length(signals))
-            push!(All_ref_qrs, index + dur_qrs)
-        end
-        #  @info "index = $index"
-        index = index + Distance + 1
-        #  @info "index + Distance + 1 = $index"
-    end
-    return All_ref_qrs
-end
 
 
 function struct_signala(signal_with_channels)
