@@ -140,12 +140,12 @@ Selection = 3
 
 include("Create_Table.jl")
 
-Fin("CSE", Number_File)
+Comparson_Delta_Edge("CSE", Number_File)
 #Table_P("Test1")
 #save_pictures_p(Selection)
 # savefig("pictures_edge_CSE/$(names_files).png")
-
-Value_Left_Edge_All_MD, Value_Right_Edge_All_MD,Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = function_Points_fronts(Massiv_Amp_all_channels)
+Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
+Ref_P[channel][Selection]
 include("Plots_P.jl")
 
 plot_all_channels_const_signal(Name_Data_Base, Number_File, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
