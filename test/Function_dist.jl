@@ -1,3 +1,4 @@
+#Файл, содержащий функции для реферетной разметки QRS & P; Фильтр границ, которые нашли с помощью алгоритма (Test1, Test2); Способы сведения границ (Min_dist_to_all_points & Mean_value)
 include("Markup_function_P.jl")
 
 
@@ -102,7 +103,7 @@ function Mean_value(Massiv_points)
     Massiv_dist_ind_val = []
     
     for i in 1:size_Massiv_points
-        distance = abs(Massiv_points[i] - average_value)
+        distance = abs(Massiv_points[i] - Average_value)
         Index = i
         value = Massiv_points[i]
         push!(Massiv_dist_ind_val, [distance, Index, value])
@@ -134,7 +135,7 @@ end
 
 #Фильтр, который рассматривает некоторые точки на 12ти отведениях (без "всплесков")
 #Вход - границы на всех отведениях
-#Вызод - границы, разбитые на левую и правую часть с помощью данного фильтра
+#Выход - границы, разбитые на левую и правую часть с помощью данного фильтра
 function Test2(Selection_Edge)
     Selection = 1
     left = []
@@ -161,6 +162,7 @@ function Test2(Selection_Edge)
      return left, right
 end
 
+#Функции вычисления Дельта для разных филтров и алгоритмов
 function Test1_MV(Selection_Edge)
     Left_Edge_All, Right_Edge_All = Test1(Selection_Edge)
     _, Index_Left_Edge_All, Value_Left_Edge_All_MV = Mean_value(Left_Edge_All)
@@ -193,7 +195,10 @@ function Test2_MD(Selection_Edge)
     return Value_Left_edge_Filtr_MD, Value_Right_edge_Filtr_MD
 end
 
-function Delta(Ref_P_L,Ref_P_R, P_L, P_R)
+#Функция вычисления Дельта граны от реферетной границы
+#Вход: Реферетные значения левой/правой границы (Ref_P_L/Ref_P_R), найденная левая/правая граница (P_L/P_R)
+#Выход:
+function Delta(Ref_P_L, Ref_P_R, P_L, P_R)
     delta_L = P_L - Ref_P_L
     delta_R = Ref_P_R - P_R
 
@@ -201,58 +206,61 @@ function Delta(Ref_P_L,Ref_P_R, P_L, P_R)
 end
 
 
-
-function Fin(Name_Data_Base, Number_File)
-    channel = 1
-    Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, All_left_right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
+#Функция, которая находит для данного файла дельта границ для 2х фильтров метода сведения MD (от MV отказались)
+#Вход: Имя базы данных(Name_Data_Base), номер файла(Number_File)
+#Выход: номер файла(Number_File), имя файла (Names_files[Number_File]), дельта для левой/правой границы для Теста1 (Left_Test_1/Right_Test_1), дельта для левой/правой границы для Теста2 (Left_Test_2/Right_Test_2)
+function Comparson_Delta_Edge(Name_Data_Base, Number_File)
+    channel = 1 #Здесь не имеет значение
+    Names_files, signal_const, _, _, _, _, Ref_P, _, Massiv_Amp_all_channels, Massiv_Points_channel, _ = all_the(Name_Data_Base, Number_File)
     #Сигнал в виде массива для более удобного поканальной отрисовки
     Massiv_Signal = Sign_Channel(signal_const)
     
-    Selection = 3
-Selection_Edge = []
-for Current_chanel in 1:12
-    #Current_chanel = 1
-    Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Current_chanel][Selection], Massiv_Points_channel[Current_chanel][Selection])
-    #Тут Функцию по КАК РАЗ поканально в одной секции
-    push!(Selection_Edge, Points_fronts)
-end
-
-Value_Left_Edge_All_MV, Value_Right_Edge_All_MV = Test1_MV(Selection_Edge)
-Value_Left_Edge_Filtr_MV, Value_Right_Edge_Filtr_MV = Test2_MV(Selection_Edge)
-Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test1_MD(Selection_Edge)
-Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
-
-Left_p = Ref_P[channel][Selection][1]
-Right_p = Ref_P[channel][Selection][2]
-#MD All
-Left_Test_1, Right_Test_1 = Delta(Left_p, Right_p, Value_Left_Edge_All_MD, Value_Right_Edge_All_MD)
-#MD Filter
-Left_Test_2, Right_Test_2 = Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD)
-return Number_File, Names_files[Number_File], Left_Test_1, Right_Test_1, Left_Test_2, Right_Test_2
-end
-
-function function_Points_fronts(Massiv_Amp_all_channels)
+    Selection = 3 #Здесь не имеет значение, но по итогу рассматриваем на 3ем отсеке (все отсеки между собой одинаковы, кроме первого)
+    Selection_Edge = []
     
-Selection_Edge = []
-for Current_chanel in 1:12
-    #Current_chanel = 1
-    Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Current_chanel][Selection], Massiv_Points_channel[Current_chanel][Selection])
-    #Тут Функцию по КАК РАЗ поканально в одной секции
-    push!(Selection_Edge, Points_fronts)
+    for Current_chanel in 1:12
+        Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Current_chanel][Selection], Massiv_Points_channel[Current_chanel][Selection])
+        #Тут Функцию по КАК РАЗ поканально в одной секции
+        push!(Selection_Edge, Points_fronts)
+    end
+
+    #Value_Left_Edge_All_MV, Value_Right_Edge_All_MV = Test1_MV(Selection_Edge) #отказались
+    #Value_Left_Edge_Filtr_MV, Value_Right_Edge_Filtr_MV = Test2_MV(Selection_Edge) #отказались
+    Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test1_MD(Selection_Edge)
+    Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
+
+    Left_p = Ref_P[channel][Selection][1]
+    Right_p = Ref_P[channel][Selection][2]
+
+    #MD All
+    Left_Test_1, Right_Test_1 = Delta(Left_p, Right_p, Value_Left_Edge_All_MD, Value_Right_Edge_All_MD)
+    #MD Filter
+    Left_Test_2, Right_Test_2 = Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD)
+
+    #MV All отказались
+    #Left_Test_1_mv, Right_Test_1_mv = Delta(Left_p, Right_p, Value_Left_Edge_All_MV, Value_Right_Edge_All_MV) #отказались
+    #MV Filter отказались
+    #Left_Test_2_mv, Right_Test_2_mv = Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MV, Value_Right_Edge_Filtr_MV) отказались
+
+    return Number_File, Names_files[Number_File], Left_Test_1, Right_Test_1, Left_Test_2, Right_Test_2
 end
 
-Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test1_MD(Selection_Edge)
-Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
-return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD,Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD 
+
+#Функция, выдающая значение границ для двух фильтров метода сведения MD
+#Вход: Массив Амплитуд (Massiv_Amp_all_channels), Массив Точек (Massiv_Points_channel)
+#Выход: Значение левой/правой границы для фильтра 1 и фильтра 2 (All & Filtr)
+function function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
+    Selection = 3
+    Selection_Edge = []
+
+    for Current_chanel in 1:12
+        Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Current_chanel][Selection], Massiv_Points_channel[Current_chanel][Selection])
+        #Тут Функцию по КАК РАЗ поканально в одной секции
+        push!(Selection_Edge, Points_fronts)
+    end
+
+    Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test1_MD(Selection_Edge)
+    Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
+
+    return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD 
 end
-#=
-Selection_Edge = []
-for Current_chanel in 1:12
-    #Current_chanel = 1
-    Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Current_chanel][Selection], Massiv_Points_channel[Current_chanel][Selection])
-    #Тут Функцию по КАК РАЗ поканально в одной секции
-    push!(Selection_Edge, Points_fronts)
-end
-=#
-#Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test1_MD(Selection_Edge)
-#Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
