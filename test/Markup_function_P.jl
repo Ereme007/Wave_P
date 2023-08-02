@@ -15,8 +15,9 @@ end
 
 markup_front_wave_P_amp = Dict{String, Markup_Left_Right_Front_Wave_P_amp_2}()
 
-#= Функция. которая переводит массив Massiv_Amp_all_channels в Amp Left Right (Points_fronts)=#
-
+#= Функция, которая переводит массив Massiv_Amp_all_channels в Amp Left Right (Points_fronts)=#
+#Вход: Массив амплитуд и массив точек
+#Выход: Структура, у которой поля Amp Left Right
 function Mark_Amp_Left_Right(massiv_amp_all_channels, massiv_points_channel)
     Current_amp = massiv_amp_all_channels
     Amp_extrem = Current_amp[1];
@@ -24,6 +25,7 @@ function Mark_Amp_Left_Right(massiv_amp_all_channels, massiv_points_channel)
     Right_extrem =  floor(Int64, Current_amp[3]);
     Current_points = massiv_points_channel
     Points_fronts = Markup_Left_Right_Front_Wave_P_amp_2(Amp_extrem, Current_points[Left_extrem], Current_points[Right_extrem]);
+    
     return Points_fronts
 end
     
