@@ -14,7 +14,7 @@ include("Plots_P.jl")
 include("Create_Table.jl")
 
 #Наименование базы данных и номер файла ("CSE")
-Name_Data_Base, Number_File = "CSE", 1
+Name_Data_Base, Number_File = "CSE", 2
 #Определённое отведение (channel)
 channel = 1
 
@@ -52,8 +52,12 @@ title!("$(Names_files[Number_File]), $Name_Data_Base, Отведение $channe
 plot_vertical(signal_without_qrs[1], signal_without_qrs[2], signal_without_qrs[3], signal_without_qrs[4], signal_without_qrs[5], signal_without_qrs[6], signal_without_qrs[7], signal_without_qrs[8], signal_without_qrs[9], signal_without_qrs[10], signal_without_qrs[11], signal_without_qrs[12]);
 plot!()
 
-#График исходного канала на определённом отведении с"занулением" QRS
+#График исходного канала на определённом отведении с "занулением" QRS
 plot(signal_without_qrs[channel], legend = false);
+title!("$(Names_files[Number_File]), $Name_Data_Base, Отведение $channel")
+
+#График исходного канала с разметкой qrs на определённом отведении с "занулением" QRS
+plot_vertical_ref(Ref_qrs, signal_without_qrs[channel]);
 title!("$(Names_files[Number_File]), $Name_Data_Base, Отведение $channel")
 
 #График отфильрованного сигнала my_butter канала на всех отведениях с "занулением" QRS (P.S. к сожалению, имя файла не указать)
@@ -127,9 +131,9 @@ include("Plots_P.jl");
 include("Create_Table.jl");
 include("Function_dist.jl")
 #Наименование базы данных и номер файла ("CSE")
-Name_Data_Base, Number_File = "CSE", 8
+Name_Data_Base, Number_File = "CSE", 2
 #Определённое отведение (channel)
-channel = 1
+channel = 3
 
 #Сигнал
 Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, All_left_right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
@@ -141,7 +145,11 @@ Selection = 3
 include("Create_Table.jl")
 
 Comparson_Delta_Edge("CSE", Number_File)
-#Table_P("Test1")
+
+#Сохраниене статистики
+#Table_P("Test_Line_qrs")
+
+
 #save_pictures_p(Selection)
 # savefig("pictures_edge_CSE/$(names_files).png")
 Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)

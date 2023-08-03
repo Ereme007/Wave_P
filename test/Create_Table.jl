@@ -59,7 +59,7 @@ function Table_P(Name_Project)
     Delta_Left_2 = delta_left2, 
     Delta_Right_2 = delta_right2,
     In_Out_2 = In_or_Out2)
-  #  CSV.write("test/Projects/$(Name_Project).csv", text, delim = ';')
+    CSV.write("test/Projects/$(Name_Project).csv", text, delim = ';')
 end
 
 # Функция сохраняющая картинки (несделано, так как нужно без ploty(), но без него картинки "некрасивые")

@@ -189,3 +189,25 @@ Current_amp = Massiv_Amp_all_channels[Channel][Selection]
 #Points_fronts.Left
 #Points_fronts.Right
 Test2(Left)
+
+
+
+
+
+
+
+
+
+
+function solve_y(Xa, Xb, Ya, Yb, X)
+    Y = (X-Xa)/(Xb-Xa)*(Yb-Ya)+Ya
+    return Y
+end
+
+solve_y(3, 8, 1, 2, 8)
+
+
+
+
+
+greed(3, 8, 1, 2)

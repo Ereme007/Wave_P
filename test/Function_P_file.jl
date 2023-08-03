@@ -93,8 +93,9 @@ function all_the(BaseName, N)
 
     Ref_qrs = All_Ref_QRS(signals_channel[1], start_qrs, end_qrs, Referents_by_File.ibeg, Referents_by_File.iend)
 
-    signal_without_qrs = Zero_qrs(Ref_qrs, signals_channel, start_qrs, end_qrs)
-    
+    #signal_without_qrs = Zero_qrs(Ref_qrs, signals_channel, start_qrs, end_qrs)
+    signal_without_qrs = Line_qrs(Ref_qrs, signals_channel, start_qrs, end_qrs)
+    @info "re"   
     Left, Right = Segment_left_right_P(Frequency, Ref_qrs, Referents_by_File.ibeg, Referents_by_File.iend)
     All_left_right = [Left, Right]
 
