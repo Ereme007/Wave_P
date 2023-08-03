@@ -1,5 +1,9 @@
+
+#Много вспомогательных функций
 include("../src/my_filt.jl")
 
+#Не использую
+#=
 function points_extrem(Signal, Start, End, channel)
     Chanel_filter = [Signal.I, Signal.II, Signal.III, Signal.aVR, Signal.aVL, Signal.aVF, Signal.V1, Signal.V2, Signal.V3, Signal.V4, Signal.V5, Signal.V6]
     points_max = new_localmax(Chanel_filter[channel][Start:End], 15)
@@ -13,7 +17,10 @@ function points_extrem(Signal, Start, End, channel)
     Left, Right = Border_tr(points_max, points_min)
     return Left, Right, points_max, points_min
 end
+=#
 
+
+#=
 #Положительная
 function Left_Border_Max(points_max)
     Maxx, Minn = Inf, -Inf
@@ -29,8 +36,10 @@ function Left_Border_Max(points_max)
     end
     return Minn, Maxx
 end
+=#
 
 
+#=
 function Border_tr(points_max, points_min)
     Minn, Maxx = Left_Border_Max(points_max)
 
@@ -45,8 +54,10 @@ function Border_tr(points_max, points_min)
     end
     return dist_min, dist_max
 end
+=#
 
 
+#=
 function Border_L_R(ch_names, filtered_signals, Start, Start_QRS)
     Channel_Left = Int64[]
     Channel_Right = Int64[]
@@ -71,9 +82,9 @@ function Border_L_R(ch_names, filtered_signals, Start, Start_QRS)
     end
     return Channel_Left, Channel_Right
 end
+=#
 
-
-
+#=
 function struct_signala(signal_with_channels)
     signal = map(Tables.columntable(signal_with_channels)) do sig
         hpass = my_butter(sig, 2, (5, 20), fs, Bandpass)
@@ -82,17 +93,73 @@ function struct_signala(signal_with_channels)
     signal = StructVector(signal)
     return signal
 end
+=#
+
+#Функция нахождения локального максимума с заданным радиусом 
+#Вход: сигнал(Signal), радиус(rad)
+#Выход: массив максимумов (Massiv_max)
+function new_localmax(Signal, rad)
+    Massiv_max = Int64[]
+    size_signal = length(Signal)
+    i = 1
+    while (i <= size_signal)
+        max = Signal[i]
+        for j in (i-rad):(i+rad)
+            if (j >= 1 && j < size_signal && Signal[j] > max)
+                max = Signal[j]
+            end
+        end
+        if (Signal[i] == max)
+            push!(Massiv_max, i)
+            i = i + rad
+        else
+            i = i + 1
+        end
+    end
+
+    return Massiv_max
+end
 
 
+#Функция нахождения локального минимума с заданным радиусом 
+#Вход: сигнал(Signal), радиус(rad)
+#Выход: массив минимумов (Massiv_min)
+function new_localmin(Signal, rad)
+    Massiv_min = Int64[]
+    size_signal = length(Signal)
+    i = 1
+    while (i <= size_signal)
+        min = Signal[i]
+        for j in (i-rad):(i+rad)
+            if (j >= 1 && j < size_signal && Signal[j] < min)
+                min = Signal[j]
+                #    @info j
+            end
+        end
+        if (Signal[i] == min)
+            push!(Massiv_min, i)
+            i = i + rad - 1
+        else
+            i = i + 1
+        end
+    end
+
+    return Massiv_min
+end
 
 
 #Использован
+#Функция записывает сигнал в 12 каналов
+#Вход: Структура сигнала
+#Выход: Массив, в которм 12 ячеек
 function Sign_Channel(Signal)
     return [Signal.I, Signal.II, Signal.III, Signal.aVR, Signal.aVL, Signal.aVF, Signal.V1, Signal.V2, Signal.V3, Signal.V4, Signal.V5, Signal.V6]
 end
 
 #Использован
-#"Зануление" qrs по середине
+#Функция "Зануление" qrs по середине
+#Вход: Облатсь поиска P(All_ref_qrs), сигнал массив(signals), начало/конец qrs (start_qrs/end_qrs)
+#Выход: Новый сигнал массив
 function Zero_qrs(All_ref_qrs, signals, start_qrs, end_qrs)
     i = 2
     size = length(All_ref_qrs)
@@ -104,12 +171,15 @@ function Zero_qrs(All_ref_qrs, signals, start_qrs, end_qrs)
         end
         i = i + 2
     end
+    
     return signals
 end
 
 
 #(НЕ)Использован
-#"Зануление" qrs по левому краю
+#Функция "Зануление" qrs по левому краю
+#Вход: Облатсь поиска P(All_ref_qrs), сигнал массив(signals), начало/конец qrs (start_qrs/end_qrs)
+#Выход: Новый сигнал массив
 function Simple_Zero_qrs(All_ref_qrs, signals, start_qrs, end_qrs)
     i = 2
     size = length(All_ref_qrs)
@@ -120,13 +190,15 @@ function Simple_Zero_qrs(All_ref_qrs, signals, start_qrs, end_qrs)
         end
         i = i + 2
     end
+
     return signals
 end
 
 
-
+#Функция определяющая облатсь поиска P
+#Вход: частота (fs), реферетная разметка qrs (All_ref_qrs), начало/конец сигнала (all_strat/all_end)
+#Выход: левая/правая граница облатси поиска волны Р (left_p/right_p)
 function Segment_left_right_P(fs, All_ref_qrs, all_strat, all_end)
-    # fs
     koeff = 1000 / fs
     left_p, right_p = Int64[], Int64[]
     #первая итерация!!
@@ -174,7 +246,8 @@ function Segment_left_right_P(fs, All_ref_qrs, all_strat, all_end)
 end
 
 
-
+#Не используем
+#=
 function all_min_max(All_left_right, signal_without_qrs, midd)
     Po_min = []
     Po_max = []
@@ -182,12 +255,6 @@ function all_min_max(All_left_right, signal_without_qrs, midd)
     for j in 1:12
         graph_diff = DiffFilt(signal_without_qrs[j], midd)
         graph_butter = my_butter(graph_diff, 2, (2, 20), fs, Bandpass)
-
-
-
-
-
-
 
         i = 1 #по кусочкам на одном канале
         Only_Max = Int64[]
@@ -213,11 +280,12 @@ function all_min_max(All_left_right, signal_without_qrs, midd)
     end
     return Po_min, Po_max
 end
+=#
 
 
 
-
-
+#Не используем
+#=
 function all_min_max(All_left_right, signal_without_qrs, midd, fs)
     Po_min = []
     Po_max = []
@@ -259,36 +327,47 @@ function all_min_max(All_left_right, signal_without_qrs, midd, fs)
     end
     return Po_min, Po_max
 end
+=#
 
-
-
-function Graph_my_butter(signal_without_qrs, fs)
+#Функция применяет к сигналу my_butter
+#Вход: Сигнал ~без_qrs (signal_without_qrs), частота (fs)
+#Выход: измененный сигнал (all_graph_butter)
+function Graph_my_butter(signal, fs)
     all_graph_butter = []
+    
     for i in 1:12
-        graph_butter = my_butter(signal_without_qrs[i], 2, (2, 20), fs, Bandpass)
+        graph_butter = my_butter(signal[i], 2, (2, 20), fs, Bandpass)
         push!(all_graph_butter, graph_butter)
     end
+    
     return all_graph_butter
 end
 
+
+#Функция применяет к сигналу DiffFilt
+#Вход: Сигнал (signal), дистанция производной (dist)
+#Выход: измененный сигнал (all_graph_diff)
 function Graph_diff(signal, dist)
     all_graph_diff = []
+    
     for i in 1:12
         graph_diff = DiffFilt(signal[i], dist)
         push!(all_graph_diff, graph_diff)
     end
 
-
-
     return all_graph_diff
 end
 
 
+#Функция определения всеx точкек мин мах на всех отведениях и участках
+#Вход: Область поиска волны P (All_left_right), Сигнал (Signal), Радиус поиска ~.env (RADIUS_LOCAL)
+#Выход: массив точек All_points = [Max_local, Min_local]
 function All_points_with_channels_max_min(All_left_right, Signal, RADIUS_LOCAL)
     All_points = []
     for channel in 1:12
         Min_local = []
         Max_local = []
+        
         for i in 1:length(All_left_right[1])
             Start = All_left_right[1][i]
             End = All_left_right[2][i]
@@ -314,28 +393,32 @@ function All_points_with_channels_max_min(All_left_right, Signal, RADIUS_LOCAL)
 end
 
 
-
-
+#Отсортировка
+#Вход: массив ми и мак точек (Massiv_Points)
+#Выход: отстортированные (point_sort_channel) 
 function Sort_points_with_channel(Massiv_Points)
-
     point_sort_channel = []
+    
     for channel in 1:12
-
+        Mass_chan = Massiv_Points[channel]
         points_sort = []
-        for k in 1:length(Massiv_Points[channel][1])
+        
+        for k in 1:length(Mass_chan[1])
             new = []
-            for i in 1:length(Massiv_Points[channel][1][k])
-                val = Massiv_Points[channel][1][k][i]
+            
+            for i in 1:length(Mass_chan[1][k])
+                val = Mass_chan[1][k][i]
                 push!(new, val) #заполнили min
             end
 
-            for i in 1:length(Massiv_Points[channel][2][k])
-                val = Massiv_Points[channel][2][k][i]
+            for i in 1:length(Mass_chan[2][k])
+                val = Mass_chan[2][k][i]
                 push!(new, val) #заполнили max
             end
+            
             push!(points_sort, sort(new)) # все min и max и отрортировали
-
         end
+        
         push!(point_sort_channel, points_sort)
     end
 
@@ -343,7 +426,7 @@ function Sort_points_with_channel(Massiv_Points)
 end
 
 
-
+#=
 function Fronts(Massiv_Points_channel, all_graph_diff, koeff)
     f_index = 0
     first_index = 0
@@ -390,7 +473,7 @@ function Fronts(Massiv_Points_channel, all_graph_diff, koeff)
 
     return OBLAST
 end
-
+=#
 
 
 #function Fronts2(Massiv_Points_channel, all_graph_diff,  koeff)
@@ -400,50 +483,6 @@ end
 #       end
 #  end
 #end
-
-function new_localmax(Signal, rad)
-    Massiv_max = Int64[]
-    size_signal = length(Signal)
-    i = 1
-    while (i <= size_signal)
-        max = Signal[i]
-        for j in (i-rad):(i+rad)
-            if (j >= 1 && j < size_signal && Signal[j] > max)
-                max = Signal[j]
-            end
-        end
-        if (Signal[i] == max)
-            push!(Massiv_max, i)
-            i = i + rad
-        else
-            i = i + 1
-        end
-    end
-    return Massiv_max
-end
-
-
-function new_localmin(Signal, rad)
-    Massiv_min = Int64[]
-    size_signal = length(Signal)
-    i = 1
-    while (i <= size_signal)
-        min = Signal[i]
-        for j in (i-rad):(i+rad)
-            if (j >= 1 && j < size_signal && Signal[j] < min)
-                min = Signal[j]
-                #    @info j
-            end
-        end
-        if (Signal[i] == min)
-            push!(Massiv_min, i)
-            i = i + rad - 1
-        else
-            i = i + 1
-        end
-    end
-    return Massiv_min
-end
 
 
 """
