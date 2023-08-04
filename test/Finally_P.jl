@@ -14,7 +14,7 @@ include("Plots_P.jl")
 include("Create_Table.jl")
 
 #Наименование базы данных и номер файла ("CSE")
-Name_Data_Base, Number_File = "CSE", 2
+Name_Data_Base, Number_File = "CSE", 1
 #Определённое отведение (channel)
 channel = 1
 
@@ -133,7 +133,7 @@ include("Function_dist.jl")
 #Наименование базы данных и номер файла ("CSE")
 Name_Data_Base, Number_File = "CSE", 2
 #Определённое отведение (channel)
-channel = 3
+channel = 11
 
 #Сигнал
 Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, All_left_right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
@@ -172,43 +172,6 @@ vline!([Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD]) #зелёный
 ########################################################################################################
 ########################################################################################################
 
-#=
-Selection_Edge = []
-for Current_chanel in 1:12
-    #Current_chanel = 1
-    Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Current_chanel][Selection], Massiv_Points_channel[Current_chanel][Selection])
-    #Тут Функцию по КАК РАЗ поканально в одной секции
-    push!(Selection_Edge, Points_fronts)
-end
-=#
-#Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test1_MD(Selection_Edge)
-#Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
-
-
-
-#Channele = 1
-#plot(signal_const[Channele], ylim=[100, 120], xlim=[Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50]);
-#vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red);
-#plot!()
-
-
-
-#=
-if ((n == 70) || (n == 67))#(number file)
-10 18 45 52 57 89 92 93 100 111 120
-    =#
-
- 
-
-
-
-
-#Number1 = [1, 2]
-#Name1 = ["one", "two"]
-#delta_left1 = [2, 3]
-#delta_right1 = [2, 3]
-#In_or_Out1 = ["In", "Out"]
-# Creating DataFrame
 
 #Функция, строящая график на дифференцированном сигнале, границы P из реферетного файла и найденные границы зубца Р
 plot_all_channels_points(Name_Data_Base, Number_File, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
