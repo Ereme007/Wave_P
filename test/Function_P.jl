@@ -2,99 +2,6 @@
 #Много вспомогательных функций
 include("../src/my_filt.jl")
 
-#Не использую
-#=
-function points_extrem(Signal, Start, End, channel)
-    Chanel_filter = [Signal.I, Signal.II, Signal.III, Signal.aVR, Signal.aVL, Signal.aVF, Signal.V1, Signal.V2, Signal.V3, Signal.V4, Signal.V5, Signal.V6]
-    points_max = new_localmax(Chanel_filter[channel][Start:End], 15)
-    points_min = new_localmin(Chanel_filter[channel][Start:End], 2)
-    @info "max"
-    @info points_max
-
-    @info "min"
-    @info points_min
-
-    Left, Right = Border_tr(points_max, points_min)
-    return Left, Right, points_max, points_min
-end
-=#
-
-
-#=
-#Положительная
-function Left_Border_Max(points_max)
-    Maxx, Minn = Inf, -Inf
-    for i in 1:length(points_max)
-        if points_max[i] > Minn
-            #push!(PP, points_max[i])
-            Minn = points_max[i]
-        end
-        if points_max[i] < Maxx
-            #push!(PP, points_max[i])
-            Maxx = points_max[i]
-        end
-    end
-    return Minn, Maxx
-end
-=#
-
-
-#=
-function Border_tr(points_max, points_min)
-    Minn, Maxx = Left_Border_Max(points_max)
-
-    dist_min, dist_max = Inf, Inf
-    for j in 1:length(points_min)
-        if points_min[j] < Minn && dist_min > points_min[j]
-            dist_min = points_min[j]
-        end
-        if points_min[j] > Maxx && dist_max > points_min[j]
-            dist_max = points_min[j]
-        end
-    end
-    return dist_min, dist_max
-end
-=#
-
-
-#=
-function Border_L_R(ch_names, filtered_signals, Start, Start_QRS)
-    Channel_Left = Int64[]
-    Channel_Right = Int64[]
-    for k in 1:length(ch_names)
-        Left_P, Right_P = points_extrem(filtered_signals, Start, Start_QRS, k)
-        if (Left_P == Inf || Left_P == -Inf)
-            @info "Left_P"
-            @info k
-            @info "==="
-            push!(Channel_Left, -1)
-        else
-            push!(Channel_Left, Left_P)
-        end
-        if (Right_P == Inf || Right_P == -Inf)
-            @info "Right_P"
-            @info k
-            @info "==="
-            push!(Channel_Right, -1)
-        else
-            push!(Channel_Right, Right_P)
-        end
-    end
-    return Channel_Left, Channel_Right
-end
-=#
-
-#=
-function struct_signala(signal_with_channels)
-    signal = map(Tables.columntable(signal_with_channels)) do sig
-        hpass = my_butter(sig, 2, (5, 20), fs, Bandpass)
-    end
-
-    signal = StructVector(signal)
-    return signal
-end
-=#
-
 #Функция нахождения локального максимума с заданным радиусом 
 #Вход: сигнал(Signal), радиус(rad)
 #Выход: массив максимумов (Massiv_max)
@@ -246,89 +153,6 @@ function Segment_left_right_P(fs, All_ref_qrs, all_strat, all_end)
 end
 
 
-#Не используем
-#=
-function all_min_max(All_left_right, signal_without_qrs, midd)
-    Po_min = []
-    Po_max = []
-
-    for j in 1:12
-        graph_diff = DiffFilt(signal_without_qrs[j], midd)
-        graph_butter = my_butter(graph_diff, 2, (2, 20), fs, Bandpass)
-
-        i = 1 #по кусочкам на одном канале
-        Only_Max = Int64[]
-        Only_Min = Int64[]
-
-        while (i <= length(All_left_right[1]))
-            diap = graph_butter[All_left_right[1][i]:All_left_right[2][i]]
-            maximpoints = find_localmax(diap, 25) .+ All_left_right[1][i]
-            minimpoints = find_localmin2(diap, 5) .+ All_left_right[1][i]
-
-            for k in 1:length(maximpoints)
-                push!(Only_Max, maximpoints[k])
-            end
-
-            for k in 1:length(minimpoints)
-                push!(Only_Min, minimpoints[k])
-            end
-
-            i = i + 1
-        end
-        push!(Po_min, Only_Min)
-        push!(Po_max, Only_Max)
-    end
-    return Po_min, Po_max
-end
-=#
-
-
-
-#Не используем
-#=
-function all_min_max(All_left_right, signal_without_qrs, midd, fs)
-    Po_min = []
-    Po_max = []
-
-    for j in 1:12
-        #фильтр по всему сигналу
-        # graph_diff = DiffFilt(signal_without_qrs[j], midd)
-
-        #graph_butter = my_butter(graph_diff, 2, (2, 20), fs, Bandpass)
-
-
-
-
-        graph_butter = my_butter(signal_without_qrs[j], 2, (2, 20), fs, Bandpass)
-        graph_diff = DiffFilt(graph_butter, 20)
-
-
-        i = 1 #по кусочкам на одном канале
-        Only_Max = Int64[]
-        Only_Min = Int64[]
-
-        while (i <= length(All_left_right[1]))
-            diap = graph_butter[All_left_right[1][i]:All_left_right[2][i]]
-            maximpoints = new_localmax(diap, 10) .+ All_left_right[1][i]
-            minimpoints = new_localmin(diap, 10) .+ All_left_right[1][i]
-
-            for k in 1:length(maximpoints)
-                push!(Only_Max, maximpoints[k])
-            end
-
-            for k in 1:length(minimpoints)
-                push!(Only_Min, minimpoints[k])
-            end
-
-            i = i + 1
-        end
-        push!(Po_min, Only_Min)
-        push!(Po_max, Only_Max)
-    end
-    return Po_min, Po_max
-end
-=#
-
 #Функция применяет к сигналу my_butter
 #Вход: Сигнал ~без_qrs (signal_without_qrs), частота (fs)
 #Выход: измененный сигнал (all_graph_butter)
@@ -426,68 +250,6 @@ function Sort_points_with_channel(Massiv_Points)
 end
 
 
-#=
-function Fronts(Massiv_Points_channel, all_graph_diff, koeff)
-    f_index = 0
-    first_index = 0
-    l_index = 0
-    last_index = 0
-    #только 1ая облась
-    OBLAST = []
-
-
-    for points_in in 1:length(Massiv_Points_channel[channel]) # (цикл от 1 области зубца P, который возможен в сигнале до последней области - OBL)
-        #@info "points_in = $points_in" 
-        Max_amp = 0
-
-        for i in 1:length(Massiv_Points_channel[channel][points_in])
-            @info "i = $i"
-            amp = 0
-
-            for k in (i+1):(i+4)
-                if ((k + 1) < length(Massiv_Points_channel[channel][points_in]) && abs(Massiv_Points_channel[channel][points_in][i] - Massiv_Points_channel[channel][points_in][k]) < 80 / koeff) #тут вылезет!
-                    mm1 = Massiv_Points_channel[channel][points_in][k-1]
-                    mm2 = Massiv_Points_channel[channel][points_in][k]
-                    amp = amp + abs(all_graph_diff[channel][mm1] - all_graph_diff[channel][mm2])
-
-
-                    f_index = i
-                    l_index = k
-                    @info "inside amp = $amp"
-                end
-
-                if (Max_amp < amp)
-                    Max_amp = amp
-                    first_index = i
-                    last_index = l_index
-                end
-            end
-
-
-        end
-        push!(OBLAST, [Max_amp, first_index, last_index])
-
-        #  запоминаем, что на участке под номером OBL, амплитуду Max_amp, начало и конец first_index last_index
-    end
-
-
-    return OBLAST
-end
-=#
-
-
-#function Fronts2(Massiv_Points_channel, all_graph_diff,  koeff)
-#   for Channel in 1:12
-#      for Oblast in 1:length(Massiv_Points_channel[Channel])
-#
-#       end
-#  end
-#end
-
-
-"""
-
-"""
 function amp_one_channel(Massiv_Points_channel, all_graph_diff, koeff, channel, RADIUS)
     #@info "Start amp_one_channel"
     #@info "Rad = $RADIUS"
@@ -496,7 +258,7 @@ function amp_one_channel(Massiv_Points_channel, all_graph_diff, koeff, channel, 
     #только 1ая облась
     AMP_START_END = []
     FINAL_amp = 0
-    #   OBLAST_with_channel = []
+    
     for current_segment in 1:length(Massiv_Points_channel[channel]) # (цикл от 1 области зубца P, который возможен в сигнале до последней области - Amp_start_end)
         # @info "current_segment = $current_segment" 
         Max_amp = 0
@@ -531,7 +293,6 @@ function amp_one_channel(Massiv_Points_channel, all_graph_diff, koeff, channel, 
         push!(AMP_START_END, [FINAL_amp, first_index, last_index])
         #  запоминаем, что на участке под номером OBL, амплитуду Max_amp, начало и конец first_index last_index
     end
-    #push!(OBLAST_with_channel, AMP_START_END)
 
     return AMP_START_END
 end
@@ -543,6 +304,7 @@ function amp_all_cannel(Massiv_Points_channel, all_graph_diff, koeff, RADIUS)
     for channel in 1:12
         push!(Final_massiv, amp_one_channel(Massiv_Points_channel, all_graph_diff, koeff, channel, RADIUS))
     end
+    
     return Final_massiv
 end
 
@@ -554,8 +316,6 @@ end
 
 #слева-направо
 function Second_Diff_Left_Right(signal, channel, Right, End_signal)
-    #End_signal = 550
-    #Right = 496
     stop_flag = false
     mass = Float64[]
     Index = Int64[]
@@ -567,6 +327,7 @@ function Second_Diff_Left_Right(signal, channel, Right, End_signal)
     else
         flag = false
     end
+
     Otr = Right + 30
 
     if (Otr > End_signal)
@@ -581,6 +342,7 @@ function Second_Diff_Left_Right(signal, channel, Right, End_signal)
             index = i
             push!(Index, index)
         end
+
         push!(mass, Second_Diff(signal[channel], i, 1))
         i = i + 1
     end
@@ -589,8 +351,8 @@ function Second_Diff_Left_Right(signal, channel, Right, End_signal)
     return Index
 end
 
+
 function Second_Diff_Right_Left(signal, channel, Left, Start_signal)
-    #Left = 463
     stop_flag = false
     mass = Float64[]
     Index = Int64[]
@@ -617,19 +379,19 @@ function Second_Diff_Right_Left(signal, channel, Left, Start_signal)
             index = i
             push!(Index, index)
         end
+
         push!(mass, Second_Diff(signal[channel], i, 1))
         i = i - 1
     end
 
-    #return mass, Index
     return Index
-
 end
 
 
 function greed(Xa, Xb, Ya, Yb)
     return delY = (Yb-Ya)/(Xb-Xa)
 end
+
 
 function Line_qrs(All_ref_qrs, signals, start_qrs, end_qrs)
     i = 2
@@ -646,9 +408,6 @@ function Line_qrs(All_ref_qrs, signals, start_qrs, end_qrs)
                 signals[channel][coord_x] = coord_y + rise
                 coord_y = coord_y + rise
             end
-           # sti = signals[channel][All_ref_qrs[i-1]-1]
-           # signals[channel][All_ref_qrs[i-1]:All_ref_qrs[i]] .= sti + rise*i
-
         end
         i = i + 2
     end
