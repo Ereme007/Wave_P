@@ -195,6 +195,9 @@ function Simple_Zero_qrs(All_ref_qrs, signals, start_qrs, end_qrs)
 end
 
 
+#Функция "Зануление" qrs в виде линии
+#Вход: Облатсь поиска P(All_ref_qrs), сигнал массив(signals), начало/конец qrs (start_qrs/end_qrs)
+#Выход: Новый сигнал массив
 function Line_qrs(All_ref_qrs, signals, start_qrs, end_qrs)
     i = 2
     size = length(All_ref_qrs)
@@ -508,9 +511,15 @@ end
 #end
 
 
-"""
+#Нахождение амплитуды и границ по одному каналу (последняя цифра - номер канала)
+#Massiv_Points_channel = Sort_points_with_channel() - сортируем точки по возрастанию на всех каналах по своим промежуткам (т.е.  Sort_points_with_channel[1] - означает для 1го канала рассматриваются все области поиска, на которых в порядке возрастания расставлены локальные точки)
 
-"""
+#Пояснение многомерного массива "Massiv_Points_channel"
+#Massiv_Points_channel[channel] # на отведении channel столько отрезков (length)
+#Massiv_Points_channel[channel][2] #облать имеющий номер 2
+#Massiv_Points_channel[channel][2][1] #точка по X
+#На вход: массив точек(Massiv_Points_channel), график (дифф) (Massiv_Points_channel), коэффициент(koeff), канал(channel), радиус(RADIUS)
+#На выход: AMP_START_END - структура, которая содержит амплитуду. индекс левой и правой границы фронта
 function amp_one_channel(Massiv_Points_channel, all_graph_diff, koeff, channel, RADIUS)
     #@info "Start amp_one_channel"
     #@info "Rad = $RADIUS"
@@ -560,7 +569,9 @@ function amp_one_channel(Massiv_Points_channel, all_graph_diff, koeff, channel, 
 end
 
 
-
+#Свежение к 12 каналам
+#На вход: массив точек(Massiv_Points_channel), дифф сигнал(all_graph_diff), коэффициент(koeff), радиус (RADIUS)
+#На выход: массив из 12и отведений (Final_massiv)
 function amp_all_cannel(Massiv_Points_channel, all_graph_diff, koeff, RADIUS)
     Final_massiv = []
     for channel in 1:12
@@ -569,12 +580,14 @@ function amp_all_cannel(Massiv_Points_channel, all_graph_diff, koeff, RADIUS)
     return Final_massiv
 end
 
+
+#=
 function Second_Diff(signal, x, h)
     return (signal[x+h] - 2 * signal[x] + signal[x-h]) / (h * h)
 end
+=#
 
-
-
+#=
 #слева-направо
 function Second_Diff_Left_Right(signal, channel, Right, End_signal)
     #End_signal = 550
@@ -648,3 +661,5 @@ function Second_Diff_Right_Left(signal, channel, Left, Start_signal)
     return Index
 
 end
+
+=#
