@@ -127,7 +127,7 @@ include("Plots_P.jl");
 include("Create_Table.jl");
 include("Function_dist.jl")
 #Наименование базы данных и номер файла ("CSE")
-Name_Data_Base, Number_File = "CSE", 12
+Name_Data_Base, Number_File = "CSE", 3
 #Определённое отведение (channel)
 channel = 4
 
@@ -141,7 +141,7 @@ Selection = 3
 include("Create_Table.jl")
 
 Comparson_Delta_Edge("CSE", Number_File)
-#Table_P("Test1")
+#Table_P("Rad80_GlEdge42")
 #save_pictures_p(Selection)
 # savefig("pictures_edge_CSE/$(names_files).png")
 Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
@@ -246,7 +246,7 @@ vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD]) #желтый
 #_, Index_Right_edge_Filtr, Value_Right_edge_Filtr_MD = Min_dist_to_all_points(Right_edge_Filtr)
 vline!([Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD]) #зелёный
 #x = 1:length(Left_edge_Filtr)
-#plot!(x, Left_edge_Filtr)
+#plot(x, Left_edge_Filtr)
 #x = 1:length(Right_edge_Filtr)
 #plot!(x, Right_edge_Filtr)
 
@@ -262,29 +262,12 @@ xlims!(Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50)
 #vline!([Value_Left_edge_Filtr_MV, Value_Right_edge_Filtr_MV]) #розовый
 #vline!([Value_Left_edge_Filtr_MD, Value_Right_edge_Filtr_MD]) #желтый
 
+#проверка значений
 Left_p = Ref_P[channel][Selection][1]
 Right_p = Ref_P[channel][Selection][2]
 
-
-
-
-
 #All (Test1)
-#MV
-#Delta(Left_p, Right_p, Value_Left_Edge_All_MV, Value_Right_Edge_All_MV)
-#Dist_Left_ref_method_MV = Value_Left_edge_Filtr_MV - Left_p
-#Dist_Right_ref_method_MV = Right_p - Value_Right_edge_Filtr_MV
-#MD
 Delta(Left_p, Right_p, Value_Left_Edge_All_MD, Value_Right_Edge_All_MD)
-#Dist_Left_ref_method_MD = Value_Left_edge_Filtr_MD - Left_p
-#Dist_Right_ref_method_MD = Right_p - Value_Right_edge_Filtr_MD
 
 #Filtr (Test2)
-#MV
-#Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MV, Value_Right_Edge_Filtr_MV)
-#Dist_Left_ref_method_MV = Value_Left_edge_Filtr_MV - Left_p
-#Dist_Right_ref_method_MV = Right_p - Value_Right_edge_Filtr_MV
-#MD
 Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD)
-#Dist_Left_ref_method_MD = Value_Left_edge_Filtr_MD - Left_p
-#Dist_Right_ref_method_MD = Right_p - Value_Right_edge_Filtr_MD
