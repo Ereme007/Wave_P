@@ -1,6 +1,6 @@
 #Файл, содержащий функции для реферетной разметки QRS & P; Фильтр границ, которые нашли с помощью алгоритма (Test1, Test2); Способы сведения границ (Min_dist_to_all_points & Mean_value)
 include("Markup_function_P.jl")
-
+include(".env")
 
 #Функция составления реферетной разметки для волны Р
 #Вход - количество областей поисак P
@@ -148,12 +148,12 @@ function Test2(Selection_Edge)
     for Selection in 2:12
         # @info "abs(left[Selection-1] - left[Selection]) = $(abs(left[Selection-1] - left[Selection-1]))"
         # @info "Sel = $(left[Selection-1])"
-         if(abs(left[Curr_Sel_left-1] - Selection_Edge[Selection].Left) < 78)
+         if(abs(left[Curr_Sel_left-1] - Selection_Edge[Selection].Left) < Global_Edge)
             push!(left, Selection_Edge[Selection].Left)
             Curr_Sel_left = Curr_Sel_left + 1
          end
          
-         if(abs(right[Curr_Sel_right-1] - Selection_Edge[Selection].Right) < 78)
+         if(abs(right[Curr_Sel_right-1] - Selection_Edge[Selection].Right) < Global_Edge)
             push!(right, Selection_Edge[Selection].Right)
             Curr_Sel_right = Curr_Sel_right + 1
          end
