@@ -1,5 +1,5 @@
-
-function _read_ref(nr, reffile::String = raw"\\incart.local\FS\GUEST\Yuly\ГОСТ51\CSE\ref.csv" )
+include("../test/.env")
+function _read_ref(nr, reffile::String = Raw_CSE_Ref_Incart )
     df = CSV.read(reffile, DataFrame, delim = ';')
     #@info df
     row = df[nr, :]
