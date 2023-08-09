@@ -129,7 +129,7 @@ include("Function_dist.jl")
 #Наименование базы данных и номер файла ("CSE")
 Name_Data_Base, Number_File = "CSE", 85
 #Определённое отведение (channel)
-channel = 4
+channel = 3
 
 #Сигнал
 Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
@@ -276,3 +276,12 @@ include("Function_P_file.jl")
 My_Edge_P_All_Channel(Massiv_Points_channel, Massiv_Amp_all_channels)
 My_Edge_P_One_Channel(Massiv_Points_channel, Massiv_Amp_all_channels, 1)
 My_Edge_P(Massiv_Points_channel, Massiv_Amp_all_channels, 1, 1)
+
+
+plot(all_graph_diff[channel])
+for_scatter_x = My_Edge_P_One_Channel(Massiv_Points_channel, Massiv_Amp_all_channels, channel)
+for_scatter_x
+vline!(for_scatter_x, color = "green")
+vline!(Ref_P[channel], color = "red")
+
+Ref_P[1]
