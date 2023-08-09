@@ -149,9 +149,8 @@ Comparson_Delta_Edge("CSE", Number_File)
 #Сохраниене статистики
 #Table_P("Test_Line_qrs")
 #Table_P_AMP("During")
-
 #save_pictures_p(Selection)
-# savefig("pictures_edge_CSE/$(names_files).png")
+
 Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
 Ref_P[channel][Selection]
 include("Plots_P.jl")
