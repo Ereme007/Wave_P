@@ -78,7 +78,7 @@ function save_pictures_p(Selection)
 
         Name_Data_Base= "CSE";
         Number_File =  i;
-        Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, All_left_right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
+        Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
         #Сигнал в виде массива для более удобного поканальной отрисовки
         Massiv_Signal = Sign_Channel(signal_const)
         Comparson_Delta_Edge(Name_Data_Base, Number_File)

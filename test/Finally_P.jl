@@ -19,7 +19,7 @@ Name_Data_Base, Number_File = "CSE", 1
 channel = 4
 
 #Сигнал
-Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, All_left_right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
+Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
 #Сигнал в виде массива для более удобного поканальной отрисовки
 Massiv_Signal = Sign_Channel(signal_const)
 
@@ -41,11 +41,11 @@ plot_vertical_ref(Ref_qrs, Massiv_Signal[channel]);
 title!("$(Names_files[Number_File]), $Name_Data_Base, Отведение $channel")
 
 #График исходного канала на всех отведениях с первичной областью поиска P (P.S. к сожалению, имя файла не указать) Красная - левая; Зелёная - правая
-plot_vertical_ref(All_left_right, signal_const.I, signal_const.II, signal_const.III, signal_const.aVR, signal_const.aVL, signal_const.aVF, signal_const.V1, signal_const.V2, signal_const.V3, signal_const.V4, signal_const.V5, signal_const.V6);
+plot_vertical_ref(Place_found_P_Left_and_Right, signal_const.I, signal_const.II, signal_const.III, signal_const.aVR, signal_const.aVL, signal_const.aVF, signal_const.V1, signal_const.V2, signal_const.V3, signal_const.V4, signal_const.V5, signal_const.V6);
 plot!()
 
 #График исходного канала на определённом отведении с первичной областью поиска P; Красная - левая; Зелёная - правая
-plot_vertical_ref(All_left_right, Massiv_Signal[channel]);
+plot_vertical_ref(Place_found_P_Left_and_Right, Massiv_Signal[channel]);
 title!("$(Names_files[Number_File]), $Name_Data_Base, Отведение $channel, red=left, green=right")
 
 #График исходного канала на всех отведениях с "занулением" QRS (P.S. к сожалению, имя файла не указать)
@@ -73,11 +73,11 @@ plot_vertical_ref(Ref_qrs, all_graph_butter[channel]);
 plot!()
 
 #График отфильрованного сигнала my_butter канала на всех отведениях с "занулением" QRS и первичной областью поиска Р (P.S. к сожалению, имя файла не указать)
-plot_vertical_ref(All_left_right, all_graph_butter[1], all_graph_butter[2], all_graph_butter[3], all_graph_butter[4], all_graph_butter[5], all_graph_butter[6], all_graph_butter[7], all_graph_butter[8], all_graph_butter[9], all_graph_butter[10], all_graph_butter[11], all_graph_butter[12]);
+plot_vertical_ref(Place_found_P_Left_and_Right, all_graph_butter[1], all_graph_butter[2], all_graph_butter[3], all_graph_butter[4], all_graph_butter[5], all_graph_butter[6], all_graph_butter[7], all_graph_butter[8], all_graph_butter[9], all_graph_butter[10], all_graph_butter[11], all_graph_butter[12]);
 plot!()
 
 #График отфильрованного сигнала my_butter канала на определённом отведении с "занулением" QRS и первичной областью поиска Р (P.S. к сожалению, имя файла не указать)
-plot_vertical_ref(All_left_right, all_graph_butter[channel]);
+plot_vertical_ref(Place_found_P_Left_and_Right, all_graph_butter[channel]);
 title!("My_butter+first_P, $(Names_files[Number_File]), $Name_Data_Base, Отведение $channel, red=left, green=right")
 
 #График дифференцированного сигнала на всех отведениях (P.S. к сожалению, имя файла не указать)
@@ -97,11 +97,11 @@ plot_vertical_ref(Ref_qrs, all_graph_diff[channel]);
 title!("Дифф+ref_qrs, $(Names_files[Number_File]), $Name_Data_Base, Отведение $channel")
 
 #График дифференцированного сигнала на всех отведениях c первичной областью поиска Р (P.S. к сожалению, имя файла не указать)
-plot_vertical_ref(All_left_right, all_graph_diff[1], all_graph_diff[2], all_graph_diff[3], all_graph_diff[4], all_graph_diff[5], all_graph_diff[6], all_graph_diff[7], all_graph_diff[8], all_graph_diff[9], all_graph_diff[10], all_graph_diff[11], all_graph_diff[12]);
+plot_vertical_ref(Place_found_P_Left_and_Right, all_graph_diff[1], all_graph_diff[2], all_graph_diff[3], all_graph_diff[4], all_graph_diff[5], all_graph_diff[6], all_graph_diff[7], all_graph_diff[8], all_graph_diff[9], all_graph_diff[10], all_graph_diff[11], all_graph_diff[12]);
 plot!()
 
 #График дифференцированного сигнала на определённом отведении c первичной областью поиска Р (P.S. к сожалению, имя файла не указать)
-plot_vertical_ref(All_left_right, all_graph_diff[channel]);
+plot_vertical_ref(Place_found_P_Left_and_Right, all_graph_diff[channel]);
 title!("Дифф+first_P, $(Names_files[Number_File]), $Name_Data_Base, Отведение $channel, red=left, green=right")
 ########################################################################################################
 ########################################################################################################
@@ -132,7 +132,7 @@ Name_Data_Base, Number_File = "CSE", 85
 channel = 4
 
 #Сигнал
-Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, All_left_right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
+Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
 #Сигнал в виде массива для более удобного поканальной отрисовки
 Massiv_Signal = Sign_Channel(signal_const)
 
@@ -271,3 +271,8 @@ Delta(Left_p, Right_p, Value_Left_Edge_All_MD, Value_Right_Edge_All_MD)
 
 #Filtr (Test2)
 Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD)
+
+include("Function_P_file.jl")
+My_Edge_P_All_Channel(Massiv_Points_channel, Massiv_Amp_all_channels)
+My_Edge_P_One_Channel(Massiv_Points_channel, Massiv_Amp_all_channels, 1)
+My_Edge_P(Massiv_Points_channel, Massiv_Amp_all_channels, 1, 1)

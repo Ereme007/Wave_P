@@ -72,15 +72,15 @@ plot_vertical_ref(Ref_qrs, signal_without_qrs[8], signal_without_qrs[2]; label="
 
 #Функция определяющая приблезительные участки P зубца (+ график на 12 каналах)
 Left, Right = Segment_left_right_P(fs, Ref_qrs, ref.ibeg, ref.iend)
-All_left_right = [Left, Right] #записываем в 2-хмерный массив
-plot_vertical_ref(All_left_right, signal_without_qrs[1], signal_without_qrs[2], signal_without_qrs[3], signal_without_qrs[4], signal_without_qrs[5], signal_without_qrs[6], signal_without_qrs[7], signal_without_qrs[8], signal_without_qrs[9], signal_without_qrs[10], signal_without_qrs[11], signal_without_qrs[12]; label="")
-Tester = All_left_right
+Place_found_P_Left_and_Right = [Left, Right] #записываем в 2-хмерный массив
+plot_vertical_ref(Place_found_P_Left_and_Right, signal_without_qrs[1], signal_without_qrs[2], signal_without_qrs[3], signal_without_qrs[4], signal_without_qrs[5], signal_without_qrs[6], signal_without_qrs[7], signal_without_qrs[8], signal_without_qrs[9], signal_without_qrs[10], signal_without_qrs[11], signal_without_qrs[12]; label="")
+Tester = Place_found_P_Left_and_Right
 #теперь по всем каналам my_butter
 all_graph_butter = Graph_my_butter(signal_without_qrs)
 #график
 plot_vertical(all_graph_butter[1], all_graph_butter[2], all_graph_butter[3], all_graph_butter[4], all_graph_butter[5], all_graph_butter[6], all_graph_butter[7], all_graph_butter[8], all_graph_butter[9], all_graph_butter[10], all_graph_butter[11], all_graph_butter[12]; label="")
 #график с границами области где ищем зубец P (орандевый - начало, зелёный - правый край поиска)
-plot_vertical_ref(All_left_right, all_graph_butter[1], all_graph_butter[2], all_graph_butter[3], all_graph_butter[4], all_graph_butter[5], all_graph_butter[6], all_graph_butter[7], all_graph_butter[8], all_graph_butter[9], all_graph_butter[10], all_graph_butter[11], all_graph_butter[12]; label="")
+plot_vertical_ref(Place_found_P_Left_and_Right, all_graph_butter[1], all_graph_butter[2], all_graph_butter[3], all_graph_butter[4], all_graph_butter[5], all_graph_butter[6], all_graph_butter[7], all_graph_butter[8], all_graph_butter[9], all_graph_butter[10], all_graph_butter[11], all_graph_butter[12]; label="")
 
 
 #Дальше рассматриваем коэффициент относительно того какой fs 
@@ -91,8 +91,8 @@ all_graph_diff = Graph_diff(all_graph_butter, dist)
 
 
 #график с границами области где ищем зубец P (орандевый - начало, зелёный - правый край поиска)
-plot_vertical_ref(All_left_right, all_graph_diff[1], all_graph_diff[2], all_graph_diff[3], all_graph_diff[4], all_graph_diff[5], all_graph_diff[6], all_graph_diff[7], all_graph_diff[8], all_graph_diff[9], all_graph_diff[10], all_graph_diff[11], all_graph_diff[12]; label="")
-plot_vertical_ref(All_left_right, all_graph_diff[1], all_graph_diff[2], all_graph_diff[3], label = "")
+plot_vertical_ref(Place_found_P_Left_and_Right, all_graph_diff[1], all_graph_diff[2], all_graph_diff[3], all_graph_diff[4], all_graph_diff[5], all_graph_diff[6], all_graph_diff[7], all_graph_diff[8], all_graph_diff[9], all_graph_diff[10], all_graph_diff[11], all_graph_diff[12]; label="")
+plot_vertical_ref(Place_found_P_Left_and_Right, all_graph_diff[1], all_graph_diff[2], all_graph_diff[3], label = "")
 
 
 
@@ -101,8 +101,8 @@ plot_vertical_ref(All_left_right, all_graph_diff[1], all_graph_diff[2], all_grap
 #Проверка на одном канале
 channel = 8
 plot(all_graph_diff[channel], title = "Channel $channel ",  label="Дифф граф")
-#Start_first_qrs = All_left_right[1][1]
-#End_first_qrs = All_left_right[2][1]
+#Start_first_qrs = Place_found_P_Left_and_Right[1][1]
+#End_first_qrs = Place_found_P_Left_and_Right[2][1]
 #xlims!(Start_first_qrs, End_first_qrs)
 #all_local_max = []
 #ploints_max = find_localmax(all_graph_diff[channel][Start_first_qrs:End_first_qrs], 8)
@@ -110,8 +110,8 @@ plot(all_graph_diff[channel], title = "Channel $channel ",  label="Дифф гр
 #ploints_min = find_localmin2(all_graph_diff[channel][Start_first_qrs:End_first_qrs], 10)
 #scatter!(ploints_min, all_graph_diff[channel][ploints_min])
 #points_max_min = [ploints_max, ploints_min]
-#Start = All_left_right
-massiv = All_points_with_channels_max_min(All_left_right, all_graph_diff)
+#Start = Place_found_P_Left_and_Right
+massiv = All_points_with_channels_max_min(Place_found_P_Left_and_Right, all_graph_diff)
 #Создаётся 3-хмерный массив, 1-ое это канал(12 значений), 2-е это max [1] и min [2] (2 значения), 3-е - номер участка поиска волны P (тут значение зависит от сигнала)
 Test_Max_First = massiv[channel][1][1]
 Test_Min_First = massiv[channel][2][1]
@@ -122,7 +122,7 @@ Test_Max_3 = massiv[channel][1][3]
 Test_Min_3 = massiv[channel][2][3]
 
 #Сортируем точки min и max в порядке возрастания по областям поиска зубца P
-Massiv_Points_channel = Sort_points_with_channel(All_points_with_channels_max_min(All_left_right, all_graph_diff))
+Massiv_Points_channel = Sort_points_with_channel(All_points_with_channels_max_min(Place_found_P_Left_and_Right, all_graph_diff))
 Massiv_Points_channel[channel]
 
 #all_graph_diff[channel]
@@ -139,9 +139,9 @@ scatter!(Test_Max_Sec, all_graph_diff[channel][Test_Max_Sec], label = "Max 2 Sel
 scatter!(Test_Min_Sec, all_graph_diff[channel][Test_Min_Sec], label = "Min 2 Selection")
 scatter!(Test_Max_3, all_graph_diff[channel][Test_Max_3], label = "Max 3 Selection")
 scatter!(Test_Min_3, all_graph_diff[channel][Test_Min_3], label = "Min 3 Selection")
-xlims!(All_left_right[1][1], All_left_right[2][3])
-vline!([All_left_right[2][1], All_left_right[1][2]], label = "кр обл поиска Р")
-vline!([All_left_right[2][2], All_left_right[1][3]], label = "кр обл поиска Р")
+xlims!(Place_found_P_Left_and_Right[1][1], Place_found_P_Left_and_Right[2][3])
+vline!([Place_found_P_Left_and_Right[2][1], Place_found_P_Left_and_Right[1][2]], label = "кр обл поиска Р")
+vline!([Place_found_P_Left_and_Right[2][2], Place_found_P_Left_and_Right[1][3]], label = "кр обл поиска Р")
 
 #Пояснение многомерного массива "Massiv_Points_channel"
 Massiv_Points_channel[channel] # на отведении channel столько отрезков (length)
@@ -174,13 +174,13 @@ End_sig_p = Massiv_Points_channel[1][Selection][End_test]
 
 #На исходном сигнале
 plot(signals.I)
-xlims!(All_left_right[1][Selection], All_left_right[2][Selection])
+xlims!(Place_found_P_Left_and_Right[1][Selection], Place_found_P_Left_and_Right[2][Selection])
 scatter!((Start_sig_p, signals.I[Start_sig_p]))
 scatter!((End_sig_p, signals.I[End_sig_p]))
 
 #На отфильтрованном сигнале
 plot(all_graph_diff[channel], label = "Отфильтрованный сигнал")
-xlims!(All_left_right[1][Selection], All_left_right[2][Selection])
+xlims!(Place_found_P_Left_and_Right[1][Selection], Place_found_P_Left_and_Right[2][Selection])
 scatter!((Start_sig_p, all_graph_diff[channel][Start_sig_p]), label = "Левая граница")
 scatter!((End_sig_p, all_graph_diff[channel][End_sig_p]), label = "Правая граница")
 
@@ -188,8 +188,8 @@ scatter!((End_sig_p, all_graph_diff[channel][End_sig_p]), label = "Правая 
 vline!([ref.P_onset, ref.P_offset], label = "Реф разметка")
 
 #3я производная
-ind1 = Second_Diff_Left_Right(all_graph_diff, channel,End_sig_p, All_left_right[2][Selection])
-ind2 = Second_Diff_Right_Left(all_graph_diff, channel,Start_sig_p, All_left_right[1][Selection])
+ind1 = Second_Diff_Left_Right(all_graph_diff, channel,End_sig_p, Place_found_P_Left_and_Right[2][Selection])
+ind2 = Second_Diff_Right_Left(all_graph_diff, channel,Start_sig_p, Place_found_P_Left_and_Right[1][Selection])
 scatter!([ind1, ind2], [all_graph_diff[channel][ind1], all_graph_diff[channel][ind2]], label = "3я производаня")
 
 
@@ -216,11 +216,11 @@ Start_sig_p
 
 
 
-plot_vertical_ref(All_left_right, signal_without_qrs[channel], all_graph_butter[channel], p1)
+plot_vertical_ref(Place_found_P_Left_and_Right, signal_without_qrs[channel], all_graph_butter[channel], p1)
 
 
 Tester
-All_left_right
+Place_found_P_Left_and_Right
 
 
 
@@ -268,7 +268,7 @@ signals_start = Sign_Channel(signals_copy) #12 каналов
 Ref_qrs = All_Ref_QRS(start_qrs, end_qrs, ref.ibeg, ref.iend)
 
 Left, Right = Segment_left_right_P(fs, Ref_qrs, ref.ibeg, ref.iend)
-All_left_right = [Left, Right]
+Place_found_P_Left_and_Right = [Left, Right]
 all_graph_butter = Graph_my_butter(signal_without_qrs)
 koef  = 1000/fs
 dist = floor(Int64, 20/koef)
@@ -283,8 +283,8 @@ End_test = floor(Int64, One_channel[Selection][3])
 
 Start_sig_p = Massiv_Points_channel[1][Selection][Start_test]
 End_sig_p = Massiv_Points_channel[1][Selection][End_test]
-ind1 = Second_Diff_Left_Right(all_graph_diff, channel,End_sig_p, All_left_right[2][Selection])
-ind2 = Second_Diff_Right_Left(all_graph_diff, channel,Start_sig_p, All_left_right[1][Selection])
+ind1 = Second_Diff_Left_Right(all_graph_diff, channel,End_sig_p, Place_found_P_Left_and_Right[2][Selection])
+ind2 = Second_Diff_Right_Left(all_graph_diff, channel,Start_sig_p, Place_found_P_Left_and_Right[1][Selection])
 
 
 p1 = (plot(all_graph_diff[channel], label = "Отфильтрованный сигнал");
@@ -306,7 +306,7 @@ Start_sig_p
 
 channel
 
-plot_vertical_ref(All_left_right, signals_start[channel], signal_without_qrs[channel], all_graph_butter[channel], p1)
+plot_vertical_ref(Place_found_P_Left_and_Right, signals_start[channel], signal_without_qrs[channel], all_graph_butter[channel], p1)
 
 
 

@@ -169,18 +169,18 @@ signal_without_qrs = Zero_qrs(Ref_qrs, signals_channel, start_qrs, end_qrs)
 
 #plot(signals_start[channel])
 Left, Right = Segment_left_right_P(fs, Ref_qrs, ref.ibeg, ref.iend)
-All_left_right = [Left, Right]
-Tester = All_left_right
+Place_found_P_Left_and_Right = [Left, Right]
+Tester = Place_found_P_Left_and_Right
 all_graph_butter = Graph_my_butter(signal_without_qrs)
 koef  = 1000/fs
 
 
-@info "$All_left_right"
+@info "$Place_found_P_Left_and_Right"
 
 
 dist = floor(Int64, 20/koef)
 all_graph_diff = Graph_diff(all_graph_butter, dist)
-Massiv_Points_channel = Sort_points_with_channel(All_points_with_channels_max_min(All_left_right, all_graph_diff, RADIUS))
+Massiv_Points_channel = Sort_points_with_channel(All_points_with_channels_max_min(Place_found_P_Left_and_Right, all_graph_diff, RADIUS))
 
 amp_one_channel(Massiv_Points_channel, all_graph_diff, koef, channel, RADIUS)
 Massiv_Amp_all_channels = amp_all_cannel(Massiv_Points_channel, all_graph_diff, koef, RADIUS)
@@ -201,8 +201,8 @@ End_test = floor(Int64, One_channel[Selection][3])
 
 Start_sig_p = Massiv_Points_channel[channel][Selection][Start_test]
 End_sig_p = Massiv_Points_channel[channel][Selection][End_test]
-ind1 = Second_Diff_Left_Right(all_graph_diff, channel,End_sig_p, All_left_right[2][Selection])
-ind2 = Second_Diff_Right_Left(all_graph_diff, channel,Start_sig_p, All_left_right[1][Selection])
+ind1 = Second_Diff_Left_Right(all_graph_diff, channel,End_sig_p, Place_found_P_Left_and_Right[2][Selection])
+ind2 = Second_Diff_Right_Left(all_graph_diff, channel,Start_sig_p, Place_found_P_Left_and_Right[1][Selection])
 
 
 p1 = (plot(all_graph_diff[channel], label = "Отфильтрованный сигнал");
@@ -227,10 +227,10 @@ scatter!((End_sig_p, all_graph_diff[channel][End_sig_p]), label = "Правая 
 
 #plot(signals_start[channel])
 
-#plot_vertical_ref(All_left_right, signals_start[channel], signal_without_qrs[channel], all_graph_butter[channel], p1)
-#plot_vertical_ref(All_left_right,signal_without_qrs[channel])
+#plot_vertical_ref(Place_found_P_Left_and_Right, signals_start[channel], signal_without_qrs[channel], all_graph_butter[channel], p1)
+#plot_vertical_ref(Place_found_P_Left_and_Right,signal_without_qrs[channel])
 
-markup_selection = Markup_Left_Right_Range(All_left_right[1][Selection], All_left_right[2][Selection])
+markup_selection = Markup_Left_Right_Range(Place_found_P_Left_and_Right[1][Selection], Place_found_P_Left_and_Right[2][Selection])
 
 
 markup_front_wave_P = Markup_Left_Right_Front_Wave_P(Start_sig_p, End_sig_p)
@@ -245,7 +245,7 @@ Ref_Right = ref.P_offset + (Selection-1) *(ref.iend - ref.ibeg)
 size_selection = length(Massiv_Points_channel[1])
 
 
-    return markup_selection, markup_front_wave_P, size_selection, Ref_Left, Ref_Right, All_left_right, signals_start[channel], signal_without_qrs[channel], all_graph_butter[channel], p1
+    return markup_selection, markup_front_wave_P, size_selection, Ref_Left, Ref_Right, Place_found_P_Left_and_Right, signals_start[channel], signal_without_qrs[channel], all_graph_butter[channel], p1
 end
 
 Filed = 2
@@ -253,14 +253,14 @@ Ch = 1
 Sel = 10
 #Ref_qrs
 fs = 500
-All_left_right
+Place_found_P_Left_and_Right
 
-markup_selection1, markup_front_wave_P, size_selection, Ref_Left, Ref_Right, All_left_right, signals_start, signal_without_qrs, all_graph_butter, p1 = Wave_P(Filed, Ch, Sel)
-plot_vertical_ref(All_left_right, signals_start, signal_without_qrs, all_graph_butter, p1)
+markup_selection1, markup_front_wave_P, size_selection, Ref_Left, Ref_Right, Place_found_P_Left_and_Right, signals_start, signal_without_qrs, all_graph_butter, p1 = Wave_P(Filed, Ch, Sel)
+plot_vertical_ref(Place_found_P_Left_and_Right, signals_start, signal_without_qrs, all_graph_butter, p1)
 
 
 
-#markup_selection = Markup_Left_Right_Range(All_left_right[1][Sel], All_left_right[2][Sel])
+#markup_selection = Markup_Left_Right_Range(Place_found_P_Left_and_Right[1][Sel], Place_found_P_Left_and_Right[2][Sel])
 markup_selection.Left
 markup_selection.Right
 markup_front_wave_P.Left
@@ -300,5 +300,5 @@ Ref_Right
 
 #all
 
-#plot_vertical_ref(All_left_right, signals_start[channel], signal_without_qrs[channel], all_graph_butter[channel], p1)
+#plot_vertical_ref(Place_found_P_Left_and_Right, signals_start[channel], signal_without_qrs[channel], all_graph_butter[channel], p1)
 

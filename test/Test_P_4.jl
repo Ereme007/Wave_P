@@ -181,21 +181,21 @@ function all_the(Base_name, n)
     signal_without_qrs = Zero_qrs(Ref_qrs, signals_channel, start_qrs, end_qrs)
     
     Left, Right = Segment_left_right_P(fs, Ref_qrs, ref.ibeg, ref.iend)
-All_left_right = [Left, Right]
+Place_found_P_Left_and_Right = [Left, Right]
 all_graph_butter = Graph_my_butter(signal_without_qrs)
 koef  = 1000/fs
 
 
-#@info "$All_left_right"
+#@info "$Place_found_P_Left_and_Right"
 
 
 dist = floor(Int64, 20/koef)
 all_graph_diff = Graph_diff(all_graph_butter, dist)
 
-Tst = All_points_with_channels_max_min(All_left_right, all_graph_diff, RADIUS_LOCAL)[1]
+Tst = All_points_with_channels_max_min(Place_found_P_Left_and_Right, all_graph_diff, RADIUS_LOCAL)[1]
 @info "все точки мин мах: $Tst"
 
-Massiv_Points_channel = Sort_points_with_channel(All_points_with_channels_max_min(All_left_right, all_graph_diff, RADIUS_LOCAL))
+Massiv_Points_channel = Sort_points_with_channel(All_points_with_channels_max_min(Place_found_P_Left_and_Right, all_graph_diff, RADIUS_LOCAL))
 
 Massiv_Amp_all_channels = amp_all_cannel(Massiv_Points_channel, all_graph_diff, koef, RADIUS)
 

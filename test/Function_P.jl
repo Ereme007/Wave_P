@@ -274,7 +274,7 @@ end
 
 #Не используем
 #=
-function all_min_max(All_left_right, signal_without_qrs, midd)
+function all_min_max(Place_found_P_Left_and_Right, signal_without_qrs, midd)
     Po_min = []
     Po_max = []
 
@@ -286,10 +286,10 @@ function all_min_max(All_left_right, signal_without_qrs, midd)
         Only_Max = Int64[]
         Only_Min = Int64[]
 
-        while (i <= length(All_left_right[1]))
-            diap = graph_butter[All_left_right[1][i]:All_left_right[2][i]]
-            maximpoints = find_localmax(diap, 25) .+ All_left_right[1][i]
-            minimpoints = find_localmin2(diap, 5) .+ All_left_right[1][i]
+        while (i <= length(Place_found_P_Left_and_Right[1]))
+            diap = graph_butter[Place_found_P_Left_and_Right[1][i]:Place_found_P_Left_and_Right[2][i]]
+            maximpoints = find_localmax(diap, 25) .+ Place_found_P_Left_and_Right[1][i]
+            minimpoints = find_localmin2(diap, 5) .+ Place_found_P_Left_and_Right[1][i]
 
             for k in 1:length(maximpoints)
                 push!(Only_Max, maximpoints[k])
@@ -312,7 +312,7 @@ end
 
 #Не используем
 #=
-function all_min_max(All_left_right, signal_without_qrs, midd, fs)
+function all_min_max(Place_found_P_Left_and_Right, signal_without_qrs, midd, fs)
     Po_min = []
     Po_max = []
 
@@ -333,10 +333,10 @@ function all_min_max(All_left_right, signal_without_qrs, midd, fs)
         Only_Max = Int64[]
         Only_Min = Int64[]
 
-        while (i <= length(All_left_right[1]))
-            diap = graph_butter[All_left_right[1][i]:All_left_right[2][i]]
-            maximpoints = new_localmax(diap, 10) .+ All_left_right[1][i]
-            minimpoints = new_localmin(diap, 10) .+ All_left_right[1][i]
+        while (i <= length(Place_found_P_Left_and_Right[1]))
+            diap = graph_butter[Place_found_P_Left_and_Right[1][i]:Place_found_P_Left_and_Right[2][i]]
+            maximpoints = new_localmax(diap, 10) .+ Place_found_P_Left_and_Right[1][i]
+            minimpoints = new_localmin(diap, 10) .+ Place_found_P_Left_and_Right[1][i]
 
             for k in 1:length(maximpoints)
                 push!(Only_Max, maximpoints[k])
@@ -386,17 +386,17 @@ end
 
 
 #Функция определения всеx точкек мин мах на всех отведениях и участках
-#Вход: Область поиска волны P (All_left_right), Сигнал (Signal), Радиус поиска ~.env (RADIUS_LOCAL)
+#Вход: Область поиска волны P (Place_found_P_Left_and_Right), Сигнал (Signal), Радиус поиска ~.env (RADIUS_LOCAL)
 #Выход: массив точек All_points = [Max_local, Min_local]
-function All_points_with_channels_max_min(All_left_right, Signal, RADIUS_LOCAL)
+function All_points_with_channels_max_min(Place_found_P_Left_and_Right, Signal, RADIUS_LOCAL)
     All_points = []
     for channel in 1:12
         Min_local = []
         Max_local = []
         
-        for i in 1:length(All_left_right[1])
-            Start = All_left_right[1][i]
-            End = All_left_right[2][i]
+        for i in 1:length(Place_found_P_Left_and_Right[1])
+            Start = Place_found_P_Left_and_Right[1][i]
+            End = Place_found_P_Left_and_Right[2][i]
             Max_l = new_localmax(Signal[channel][Start:End], RADIUS_LOCAL)
             Min_l = new_localmin(Signal[channel][Start:End], RADIUS_LOCAL)
 

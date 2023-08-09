@@ -125,7 +125,7 @@ function all_the(BaseName, N)
     #График Исходного сигнала, Сигнал без QRS (1 отведеление)
     #plot_vertical(signal_const[1], signal_without_qrs[1])
     Left, Right = Segment_left_right_P(Frequency, Ref_qrs, Referents_by_File.ibeg, Referents_by_File.iend)
-    All_left_right = [Left, Right]
+    Place_found_P_Left_and_Right = [Left, Right]
 
     all_graph_butter = Graph_my_butter(signal_without_qrs, Frequency)
     
@@ -133,17 +133,17 @@ function all_the(BaseName, N)
     #График Исходного сигнала, Сигнал без QRS, Отфильтрованный сигнал (1 отведение)
     #plot_vertical(signal_const[1], signal_without_qrs[1], all_graph_butter[1])
     #График с разметкой областью поиска P, график Исходного сигнала, Сигнал без QRS, Отфильтрованный сигнал (1 отведение)
-    #plot_vertical_ref(All_left_right, signal_const[1], signal_without_qrs[1], all_graph_butter[1])
+    #plot_vertical_ref(Place_found_P_Left_and_Right, signal_const[1], signal_without_qrs[1], all_graph_butter[1])
     
     
     dist = floor(Int64, Dsit_Diff/koef)
     all_graph_diff = Graph_diff(all_graph_butter, dist)
     #Проверка графика
     #График с разметкой областью поиска P, график Исходного сигнала, Сигнал без QRS, Отфильтрованный сигнал, Дифференц сигнал (1 отведение)
-   # plot_vertical_ref(All_left_right, signal_const[Ch], signal_without_qrs[Ch], all_graph_butter[Ch], all_graph_diff[Ch]) 
+   # plot_vertical_ref(Place_found_P_Left_and_Right, signal_const[Ch], signal_without_qrs[Ch], all_graph_butter[Ch], all_graph_diff[Ch]) 
     
 
-    All_Points_Min_Max = All_points_with_channels_max_min(All_left_right, all_graph_diff, RADIUS_LOCAL)
+    All_Points_Min_Max = All_points_with_channels_max_min(Place_found_P_Left_and_Right, all_graph_diff, RADIUS_LOCAL)
     @info "все точки мин мах на всех отведениях и участках: $(All_Points_Min_Max[1])"
     Massiv_Points_channel = Sort_points_with_channel(All_Points_Min_Max)
     #@info "Massiv_Points_channel[1] = $(Massiv_Points_channel[1])"
