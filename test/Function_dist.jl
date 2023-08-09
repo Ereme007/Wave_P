@@ -9,7 +9,7 @@ function Function_Ref_P(ALL_SELECTION, Referents_by_File)
     Ref_P = []
     
     for Selection in 1:ALL_SELECTION
-        k = ([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ]);
+        k = ([Referents_by_File.P_onset - 1 + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg + 1), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg + 1) ]);
         push!(Ref_P, k)
     end
     
@@ -215,7 +215,7 @@ function Comparson_Delta_Edge(Name_Data_Base, Number_File)
     #Сигнал в виде массива для более удобного поканальной отрисовки
     Massiv_Signal = Sign_Channel(signal_const)
     
-    Selection = 3 #Здесь не имеет значение, но по итогу рассматриваем на 3ем отсеке (все отсеки между собой одинаковы, кроме первого)
+    Selection = 2 #Здесь не имеет значение, но по итогу рассматриваем на 3ем отсеке (все отсеки между собой одинаковы, кроме первого)
     Selection_Edge = []
     
     for Current_chanel in 1:12
