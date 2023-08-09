@@ -264,3 +264,41 @@ function function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
 
     return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD 
 end
+
+
+function My_Edge_P_All_Channel(All_points, Massiv_Amp)
+    size = length(All_points[1])
+    Left_and_Right_All_Channel = []
+    
+    for channel in 1:12
+        Left_and_Right = []
+
+        for i in 1:size
+            Left_index = floor(Int64, Massiv_Amp[channel][i][2])
+            Left = All_points[channel][i][Left_index]
+        
+            Right_index = floor(Int64, Massiv_Amp[channel][i][3])
+            Right = All_points[channel][i][Right_index]
+        
+            push!(Left_and_Right, [Left, Right])
+        end
+    
+        push!(Left_and_Right_All_Channel, Left_and_Right)
+    end
+    
+    return Left_and_Right_All_Channel
+end
+
+
+function My_Edge_P_One_Channel(All_points, Massiv_Amp, channel)
+    Left_and_Right = My_Edge_P_All_Channel(All_points, Massiv_Amp)
+
+    return Left_and_Right[channel]
+end
+
+
+function My_Edge_P(All_points, Massiv_Amp, channel, selection)
+    Edge = My_Edge_P_One_Channel(All_points, Massiv_Amp, channel)
+    
+    return Edge[selection]
+end
