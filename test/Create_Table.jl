@@ -96,3 +96,45 @@ function save_pictures_p(Selection)
         i = i + 1    
     end
 end
+
+
+
+#Функция записи в файл Номер проекта; Имя проекта; дельта левой границы, дельта правой границы, In/out для тест1; дельта левой границы, дельта правой границы, In/out для тест2; 
+#Вход: наименование проекта (как хоти его записать в папку Project)
+#Выход: NULL
+function Table_P_AMP(Name_Project)
+    Number = Int[] #номер файла
+    Name = [] #наименование файла
+    Amp1 = Float64[] #дельта левой границы тест1
+    Amp2 = Float64[] #дельта правой границы тест1
+    
+    i = 1
+    while(i <= 125 )
+        #@info "i = $i"
+        #Нет разметки в этих файлах
+        if(i == 67 || i == 70)
+            i = i + 1
+        end
+        #Нет Р в реферетной разметке
+        #if (i == 10 || i == 18 || i == 45 || i == 52 || i == 57 || i == 89 || i == 92 || i == 93 || i == 100 || i == 111 || i == 120)
+        #    i = i + 1
+        #end
+    
+        #number_file, names_files, left_test_1, right_test_1, left_test_2, right_test_2 = Comparson_Delta_Edge("CSE", i)
+        Names_files, signal_const, _, _, _, _, Ref_P, _, Massiv_Amp_all_channels, Massiv_Points_channel, _ = all_the("CSE", i)
+        amp1 = Massiv_Amp_all_channels[1][1][1]
+        amp2 = Massiv_Amp_all_channels[1][2][1]
+        push!(Number, i)
+        push!(Name, Names_files[i])
+        push!(Amp1, amp1)
+        push!(Amp2, amp2)
+           
+        i = i + 1
+    end
+
+    text = DataFrame(Number_File = Number,
+    Name_File = Name,
+    Amplit1 = Amp1, 
+    Amplit2 = Amp2)
+    CSV.write("test/Projects/$(Name_Project).csv", text, delim = ';')
+end
