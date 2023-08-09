@@ -107,7 +107,7 @@ function Table_P_AMP(Name_Project)
     Name = [] #наименование файла
     Amp1 = Float64[] #дельта левой границы тест1
     Amp2 = Float64[] #дельта правой границы тест1
-    
+    During = []
     i = 1
     while(i <= 125 )
         #@info "i = $i"
@@ -124,17 +124,33 @@ function Table_P_AMP(Name_Project)
         Names_files, signal_const, _, _, _, _, Ref_P, _, Massiv_Amp_all_channels, Massiv_Points_channel, _ = all_the("CSE", i)
         amp1 = Massiv_Amp_all_channels[1][1][1]
         amp2 = Massiv_Amp_all_channels[1][2][1]
+        
+        right_index = floor(Int64, Massiv_Amp_all_channels[1][2][3])
+        left_index = floor(Int64, Massiv_Amp_all_channels[1][2][2])
+        
+        right = Massiv_Points_channel[1][2][right_index]
+        left = Massiv_Points_channel[1][2][left_index]
+        
+        #@info "right = $right"
+        #@info "left = $left"
+        during = (right - left)
+        #@info "$during"
+        
         push!(Number, i)
         push!(Name, Names_files[i])
         push!(Amp1, amp1)
         push!(Amp2, amp2)
+        push!(During, during)
            
+
+        #добавить длительность сигнала на 2й секции...
         i = i + 1
     end
 
     text = DataFrame(Number_File = Number,
     Name_File = Name,
     Amplit1 = Amp1, 
-    Amplit2 = Amp2)
+    Amplit2 = Amp2,
+    During_P = During)
     CSV.write("test/Projects/$(Name_Project).csv", text, delim = ';')
 end

@@ -148,7 +148,7 @@ Comparson_Delta_Edge("CSE", Number_File)
 
 #Сохраниене статистики
 #Table_P("Test_Line_qrs")
-
+#Table_P_AMP("During")
 
 #save_pictures_p(Selection)
 # savefig("pictures_edge_CSE/$(names_files).png")
