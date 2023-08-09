@@ -105,9 +105,9 @@ end
 function Table_P_AMP(Name_Project)
     Number = Int[] #номер файла
     Name = [] #наименование файла
-    Amp1 = Float64[] #дельта левой границы тест1
-    Amp2 = Float64[] #дельта правой границы тест1
-    During = []
+    Amp1 = Float64[] #амплитуда в первой секции
+    Amp2 = Float64[] #амплитуда во второй секции
+    During = Float64[]
     i = 1
     while(i <= 125 )
         #@info "i = $i"
