@@ -127,7 +127,7 @@ include("Plots_P.jl");
 include("Create_Table.jl");
 include("Function_dist.jl")
 #Наименование базы данных и номер файла ("CSE")
-Name_Data_Base, Number_File = "CSE", 3
+Name_Data_Base, Number_File = "CSE", 85
 #Определённое отведение (channel)
 channel = 4
 
@@ -153,7 +153,7 @@ xlims!(Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50)
 vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD]) #желтый
 vline!([Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD]) #зелёный
 
-
+Value_Left_Edge_All_MD
 
 стоп
 ########################################################################################################
