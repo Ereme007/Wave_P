@@ -93,7 +93,7 @@ function all_the(BaseName, N)
 
     Ref_qrs = All_Ref_QRS(signals_channel[1], start_qrs, end_qrs, Referents_by_File.ibeg, Referents_by_File.iend)
 
-    signal_without_qrs = Line_qrs(Ref_qrs, signals_channel, start_qrs, end_qrs)
+    signal_without_qrs = Line_qrs(Ref_qrs, signals_channel)
     
     all_graph_butter = Graph_my_butter(signal_without_qrs, Frequency)    
     
