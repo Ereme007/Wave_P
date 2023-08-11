@@ -9,7 +9,7 @@ function Function_Ref_P(ALL_SELECTION, Referents_by_File)
     Ref_P = []
     
     for Selection in 1:ALL_SELECTION
-        k = ([Referents_by_File.P_onset - 1 + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg + 1), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg + 1) ]);
+        k = ([Referents_by_File.P_onset - 1 + (Selection - 1) * (Referents_by_File.iend - Referents_by_File.ibeg + 1), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg + 1) - 1 ]);
         push!(Ref_P, k)
     end
     
