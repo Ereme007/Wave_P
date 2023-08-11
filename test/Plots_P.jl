@@ -7,7 +7,7 @@ include(".env")
 #Функция, строящая график исходного сигнала на 12 отведениях с реф разметкой и моей детекцией зубца Р.
 #Вход - Имя базы данных (BaseName); номер файла (N)
 #Выход - NULL
-function plot_all_channels_const_signal(BaseName, N, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
+function plot_all_channels_const_signal(BaseName, N, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File, Ref_P)
     Mass_plots = []
 
     for Channel in 1:12
@@ -27,7 +27,8 @@ function plot_all_channels_const_signal(BaseName, N, Signal_const, Massiv_Amp_al
             
             for Selection in 1:size_mass
             # Selection = 1;
-                vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red);
+                #vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg) - 1, Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) - 1 ], lc=:red);
+                vline!(Ref_P[Channel][Selection], color = "red")
 #Left = Massiv_Amp_all_channels[Channel][Selection][2]
 #Right =  Massiv_Amp_all_channels[Channel][Selection][3]
 #scatter!([Left, Right], [Signal_const[Channel][Left], Signal_const[Channel][Right]])
