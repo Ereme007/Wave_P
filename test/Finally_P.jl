@@ -127,16 +127,16 @@ include("Plots_P.jl");
 include("Create_Table.jl");
 include("Function_dist.jl")
 #Наименование базы данных и номер файла ("CSE")
-Name_Data_Base, Number_File = "CSE", 85
+Name_Data_Base, Number_File = "CSE", 1
 #Определённое отведение (channel)
 channel = 3
 
 #Сигнал
-Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
+Names_files, signal_const, signal_without_qrs, all_graph_butter, all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
 #Сигнал в виде массива для более удобного поканальной отрисовки
 Massiv_Signal = Sign_Channel(signal_const)
 
-Selection = 3
+Selection = 1
 
 include("Create_Table.jl")
 
@@ -148,7 +148,7 @@ Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value
 Ref_P[channel][Selection]
 include("Plots_P.jl")
 
-plot_all_channels_const_signal(Name_Data_Base, Number_File, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
+plot_all_channels_const_signal(signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
 xlims!(Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50)
 vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD]) #желтый
 vline!([Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD]) #зелёный
@@ -165,25 +165,25 @@ Value_Left_Edge_All_MD
 ########################################################################################################
 
 #Функция, строящая график на дифференцированном сигнале, границы P из реферетного файла и найденные границы зубца Р
-plot_all_channels_points(Name_Data_Base, Number_File, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
-xlims!(Ref_P[1][3][1]-50, Ref_P[1][3][2]+50)
+plot_all_channels_points(Name_Data_Base, Number_File, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File, Ref_P)
+xlims!(Ref_P[1][1][1] - 50, Ref_P[1][1][2] + 50)
 
 #Функция строит исходный сигнал на заданном отведении
-plot_const_signal(Name_Data_Base, Number_File, channel, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
+plot_const_signal(Name_Data_Base, Number_File, channel, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File, Ref_P)
 plot!()
 xlims!(Ref_P[1][3][1]-50, Ref_P[1][3][2]+50)
 
 
-
-
-
+-
+Number_File
+Ref_P[1][1]
 #Два графика. Сверху - исходный сигнал с референтной разметкой P и моей детекцией P; снизу - график с фильтрами, референтной разметкой P и всеми точками,если Charr = 'p' (который находит алгоритм. Те точки, которые отличаются по цвету, являются фронтами)
 Charr = 'p'
 #Charr = 0
 plot_channel_points(Name_Data_Base, Number_File, channel, Charr, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File, Ref_P)
 @info "Massiv_Amp_all_channels = $(Massiv_Amp_all_channels[4][3])"
 plot!()
-xlims!(Ref_P[1][3][1]-50, Ref_P[1][3][2]+50)
+xlims!(Ref_P[1][1][1]-50, Ref_P[1][1][2]+50)
 
 
 
@@ -207,7 +207,7 @@ Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test1_MD(Selection_Edge)
 Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
 
 
-plot_all_channels_const_signal(Name_Data_Base, Number_File, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
+plot_all_channels_const_signal(signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
 xlims!(Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50)
 #1.1 не нужно
 #Left_Edge_All, Right_Edge_All = Test1(Selection_Edge)
@@ -229,7 +229,7 @@ xlims!(Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50)
 #plot!(x, Right_edge_Filtr)
 
 
-plot_all_channels_const_signal(Name_Data_Base, Number_File, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
+plot_all_channels_const_signal(signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
 xlims!(Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50)
 #2.1
 #Left_Edge_All, Right_Edge_All = Test1(Selection_Edge)
@@ -251,13 +251,13 @@ vline!([Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD]) #зелёный
 #plot!(x, Right_edge_Filtr)
 
 
-plot_all_channels_const_signal(Name_Data_Base, Number_File, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
+plot_all_channels_const_signal(signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
 xlims!(Ref_P[1][Selection][1]-20, Ref_P[1][Selection][2]+20)
 #vline!([Value_Left_Edge_All_MV, Value_Right_Edge_All_MV]) #розовый
 vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD]) #желтый
 
 
-plot_all_channels_const_signal(Name_Data_Base, Number_File, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
+plot_all_channels_const_signal(signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
 xlims!(Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50)
 #vline!([Value_Left_edge_Filtr_MV, Value_Right_edge_Filtr_MV]) #розовый
 #vline!([Value_Left_edge_Filtr_MD, Value_Right_edge_Filtr_MD]) #желтый

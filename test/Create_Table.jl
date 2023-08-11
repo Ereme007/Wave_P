@@ -86,7 +86,7 @@ function save_pictures_p(Selection)
         
         @info "Name files = $(Names_files[i])"
 
-        plot_all_channels_const_signal(Name_Data_Base, Number_File, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
+        plot_all_channels_const_signal(signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
         xlims!(Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50)
         vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD]) #желтый
         vline!([Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD]) #зелёный

@@ -7,7 +7,7 @@ include(".env")
 #Функция, строящая график исходного сигнала на 12 отведениях с реф разметкой и моей детекцией зубца Р.
 #Вход - Имя базы данных (BaseName); номер файла (N)
 #Выход - NULL
-function plot_all_channels_const_signal(BaseName, N, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File, Ref_P)
+function plot_all_channels_const_signal(Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
     Mass_plots = []
 
     for Channel in 1:12
