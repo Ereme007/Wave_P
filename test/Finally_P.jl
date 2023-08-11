@@ -165,7 +165,7 @@ Value_Left_Edge_All_MD
 ########################################################################################################
 
 #Функция, строящая график на дифференцированном сигнале, границы P из реферетного файла и найденные границы зубца Р
-plot_all_channels_points(Name_Data_Base, Number_File, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File, Ref_P)
+plot_all_channels_points(Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Ref_P)
 xlims!(Ref_P[1][1][1] - 50, Ref_P[1][1][2] + 50)
 
 #Функция строит исходный сигнал на заданном отведении

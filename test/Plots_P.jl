@@ -69,7 +69,7 @@ end
 #Функция, строящая график на дифференцированном сигнале, границы P из реферетного файла и найденные границы зубца Р
 #Вход - имя базы данных (BaseName); номер файла (N), Сгнал (Signal_const), массив амплитуд (Massiv_Amp_all_channels), массив точек (Massiv_Points_channel), дифф сигнал (all_graph_diff), референтные значения для файла (Referents_by_File), референтные значения волны P (Ref_P)
 #Выход - NULL
-function plot_all_channels_points(BaseName, N, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File, Ref_P)
+function plot_all_channels_points(Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Ref_P)
     #Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
     Mass_plots = []
     
