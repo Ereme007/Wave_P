@@ -5,7 +5,7 @@ include("Function_dist.jl")
 include(".env")
 
 #Функция, строящая график исходного сигнала на 12 отведениях с реф разметкой и моей детекцией зубца Р.
-#Вход - Имя базы данных (BaseName); номер файла (N)
+#Вход - Сигнал (Signal_const), Массив амплитуд (Massiv_Amp_all_channels), Массив точек (Massiv_Points_channel), Референтная разметка P(Ref_P)
 #Выход - NULL
 function plot_all_channels_const_signal(Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
     Mass_plots = []
@@ -67,7 +67,7 @@ end
 
 
 #Функция, строящая график на дифференцированном сигнале, границы P из реферетного файла и найденные границы зубца Р
-#Вход - имя базы данных (BaseName); номер файла (N), Сгнал (Signal_const), массив амплитуд (Massiv_Amp_all_channels), массив точек (Massiv_Points_channel), дифф сигнал (all_graph_diff), референтные значения для файла (Referents_by_File), референтные значения волны P (Ref_P)
+#Вход - массив амплитуд (Massiv_Amp_all_channels), массив точек (Massiv_Points_channel), дифф сигнал (all_graph_diff), референтные значения волны P (Ref_P)
 #Выход - NULL
 function plot_all_channels_points(Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Ref_P)
     #Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
@@ -113,7 +113,7 @@ end
 
 
 #Два графика. Сверху - исходный сигнал с референтной разметкой P и моей детекцией P; снизу - график с фильтрами, референтной разметкой P и всеми точками,если Charr = 'p' (который находит алгоритм. Те точки, которые отличаются по цвету, являются фронтами)
-#Вход - Имя базы данных (BaseName); номер файла (N); текущее отведение (Current_channel); Символ-флаг, если р то рисуем все экстремумы (Charr) 
+#Вход - текущее отведение (Current_channel); Символ-флаг (if 'p' - рисуем все экстремумы (Charr)), Сигнал (Signal_const), Массив амплитуд (Massiv_Amp_all_channels), массив точек (Massiv_Points_channel), Дифф сигнал (all_graph_diff), рефернтные зачения волны P (Ref_P)
 #Выход - NULL (значение амплитуды и файла - НЕТ) 
 function plot_channel_points(Current_channel, Charr, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Ref_P)
     #Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)    
@@ -215,7 +215,7 @@ end
 
 
 #Функция строит исходный сигнал на заданном отведении
-#Вход - имя базы данных (BaseName); номер файла (N); Текущее отведение (Current_chanel), рефертная разметка P (Ref_P)
+#Вход - имя базы данных (BaseName); Текущее отведение (Current_chanel), Сигнал (Signal_const), Массив амплитуд (Massiv_Amp_all_channels), Массив точек (Massiv_Points_channel), рефертная разметка P (Ref_P)
 #Выход - NULL
 function plot_const_signal(BaseName, Current_chanel, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
     #Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
