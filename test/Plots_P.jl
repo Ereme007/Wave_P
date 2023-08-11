@@ -112,16 +112,10 @@ end
 
 
 
-
-
-
-
-
-
 #Два графика. Сверху - исходный сигнал с референтной разметкой P и моей детекцией P; снизу - график с фильтрами, референтной разметкой P и всеми точками,если Charr = 'p' (который находит алгоритм. Те точки, которые отличаются по цвету, являются фронтами)
 #Вход - Имя базы данных (BaseName); номер файла (N); текущее отведение (Current_channel); Символ-флаг, если р то рисуем все экстремумы (Charr) 
 #Выход - NULL (значение амплитуды и файла - НЕТ) 
-function plot_channel_points(BaseName, N, Current_channel, Charr, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File, Ref_P)
+function plot_channel_points(Current_channel, Charr, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Ref_P)
     #Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)    
 #Current_channel = 1
     Mass_plots = []
@@ -183,7 +177,7 @@ function plot_channel_points(BaseName, N, Current_channel, Charr, Signal_const, 
             end;
    # Selection = 1 ;
             count_selections = length(Massiv_Amp_all_channels[Current_channel]);
-            lik = Function_Ref_P(count_selections, Referents_by_File);
+           # lik = Function_Ref_P(count_selections, Referents_by_File);
          #   vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red);
 #Left = Massiv_Amp_all_channels[Current_channel][Selection][2]
 #Right =  Massiv_Amp_all_channels[Current_channel][Selection][3]

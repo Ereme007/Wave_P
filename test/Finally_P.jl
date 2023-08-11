@@ -171,7 +171,7 @@ xlims!(Ref_P[1][1][1] - 50, Ref_P[1][1][2] + 50)
 #Функция строит исходный сигнал на заданном отведении
 plot_const_signal(Name_Data_Base, Number_File, channel, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File, Ref_P)
 plot!()
-xlims!(Ref_P[1][3][1]-50, Ref_P[1][3][2]+50)
+xlims!(Ref_P[1][3][1] - 50, Ref_P[1][3][2] + 50)
 
 
 -
@@ -180,10 +180,10 @@ Ref_P[1][1]
 #Два графика. Сверху - исходный сигнал с референтной разметкой P и моей детекцией P; снизу - график с фильтрами, референтной разметкой P и всеми точками,если Charr = 'p' (который находит алгоритм. Те точки, которые отличаются по цвету, являются фронтами)
 Charr = 'p'
 #Charr = 0
-plot_channel_points(Name_Data_Base, Number_File, channel, Charr, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File, Ref_P)
+plot_channel_points(channel, Charr, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Ref_P)
 @info "Massiv_Amp_all_channels = $(Massiv_Amp_all_channels[4][3])"
 plot!()
-xlims!(Ref_P[1][1][1]-50, Ref_P[1][1][2]+50)
+xlims!(Ref_P[1][1][1] - 50, Ref_P[1][1][2] + 50)
 
 
 
