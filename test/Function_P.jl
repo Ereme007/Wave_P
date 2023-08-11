@@ -194,6 +194,9 @@ function Simple_Zero_qrs(All_ref_qrs, signals, start_qrs, end_qrs)
     return signals
 end
 
+function greed(Xa, Xb, Ya, Yb)
+    return delY = (Yb-Ya)/(Xb-Xa)
+end
 
 #Функция "Зануление" qrs в виде линии
 #Вход: Облатсь поиска P(All_ref_qrs), сигнал массив(signals), начало/конец qrs (start_qrs/end_qrs)
