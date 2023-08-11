@@ -217,7 +217,7 @@ end
 #Функция строит исходный сигнал на заданном отведении
 #Вход - имя базы данных (BaseName); номер файла (N); Текущее отведение (Current_chanel), рефертная разметка P (Ref_P)
 #Выход - NULL
-function plot_const_signal(BaseName, N, Current_chanel, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File, Ref_P)
+function plot_const_signal(BaseName, Current_chanel, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
     #Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)
     #plot(Signal_const[Current_chanel], label = "Исх сиг $BaseName отведение $Current_chanel")
     plot(Signal_const[Current_chanel], label = false);
@@ -226,7 +226,7 @@ function plot_const_signal(BaseName, N, Current_chanel, Signal_const, Massiv_Amp
     
     for Selection in 1:size_mass
         #vline!([Referents_by_File.P_onset + (Selection-1) * (Referents_by_File.iend - Referents_by_File.ibeg), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg) ], lc=:red,  label=false);
-        vline!(Ref_P[Channel][Selection], color = "red")
+        vline!(Ref_P[Current_chanel][Selection], color = "red")
         Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Current_chanel][Selection],  Massiv_Points_channel[Current_chanel][Selection])
         scatter!([Points_fronts.Left, Points_fronts.Right], [Signal_const[Current_chanel][Points_fronts.Left], Signal_const[Current_chanel][Points_fronts.Right]], label=false);
     end

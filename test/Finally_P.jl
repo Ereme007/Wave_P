@@ -169,7 +169,7 @@ plot_all_channels_points(Massiv_Amp_all_channels, Massiv_Points_channel, all_gra
 xlims!(Ref_P[1][1][1] - 50, Ref_P[1][1][2] + 50)
 
 #Функция строит исходный сигнал на заданном отведении
-plot_const_signal(Name_Data_Base, Number_File, channel, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File, Ref_P)
+plot_const_signal(Name_Data_Base, channel, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
 plot!()
 xlims!(Ref_P[1][3][1] - 50, Ref_P[1][3][2] + 50)
 
@@ -190,7 +190,7 @@ xlims!(Ref_P[1][1][1] - 50, Ref_P[1][1][2] + 50)
 
 
 #Функция строит отфильтрованный сигнал на заданном отведении
-plot_const_signal(Name_Data_Base, Number_File, channel, all_graph_diff, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File)
+plot_const_signal(Name_Data_Base, channel, all_graph_diff, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
 plot!()
 xlims!(Ref_P[1][3][1]-50, Ref_P[1][3][2]+50)
 
