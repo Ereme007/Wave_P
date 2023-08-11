@@ -12,6 +12,7 @@ function new_localmax(Signal, rad)
 
     while (i <= size_signal)
         max = Signal[i]
+        
         for j in (i-rad):(i+rad)
             if (j >= 1 && j < size_signal && Signal[j] > max)
                 max = Signal[j]
@@ -82,8 +83,8 @@ function Zero_qrs(All_ref_qrs, signals, start_qrs, end_qrs)
             signals[channel][All_ref_qrs[i-1]:(floor(Int64, All_ref_qrs[i-1] + (end_qrs - start_qrs) / 2))] .= signals[channel][All_ref_qrs[i-1]-1]
             signals[channel][(floor(Int64, All_ref_qrs[i-1] + (end_qrs - start_qrs) / 2)):All_ref_qrs[i]] .= signals[channel][All_ref_qrs[i]+1]
         end
-        i = i + 2
 
+        i = i + 2
     end
     
     return signals
@@ -92,9 +93,9 @@ end
 
 #(НЕ)Использован
 #Функция "Зануление" qrs по левому краю
-#Вход: Облатсь поиска P(All_ref_qrs), сигнал массив(signals), начало/конец qrs (start_qrs/end_qrs)
+#Вход: Облатсь поиска P(All_ref_qrs), сигнал массив(signals)
 #Выход: Новый сигнал массив
-function Simple_Zero_qrs(All_ref_qrs, signals, start_qrs, end_qrs)
+function Simple_Zero_qrs(All_ref_qrs, signals)
     i = 2
     size = length(All_ref_qrs)
 
@@ -195,7 +196,6 @@ function Segment_left_right_P(fs, All_ref_qrs, all_strat, all_end)
 
         push!(right_p, P_right)
         i = i + 2
-
     end
 
     return left_p, right_p
@@ -248,12 +248,8 @@ function All_points_with_channels_max_min(Place_found_P_Left_and_Right, Signal, 
             Max_l = new_localmax(Signal[channel][Start:End], RADIUS_LOCAL)
             Min_l = new_localmin(Signal[channel][Start:End], RADIUS_LOCAL)
 
-            #if (Min_l[1] != 0)
             push!(Min_local, Min_l .+ (Start - 1))
-            #end
-            #if(Max_l[1] != 0)
             push!(Max_local, Max_l .+ (Start - 1))
-            #end
         end
 
         push!(All_points, [Max_local, Min_local])
@@ -303,7 +299,7 @@ end
 #Massiv_Points_channel[channel] # на отведении channel столько отрезков (length)
 #Massiv_Points_channel[channel][2] #облать имеющий номер 2
 #Massiv_Points_channel[channel][2][1] #точка по X
-#На вход: массив точек(Massiv_Points_channel), сигнал (singnal), (Massiv_Points_channel), коэффициент(koeff), канал(channel), радиус(RADIUS)
+#На вход: массив точек(Massiv_Points_channel), сигнал (singnal), коэффициент(koeff), канал(channel), радиус(RADIUS)
 #На выход: AMP_START_END - структура, которая содержит амплитуду. индекс левой и правой границы фронта
 function amp_one_channel(Massiv_Points_channel, singnal, koeff, channel, RADIUS)
     #@info "Start amp_one_channel"
@@ -318,7 +314,7 @@ function amp_one_channel(Massiv_Points_channel, singnal, koeff, channel, RADIUS)
     for current_segment in 1:length(Massiv_Points_channel[channel]) # (цикл от 1 области зубца P, который возможен в сигнале до последней области - Amp_start_end)
         # @info "current_segment = $current_segment" 
         Max_amp = 0
-        
+
         for i in 1:length(Massiv_Points_channel[channel][current_segment])
             # @info "счетчик = $i" 
             amp = 0
