@@ -127,6 +127,7 @@ include("Plots_P.jl");
 include("Create_Table.jl");
 include("Function_dist.jl")
 #Наименование базы данных и номер файла ("CSE")
+
 Name_Data_Base, Number_File = "CSE", 114
 #Определённое отведение (channel)
 channel = 1
