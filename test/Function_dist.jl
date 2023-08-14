@@ -302,3 +302,22 @@ function My_Edge_P(All_points, Massiv_Amp, channel, selection)
     
     return Edge[selection]
 end
+
+
+function squear_edge_P(Massiv_Points_channel, Massiv_Amp_all_channels)
+    #Le_Ri = My_Edge_P(Massiv_Points_channel, Massiv_Amp_all_channels, Channel, Selection)
+    size = length(Massiv_Points_channel[1])
+    Left = []
+    Right = []
+    for Current_Selection in 1:size
+        for Current_Channel in 1:12
+            current_left =  My_Edge_P(Massiv_Points_channel, Massiv_Amp_all_channels, Current_Channel, Current_Selection)[1]
+            push!(Left, current_left)
+
+            current_right =  My_Edge_P(Massiv_Points_channel, Massiv_Amp_all_channels, Current_Channel, Current_Selection)[2]
+            push!(Right, current_right)
+        end
+    end
+
+    return Left, Right
+end
