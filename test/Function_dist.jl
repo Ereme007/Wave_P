@@ -57,7 +57,7 @@ function Min_dist_to_all_points(Massiv_Edge)
     for i in 1:size_left
         Now_point = Massiv_Edge[i]
         #@info "Now_point = $Now_point"
-        Max_dist = 0
+        Max_dist = -Inf
         j = 1
         Index = 0
         Value = 0
@@ -71,6 +71,51 @@ function Min_dist_to_all_points(Massiv_Edge)
             end
             j = j + 1
         end
+        push!(Max, [Max_dist, Index, Value])
+    end
+    
+    sort_massiv_points = sort(Max)[1]
+    distance = sort_massiv_points[1]
+    index_point = sort_massiv_points[2]
+    value_point = sort_massiv_points[3]
+
+   # @info "distance = $distance"
+   # @info "index_point = $index_point"
+   # @info "value_point = $value_point"
+
+    return distance, index_point, value_point
+end
+
+
+
+function Square_dist(Massiv_Edge)
+    size_left = length(Massiv_Edge)
+    Max = []
+    for i in 1:size_left
+        Now_point = Massiv_Edge[i]
+        #@info "Now_point = $Now_point"
+        Max_dist = -Inf
+        j = 1
+        Index = 0
+        Value = 0
+        dist = 0
+        while(j <= size_left)
+            dist = dist + abs(Now_point - Massiv_Edge[j])*abs(Now_point - Massiv_Edge[j])
+            #@info "Massiv_Edge[j] =  $(Massiv_Edge[j])"
+            #if (dist > Max_dist)
+            #    Max_dist = dist
+            #    Index = i
+            #    Value = Now_point
+            #   end
+            j = j + 1
+        end
+        if (dist > Max_dist)
+            @info "dist = $dist"
+            Max_dist = dist
+            Index = i
+            Value = Now_point
+        end
+        @info "Max_dist = $Max_dist"
         push!(Max, [Max_dist, Index, Value])
     end
     
@@ -195,6 +240,22 @@ function Test2_MD(Selection_Edge)
     return Value_Left_edge_Filtr_MD, Value_Right_edge_Filtr_MD
 end
 
+function Test1_Square(Selection_Edge)
+    Left_edge_Filtr, Right_edge_Filtr = Test1(Selection_Edge)
+    _, Index_Left_edge_Filtr, Value_Left_edge_Filtr_MD = Square_dist(Left_edge_Filtr)
+    _, Index_Right_edge_Filtr, Value_Right_edge_Filtr_MD = Square_dist(Right_edge_Filtr)
+
+    return Value_Left_edge_Filtr_MD, Value_Right_edge_Filtr_MD
+end
+
+function Test2_Square(Selection_Edge)
+    Left_edge_Filtr, Right_edge_Filtr = Test2(Selection_Edge)
+    _, Index_Left_edge_Filtr, Value_Left_edge_Filtr_MD = Square_dist(Left_edge_Filtr)
+    _, Index_Right_edge_Filtr, Value_Right_edge_Filtr_MD = Square_dist(Right_edge_Filtr)
+
+    return Value_Left_edge_Filtr_MD, Value_Right_edge_Filtr_MD
+end
+
 #Функция вычисления Дельта граны от реферетной границы
 #Вход: Реферетные значения левой/правой границы (Ref_P_L/Ref_P_R), найденная левая/правая граница (P_L/P_R)
 #Выход:погрешность для левой/правой границы (delta_L/delta_R)
@@ -246,6 +307,86 @@ function Comparson_Delta_Edge(Name_Data_Base, Number_File)
 end
 
 
+function Comparson_Delta_Edge2(Name_Data_Base, Number_File)
+    channel = 1 #Здесь не имеет значение
+    Names_files, signal_const, _, _, _, _, Ref_P, _, Massiv_Amp_all_channels, Massiv_Points_channel, _ = all_the(Name_Data_Base, Number_File)
+    #Сигнал в виде массива для более удобного поканальной отрисовки
+    Massiv_Signal = Sign_Channel(signal_const)
+    
+    Selection = 2 #Здесь не имеет значение, но по итогу рассматриваем на 3ем отсеке (все отсеки между собой одинаковы, кроме первого)
+    Selection_Edge = []
+    
+    for Current_chanel in 1:12
+        Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Current_chanel][Selection], Massiv_Points_channel[Current_chanel][Selection])
+        #Тут Функцию по КАК РАЗ поканально в одной секции
+        push!(Selection_Edge, Points_fronts)
+    end
+
+    #Value_Left_Edge_All_MV, Value_Right_Edge_All_MV = Test1_MV(Selection_Edge) #отказались
+    #Value_Left_Edge_Filtr_MV, Value_Right_Edge_Filtr_MV = Test2_MV(Selection_Edge) #отказались
+    Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test2_Square(Selection_Edge)
+    Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
+
+    Left_p = Ref_P[channel][Selection][1]
+    Right_p = Ref_P[channel][Selection][2]
+
+    #MD All
+   # Left_Test_1, Right_Test_1 = Delta(Left_p, Right_p, Value_Left_Edge_All_MD, Value_Right_Edge_All_MD)
+    #MD Filter
+    Left_Test_2, Right_Test_2 = Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD)
+
+    Left_Sq, Right_Sq = Delta(Left_p, Right_p, Value_Left_Edge_All_MD, Value_Right_Edge_All_MD)
+
+    #MV All отказались
+    #Left_Test_1_mv, Right_Test_1_mv = Delta(Left_p, Right_p, Value_Left_Edge_All_MV, Value_Right_Edge_All_MV) #отказались
+    #MV Filter отказались
+    #Left_Test_2_mv, Right_Test_2_mv = Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MV, Value_Right_Edge_Filtr_MV) отказались
+
+    return Number_File, Names_files[Number_File], Left_Test_2, Right_Test_2, Left_Sq, Right_Sq
+end
+
+
+
+
+function Comparson_Delta_Edge3(Name_Data_Base, Number_File)
+    channel = 1 #Здесь не имеет значение
+    Names_files, signal_const, _, _, _, _, Ref_P, _, Massiv_Amp_all_channels, Massiv_Points_channel, _ = all_the(Name_Data_Base, Number_File)
+    #Сигнал в виде массива для более удобного поканальной отрисовки
+    Massiv_Signal = Sign_Channel(signal_const)
+    
+    Selection = 2 #Здесь не имеет значение, но по итогу рассматриваем на 3ем отсеке (все отсеки между собой одинаковы, кроме первого)
+    Selection_Edge = []
+    
+    for Current_chanel in 1:12
+        Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Current_chanel][Selection], Massiv_Points_channel[Current_chanel][Selection])
+        #Тут Функцию по КАК РАЗ поканально в одной секции
+        push!(Selection_Edge, Points_fronts)
+    end
+
+    #Value_Left_Edge_All_MV, Value_Right_Edge_All_MV = Test1_MV(Selection_Edge) #отказались
+    #Value_Left_Edge_Filtr_MV, Value_Right_Edge_Filtr_MV = Test2_MV(Selection_Edge) #отказались
+    Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq = Test1_Square(Selection_Edge)
+    Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = Test2_Square(Selection_Edge) 
+
+    Left_p = Ref_P[channel][Selection][1]
+    Right_p = Ref_P[channel][Selection][2]
+
+    #MD All
+   # Left_Test_1, Right_Test_1 = Delta(Left_p, Right_p, Value_Left_Edge_All_MD, Value_Right_Edge_All_MD)
+    #MD Filter
+
+    Left_Sq_Test_1, Right_Sq_Test_1 = Delta(Left_p, Right_p, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq)
+
+    Left_Sq_Test_2, Right_Sq_Test_2 = Delta(Left_p, Right_p, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq)
+    #MV All отказались
+    #Left_Test_1_mv, Right_Test_1_mv = Delta(Left_p, Right_p, Value_Left_Edge_All_MV, Value_Right_Edge_All_MV) #отказались
+    #MV Filter отказались
+    #Left_Test_2_mv, Right_Test_2_mv = Delta(Left_p, Right_p, Value_Left_Edge_Filtr_MV, Value_Right_Edge_Filtr_MV) отказались
+
+    return Number_File, Names_files[Number_File], Left_Sq_Test_1, Right_Sq_Test_1, Left_Sq_Test_2, Right_Sq_Test_2
+end
+
+
 #Функция, выдающая значение границ для двух фильтров метода сведения MD
 #Вход: Массив Амплитуд (Massiv_Amp_all_channels), Массив Точек (Massiv_Points_channel)
 #Выход: Значение левой/правой границы для фильтра 1 и фильтра 2 (All & Filtr)
@@ -261,8 +402,9 @@ function function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
 
     Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test1_MD(Selection_Edge)
     Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
-
-    return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD 
+    @info "Value_Right_Edge_Filtr_MD = $Value_Right_Edge_Filtr_MD"
+    Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = Test2_Square(Selection_Edge)
+    return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq
 end
 
 
