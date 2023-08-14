@@ -127,21 +127,21 @@ include("Plots_P.jl");
 include("Create_Table.jl");
 include("Function_dist.jl")
 #Наименование базы данных и номер файла ("CSE")
-Name_Data_Base, Number_File = "CSE", 1
+Name_Data_Base, Number_File = "CSE", 114
 #Определённое отведение (channel)
-channel = 3
+channel = 1
 
 #Сигнал
 Names_files, signal_const, signal_without_qrs, all_graph_butter, all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
 #Сигнал в виде массива для более удобного поканальной отрисовки
 Massiv_Signal = Sign_Channel(signal_const)
 
-Selection = 1
+Selection = 3
 
 include("Create_Table.jl")
 
 Comparson_Delta_Edge("CSE", Number_File)
-#Table_P("Rad80_GlEdge42")
+#Table_P("Rad100_GlEdge42")
 #save_pictures_p(Selection)
 # savefig("pictures_edge_CSE/$(names_files).png")
 Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
@@ -150,8 +150,8 @@ include("Plots_P.jl")
 
 plot_all_channels_const_signal(signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
 xlims!(Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50)
-vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD]) #желтый
-vline!([Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD]) #зелёный
+vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD], color = "purple") #фиолетовый
+vline!([Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD], color = "green") #зелёный
 
 Value_Left_Edge_All_MD
 
@@ -174,7 +174,7 @@ plot!()
 xlims!(Ref_P[1][3][1] - 50, Ref_P[1][3][2] + 50)
 
 
--
+
 Number_File
 Ref_P[1][1]
 #Два графика. Сверху - исходный сигнал с референтной разметкой P и моей детекцией P; снизу - график с фильтрами, референтной разметкой P и всеми точками,если Charr = 'p' (который находит алгоритм. Те точки, которые отличаются по цвету, являются фронтами)
@@ -235,7 +235,7 @@ xlims!(Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50)
 #Left_Edge_All, Right_Edge_All = Test1(Selection_Edge)
 #_, Index_Left_Edge_All, Value_Left_Edge_All_MD = Min_dist_to_all_points(Left_Edge_All)
 #_, Index_Right_Edge_All, Value_Right_Edge_All_MD = Min_dist_to_all_points(Right_Edge_All)
-vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD]) #желтый
+vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD], color = "purple") #фиолетовый
 #x = 1:length(Left_Edge_All)
 #plot(x, Left_Edge_All)
 #x = 1:length(Right_Edge_All)
@@ -244,7 +244,7 @@ vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD]) #желтый
 #Left_edge_Filtr, Right_edge_Filtr = Test2(Selection_Edge)
 #_, Index_Left_edge_Filtr, Value_Left_edge_Filtr_MD = Min_dist_to_all_points(Left_edge_Filtr)
 #_, Index_Right_edge_Filtr, Value_Right_edge_Filtr_MD = Min_dist_to_all_points(Right_edge_Filtr)
-vline!([Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD]) #зелёный
+vline!([Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD], color = "green") #зелёный
 #x = 1:length(Left_edge_Filtr)
 #plot(x, Left_edge_Filtr)
 #x = 1:length(Right_edge_Filtr)
@@ -252,9 +252,9 @@ vline!([Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD]) #зелёный
 
 
 plot_all_channels_const_signal(signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
-xlims!(Ref_P[1][Selection][1]-20, Ref_P[1][Selection][2]+20)
+xlims!(Ref_P[1][Selection][1] - 20, Ref_P[1][Selection][2] + 20)
 #vline!([Value_Left_Edge_All_MV, Value_Right_Edge_All_MV]) #розовый
-vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD]) #желтый
+vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD], color = "purple") #фиолетовый
 
 
 plot_all_channels_const_signal(signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
@@ -284,4 +284,6 @@ for_scatter_x
 vline!(for_scatter_x, color = "green")
 vline!(Ref_P[channel], color = "red")
 
-Ref_P[1]
+
+include("Function_dist.jl")
+squear_edge_P(Massiv_Points_channel, Massiv_Amp_all_channels)
