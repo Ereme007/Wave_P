@@ -128,7 +128,7 @@ include("Create_Table.jl");
 include("Function_dist.jl")
 #Наименование базы данных и номер файла ("CSE")
 
-Name_Data_Base, Number_File = "CSE", 114
+Name_Data_Base, Number_File = "CSE", 107
 #Определённое отведение (channel)
 channel = 1
 
@@ -142,19 +142,28 @@ Selection = 3
 include("Create_Table.jl")
 
 Comparson_Delta_Edge("CSE", Number_File)
-#Table_P("Rad100_GlEdge42")
+#Table_P_Sq("Rad100_GlEdge42_Sq")
+#Table_P("Rad100_GlEdge42_Sq")
+Table_P_Sq_1and2("Rad100_GlEdge42_Sq_1and2")
 #save_pictures_p(Selection)
 # savefig("pictures_edge_CSE/$(names_files).png")
-Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
-Ref_P[channel][Selection]
-include("Plots_P.jl")
+Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
+#Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = function_Points_fronts2(Massiv_Amp_all_channels, Massiv_Points_channel)
+
+Ref_P[channel][Selection] 
+include("Plots_P.jl")//Z..\
 
 plot_all_channels_const_signal(signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
 xlims!(Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50)
 vline!([Value_Left_Edge_All_MD, Value_Right_Edge_All_MD], color = "purple") #фиолетовый
 vline!([Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD], color = "green") #зелёный
-
+vline!([Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq], color = "black") #черный ТУТ НОВОе СВЕДЕНИЕ
 Value_Left_Edge_All_MD
+Value_Right_Edge_All_MD
+Value_Left_Edge_Filtr_MD
+Value_Right_Edge_Filtr_MD
+Value_Left_Edge_Filtr_Sq
+Value_Right_Edge_Filtr_Sq
 
 стоп
 ########################################################################################################
@@ -284,7 +293,3 @@ for_scatter_x = My_Edge_P_One_Channel(Massiv_Points_channel, Massiv_Amp_all_chan
 for_scatter_x
 vline!(for_scatter_x, color = "green")
 vline!(Ref_P[channel], color = "red")
-
-
-include("Function_dist.jl")
-squear_edge_P(Massiv_Points_channel, Massiv_Amp_all_channels)
