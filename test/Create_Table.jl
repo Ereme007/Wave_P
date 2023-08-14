@@ -96,3 +96,130 @@ function save_pictures_p(Selection)
         i = i + 1    
     end
 end
+
+
+#Сравнение TEST2 между Square и MD
+#Функция записи в файл Номер проекта; Имя проекта; дельта левой границы, дельта правой границы, In/out для тест1; дельта левой границы, дельта правой границы, In/out для тест2; 
+#Вход: наименование проекта (как хоти его записать в папку Project)
+#Выход: NULL
+function Table_P_Sq(Name_Project)
+    Number = Int[] #номер файла
+    Name = [] #наименование файла
+    delta_left_MD = Float64[] #дельта левой границы тест1
+    delta_right_MD = Float64[] #дельта правой границы тест1
+    In_or_Out1 = [] #выходит или нет за референтную разметку
+    delta_left_Sq = Float64[] #дельта левую границы тест2
+    delta_right_Sq = Float64[] #дельта правую границы тест2
+    In_or_Out2 = [] #выходит или нет за референтную разметку
+    
+    i = 1
+    while(i <= 125 )
+        #@info "i = $i"
+        #Нет разметки в этих файлах
+        if(i == 67 || i == 70)
+            i = i + 1
+        end
+        #Нет Р в реферетной разметке
+        if (i == 10 || i == 18 || i == 45 || i == 52 || i == 57 || i == 89 || i == 92 || i == 93 || i == 100 || i == 111 || i == 120)
+            i = i + 1
+        end
+    
+        number_file, names_files, left_MD, right_MD, left_Sq, right_Sq = Comparson_Delta_Edge2("CSE", i)
+        push!(Number, number_file)
+        push!(Name, names_files)
+        push!(delta_left_MD, left_MD)
+        push!(delta_right_MD, right_MD)
+    
+        if(left_MD < 0 || right_MD < 0) #Проверка внутри или вне реферетной разметки
+            push!(In_or_Out1, "Out")
+        else
+            push!(In_or_Out1, "In")
+        end
+    
+        push!(delta_left_Sq, left_Sq)
+        push!(delta_right_Sq, right_Sq)
+    
+        if(left_Sq < 0 || right_Sq < 0) #Проверка внутри или вне реферетной разметки
+            push!(In_or_Out2, "Out")
+        else
+            push!(In_or_Out2, "In")
+        end
+       
+        i = i + 1
+    end
+
+    text = DataFrame(Number_File = Number,
+    Name_File = Name,
+    Delta_Left_MD = delta_left_MD, 
+    Delta_Right_MD = delta_right_MD,
+    In_Out_MD = In_or_Out1, 
+    Delta_Left_Sq = delta_left_Sq, 
+    Delta_Right_Sq = delta_right_Sq,
+    In_Out_Sq = In_or_Out2)
+    CSV.write("test/Projects/$(Name_Project).csv", text, delim = ';')
+end
+
+
+
+
+#Сравнение  Square между Test1 и Test2
+#Rad**_GlEdge**_Sq_1and2
+#Функция записи в файл Номер проекта; Имя проекта; дельта левой границы, дельта правой границы, In/out для тест1; дельта левой границы, дельта правой границы, In/out для тест2; 
+#Вход: наименование проекта (как хоти его записать в папку Project)
+#Выход: NULL
+function Table_P_Sq_1and2(Name_Project)
+    Number = Int[] #номер файла
+    Name = [] #наименование файла
+    delta_left_Sq_1 = Float64[] #дельта левой границы тест1
+    delta_right_Sq_1 = Float64[] #дельта правой границы тест1
+    In_or_Out1 = [] #выходит или нет за референтную разметку
+    delta_left_Sq_2 = Float64[] #дельта левую границы тест2
+    delta_right_Sq_2 = Float64[] #дельта правую границы тест2
+    In_or_Out2 = [] #выходит или нет за референтную разметку
+    
+    i = 1
+    while(i <= 125 )
+        #@info "i = $i"
+        #Нет разметки в этих файлах
+        if(i == 67 || i == 70)
+            i = i + 1
+        end
+        #Нет Р в реферетной разметке
+        if (i == 10 || i == 18 || i == 45 || i == 52 || i == 57 || i == 89 || i == 92 || i == 93 || i == 100 || i == 111 || i == 120)
+            i = i + 1
+        end
+    
+        number_file, names_files, left_Sq_1, right_Sq_1, left_Sq_2, right_Sq_2 = Comparson_Delta_Edge3("CSE", i)
+        push!(Number, number_file)
+        push!(Name, names_files)
+        push!(delta_left_Sq_1, left_Sq_1)
+        push!(delta_right_Sq_1, right_Sq_1)
+    
+        if(left_Sq_1 < 0 || right_Sq_1 < 0) #Проверка внутри или вне реферетной разметки
+            push!(In_or_Out1, "Out")
+        else
+            push!(In_or_Out1, "In")
+        end
+    
+        push!(delta_left_Sq_2, left_Sq_2)
+        push!(delta_right_Sq_2, right_Sq_2)
+    
+        if(left_Sq_2 < 0 || right_Sq_2 < 0) #Проверка внутри или вне реферетной разметки
+            push!(In_or_Out2, "Out")
+        else
+            push!(In_or_Out2, "In")
+        end
+       
+        i = i + 1
+    end
+
+    text = DataFrame(Number_File = Number,
+    Name_File = Name,
+    Delta_Left_Sq_1 = delta_left_Sq_1, 
+    Delta_Right_Sq_1 = delta_right_Sq_1,
+    In_Out_Sq_1 = In_or_Out1, 
+    Delta_Left_Sq_2 = delta_left_Sq_2, 
+    Delta_Right_Sq_2 = delta_right_Sq_2,
+    In_Out_Sq_2 = In_or_Out2)
+    CSV.write("test/Projects/$(Name_Project).csv", text, delim = ';')
+end
