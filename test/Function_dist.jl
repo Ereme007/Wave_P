@@ -110,12 +110,12 @@ function Square_dist(Massiv_Edge)
             j = j + 1
         end
         if (dist > Max_dist)
-            @info "dist = $dist"
+           # @info "dist = $dist"
             Max_dist = dist
             Index = i
             Value = Now_point
         end
-        @info "Max_dist = $Max_dist"
+        #@info "Max_dist = $Max_dist"
         push!(Max, [Max_dist, Index, Value])
     end
     
@@ -402,9 +402,10 @@ function function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
 
     Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test1_MD(Selection_Edge)
     Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
-    @info "Value_Right_Edge_Filtr_MD = $Value_Right_Edge_Filtr_MD"
+   # @info "Value_Right_Edge_Filtr_MD = $Value_Right_Edge_Filtr_MD"
+    Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq = Test1_Square(Selection_Edge)
     Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = Test2_Square(Selection_Edge)
-    return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq
+    return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq
 end
 
 
