@@ -14,7 +14,7 @@ include("Plots_P.jl")
 include("Create_Table.jl")
 include("Statistic.jl")
 #Наименование базы данных и номер файла ("CSE")
-Name_Data_Base, Number_File = "CSE", 1
+Name_Data_Base, Number_File = "CSE", 107
 #Определённое отведение (channel)
 channel = 4
 

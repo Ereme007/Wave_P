@@ -12,29 +12,30 @@ include("../src/plots.jl");
 include("Function_P_file.jl");
 include("Plots_P.jl")
 include("Create_Table.jl")
-include("Statistic.jl")
+include("Statistic.jl");
 
 
 #Наименование базы данных и номер файла ("CSE")
-Name_Data_Base, Number_File = "CSE", 1
+Name_Data_Base, Number_File = "CSE", 9
 #Определённое отведение (channel)
 channel = 4
-Selection = 2
+Selection = 3
 #Сигнал
 Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
 
 #В зависимости от фильтра и алгоритма рассматривается дельта от реф границ
-comparison("T1_Sq", "T2_MD", "CSE", 2) #тут по X
+comparison("T1_Sq", "T2_Sq", "CSE", 9) #тут по X
 
 ##Сохранение статистики
 #T1 - фильтр точек (все);
 #T2 - фильтр точек (некоторые);
-#MD - mid distance;
+#MD - mid distance; - 
 #Sq - square;
+#Med - mediana
 RADIUS
 Global_Edge #используется в T2
 
-#Table_with_comparison("T1_Sq", "T2_Sq", "TWC_Rad100GE42_2")
+#Table_with_comparison("T1_Sq", "T2_Sq", "TWC_Rad100GE42_3")
 
 #все значения разметки 
 Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)

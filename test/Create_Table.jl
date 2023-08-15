@@ -224,6 +224,8 @@ function Table_P_Sq_1and2(Name_Project)
     CSV.write("test/Projects/$(Name_Project).csv", text, delim = ';')
 end
 
+
+
 function Table_with_comparison(Obj1, Obj2, Name_Project)#, Name_Data_Base, Number_File)
     Number = Int[] #номер файла
   #  Name = [] #наименование файла
@@ -236,12 +238,12 @@ function Table_with_comparison(Obj1, Obj2, Name_Project)#, Name_Data_Base, Numbe
     
     i = 1
 
-first_left_name = "$(Obj1)_left"
-first_right_name = "$(Obj1)_right"
-first_Out_In_name = "$(Obj1)_In_Out"
-second_left_name = "$(Obj2)_left"
-second_right_name = "$(Obj2)_right"
-second_Out_In_name = "$(Obj2)_In_Out"
+first_left_name = "$(Obj1) left"
+first_right_name = "$(Obj1) right"
+first_Out_In_name = "$(Obj1) In/Out"
+second_left_name = "$(Obj2) left"
+second_right_name = "$(Obj2) right"
+second_Out_In_name = "$(Obj2) In/Out"
 
     push!(Number, 0)
     # push!(Name, names_files)
