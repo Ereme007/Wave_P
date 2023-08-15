@@ -82,7 +82,7 @@ function save_pictures_p(Selection)
         #Сигнал в виде массива для более удобного поканальной отрисовки
         Massiv_Signal = Sign_Channel(signal_const)
         Comparson_Delta_Edge(Name_Data_Base, Number_File)
-        Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
+        Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, _, _, _, _ = function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
         
         @info "Name files = $(Names_files[i])"
 
@@ -222,4 +222,81 @@ function Table_P_Sq_1and2(Name_Project)
     Delta_Right_Sq_2 = delta_right_Sq_2,
     In_Out_Sq_2 = In_or_Out2)
     CSV.write("test/Projects/$(Name_Project).csv", text, delim = ';')
+end
+
+function Table_with_comparison(Obj1, Obj2, Name_Project)#, Name_Data_Base, Number_File)
+    Number = Int[] #номер файла
+  #  Name = [] #наименование файла
+    delta_first_left = [] #дельта левой границы тест1
+    delta_first_right = [] #дельта правой границы тест1
+    In_or_Out_first = [] #выходит или нет за референтную разметку
+    delta_second_left = [] #дельта левую границы тест2
+    delta_second_right = [] #дельта правую границы тест2
+    In_or_Out_second = [] #выходит или нет за референтную разметку
+    
+    i = 1
+
+first_left_name = "$(Obj1)_left"
+first_right_name = "$(Obj1)_right"
+first_Out_In_name = "$(Obj1)_In_Out"
+second_left_name = "$(Obj2)_left"
+second_right_name = "$(Obj2)_right"
+second_Out_In_name = "$(Obj2)_In_Out"
+
+    push!(Number, 0)
+    # push!(Name, names_files)
+    push!(delta_first_left, first_left_name)
+    push!(delta_first_right, first_right_name)
+    push!(In_or_Out_first, first_Out_In_name)
+    push!(delta_second_left, second_left_name)
+    push!(delta_second_right, second_right_name)
+    push!(In_or_Out_second, second_Out_In_name)
+
+
+    while(i <= 125 ) #для CSE
+        #@info "i = $i"
+        #Нет разметки в этих файлах
+        if(i == 67 || i == 70)
+            i = i + 1
+        end
+        #Нет Р в реферетной разметке
+        if (i == 10 || i == 18 || i == 45 || i == 52 || i == 57 || i == 89 || i == 92 || i == 93 || i == 100 || i == 111 || i == 120)
+            i = i + 1
+        end
+    
+        delta_left_1, delta_right_1, delta_left_2, delta_right_2 = comparison(Obj1, Obj2, "CSE", i)
+        #number_file, names_files, left_Sq_1, right_Sq_1, left_Sq_2, right_Sq_2 = Comparson_Delta_Edge3("CSE", i)
+        push!(Number, i)
+       # push!(Name, names_files)
+        push!(delta_first_left, delta_left_1)
+        push!(delta_first_right, delta_right_1)
+    
+        if(delta_left_1 < 0 || delta_right_1 < 0) #Проверка внутри или вне реферетной разметки
+            push!(In_or_Out_first, "Out")
+        else
+            push!(In_or_Out_first, "In")
+        end
+    
+        push!(delta_second_left, delta_left_2)
+        push!(delta_second_right, delta_right_2)
+    
+        if(delta_left_2 < 0 || delta_right_2 < 0) #Проверка внутри или вне реферетной разметки
+            push!(In_or_Out_second, "Out")
+        else
+            push!(In_or_Out_second, "In")
+        end
+       
+        i = i + 1
+    end
+
+    text = DataFrame(Number_File = Number,
+   # Name_File = Name,
+    first_left = delta_first_left, 
+    first_right = delta_first_right,
+    In_Out_1 = In_or_Out_first, 
+    second_left = delta_second_left, 
+    second_right = delta_second_right,
+    In_Out_2 = In_or_Out_second)
+    
+    CSV.write("test/Projects2/$(Name_Project).csv", text, delim = ';')
 end
