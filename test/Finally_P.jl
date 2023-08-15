@@ -1,6 +1,6 @@
 using Plots, StructArrays, Tables, CSV#, PlotlyBase, PlotlyKaleido
 using XLSX, DataFrames
-
+using Match
 #Если хотим сохранить картинки - отключчаем ploty()
 plotly()
 
@@ -12,7 +12,7 @@ include("../src/plots.jl");
 include("Function_P_file.jl");
 include("Plots_P.jl")
 include("Create_Table.jl")
-
+include("Statistic.jl")
 #Наименование базы данных и номер файла ("CSE")
 Name_Data_Base, Number_File = "CSE", 1
 #Определённое отведение (channel)
@@ -125,7 +125,8 @@ include("../src/plots.jl");
 include("Function_P_file.jl");
 include("Plots_P.jl");
 include("Create_Table.jl");
-include("Function_dist.jl")
+include("Function_dist.jl");
+include("Statistic.jl");
 #Наименование базы данных и номер файла ("CSE")
 
 Name_Data_Base, Number_File = "CSE", 107
@@ -144,10 +145,10 @@ include("Create_Table.jl")
 Comparson_Delta_Edge("CSE", Number_File)
 #Table_P_Sq("Rad100_GlEdge42_Sq")
 #Table_P("Rad100_GlEdge42_Sq")
-Table_P_Sq_1and2("Rad100_GlEdge42_Sq_1and2")
+#Table_P_Sq_1and2("Rad100_GlEdge42_Sq_1and2")
 #save_pictures_p(Selection)
 # savefig("pictures_edge_CSE/$(names_files).png")
-Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
+Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
 #Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = function_Points_fronts2(Massiv_Amp_all_channels, Massiv_Points_channel)
 
 Ref_P[channel][Selection] 
@@ -293,3 +294,14 @@ for_scatter_x = My_Edge_P_One_Channel(Massiv_Points_channel, Massiv_Amp_all_chan
 for_scatter_x
 vline!(for_scatter_x, color = "green")
 vline!(Ref_P[channel], color = "red")
+
+#T1 - фильтр точек (все);
+#T2 - фильтр точек (некоторые)
+#MD - mid distance
+#Sq - square
+comparison("T1_Sq", "T2_MD", "CSE", 2) #тут по X
+
+RADIUS
+Global_Edge
+
+Table_with_comparison("T1_Sq", "T2_Sq", "TWC_Rad100GE42_2")
