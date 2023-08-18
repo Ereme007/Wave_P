@@ -25,6 +25,8 @@ function comparison(Obj1, Obj2, Name_Data_Base, Number_File)
     "T2_MD" => Test2_MD(Selection_Edge)
     "T1_Sq" => Test1_Square(Selection_Edge)
     "T2_Sq" => Test2_Square(Selection_Edge)
+    "T1_Med" => Test1_Mediana(Selection_Edge)
+    "T2_Med" => Test2_Mediana(Selection_Edge)
     _ => default_result
     end)
     Left1, Right1 = Delta(Left_p, Right_p, Obj1[1], Obj1[2])
@@ -35,6 +37,8 @@ function comparison(Obj1, Obj2, Name_Data_Base, Number_File)
     "T2_MD" => Test2_MD(Selection_Edge)
     "T1_Sq" => Test1_Square(Selection_Edge)
     "T2_Sq" => Test2_Square(Selection_Edge)
+    "T1_Med" => Test1_Mediana(Selection_Edge)
+    "T2_Med" => Test2_Mediana(Selection_Edge)
     _ => default_result
     end)
     Left2, Right2 = Delta(Left_p, Right_p, Obj2[1], Obj2[2])
@@ -42,4 +46,4 @@ function comparison(Obj1, Obj2, Name_Data_Base, Number_File)
     return Left1, Right1, Left2, Right2
 end
 
-comparison("T1_Sq", "T2_Sq", "CSE", 2) #тут по X
+comparison("T1_Med", "T2_Med", "CSE", 2) #тут по X
