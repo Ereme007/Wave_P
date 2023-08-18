@@ -1,6 +1,7 @@
 using Plots, StructArrays, Tables, CSV#, PlotlyBase, PlotlyKaleido
 using XLSX, DataFrames
 using Match
+
 #Если хотим сохранить картинки - отключчаем ploty()
 plotly()
 
@@ -304,4 +305,10 @@ comparison("T1_Sq", "T2_MD", "CSE", 2) #тут по X
 RADIUS
 Global_Edge
 
-Table_with_comparison("T1_Sq", "T2_Sq", "TWC_Rad100GE42_2")
+#Table_with_comparison("T1_Sq", "T2_Sq", "TWC_Rad100GE42_2")
+
+
+module scripts
+include("../scripts/onelead.jl")
+using .onelead
+end #module
