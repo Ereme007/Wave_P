@@ -17,7 +17,7 @@ include("Statistic.jl");
 
 
 #Наименование базы данных и номер файла ("CSE")
-Name_Data_Base, Number_File = "CSE", 11
+Name_Data_Base, Number_File = "CSE", 2
 #Определённое отведение (channel)
 channel = 4
 Selection = 3
@@ -25,7 +25,7 @@ Selection = 3
 Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
 
 #В зависимости от фильтра и алгоритма рассматривается дельта от реф границ
-comparison("T2_Med", "T2_Sq", "CSE", Number_File) #тут по X
+comparison("T1_Med", "T1_Sq", "CSE", Number_File) #тут по X
 
 ##Сохранение статистики
 #T1 - фильтр точек (все);
@@ -62,7 +62,7 @@ vline!([Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana], color = "pur
 vline!([Value_Left_Edge_Filtr_Mediana, Value_Right_Edge_Filtr_Mediana], color = "green") #зелёный сведение Mediana
 vline!([Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq], color = "brown") #коричневый сведение square
 vline!([Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq], color = "black") #черный сведение square
-
+Value_Left_Edge_Filtr_Sq
 
 #Два графика. Сверху - исходный сигнал с референтной разметкой P и моей детекцией P; снизу - график с фильтрами, референтной разметкой P и всеми точками,если Charr = 'p' (который находит алгоритм. Те точки, которые отличаются по цвету, являются фронтами)
 Charr = 'p'

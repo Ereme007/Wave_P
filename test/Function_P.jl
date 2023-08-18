@@ -356,7 +356,7 @@ function amp_one_channel(Massiv_Points_channel, singnal, koeff, channel, RADIUS)
 end
 
 
-#Свежение к 12 каналам
+#Сведение к 12 каналам
 #На вход: массив точек(Massiv_Points_channel), сигнал(signal), коэффициент(koeff), радиус (RADIUS)
 #На выход: массив из 12и отведений (Final_massiv)
 function amp_all_cannel(Massiv_Points_channel, signal, koeff, RADIUS)
@@ -364,6 +364,89 @@ function amp_all_cannel(Massiv_Points_channel, signal, koeff, RADIUS)
     
     for channel in 1:12
         push!(Final_massiv, amp_one_channel(Massiv_Points_channel, signal, koeff, channel, RADIUS))
+    end
+    
+    return Final_massiv
+end
+
+
+
+#====================================================================#
+
+#Нахождение амплитуды и границ по одному каналу (последняя цифра - номер канала)
+#Massiv_Points_channel = Sort_points_with_channel() - сортируем точки по возрастанию на всех каналах по своим промежуткам (т.е.  Sort_points_with_channel[1] - означает для 1го канала рассматриваются все области поиска, на которых в порядке возрастания расставлены локальные точки)
+
+#Пояснение многомерного массива "Massiv_Points_channel"
+#Massiv_Points_channel[channel] # на отведении channel столько отрезков (length)
+#Massiv_Points_channel[channel][2] #облать имеющий номер 2
+#Massiv_Points_channel[channel][2][1] #точка по X
+#На вход: массив точек(Massiv_Points_channel), сигнал (singnal), коэффициент(koeff), канал(channel), радиус(RADIUS)
+#На выход: AMP_START_END - структура, которая содержит амплитуду. индекс левой и правой границы фронта
+function amp_one_channel_(Massiv_Points_channel, singnal, koeff, channel, RADIUS)
+    #@info "Start amp_one_channel"
+    #@info "Rad = $RADIUS"
+    f_index = first_index = 0
+    l_index = last_index = 0
+    #только 1ая облась
+    AMP_START_END = []
+    FINAL_amp = 0
+    #   OBLAST_with_channel = []
+    All_Amp = []
+    All_Amp_by_channel = []
+    for current_segment in 1:length(Massiv_Points_channel[channel]) # (цикл от 1 области зубца P, который возможен в сигнале до последней области - Amp_start_end)
+        # @info "current_segment = $current_segment" 
+        Max_amp = 0
+
+        for i in 1:length(Massiv_Points_channel[channel][current_segment])
+            # @info "счетчик = $i" 
+            amp = 0
+
+            for k in (i+1):(i+3)
+                #  @info "значение K = $k" 
+                
+                if (((k + 1) <= length(Massiv_Points_channel[channel][current_segment])) && abs(Massiv_Points_channel[channel][current_segment][i] - Massiv_Points_channel[channel][current_segment][k]) < RADIUS / koeff) #тут вылезет!
+                    #  @info "зашли внутрь" 
+                    before = Massiv_Points_channel[channel][current_segment][k-1]
+                    after = Massiv_Points_channel[channel][current_segment][k]
+                    #  @info "wtf k! = $k"                 
+                    amp = amp + abs(singnal[channel][before] - singnal[channel][after])
+                    f_index = i
+                    l_index = k
+                    #@info "inside amp = $amp" 
+                end
+                push!(All_Amp, [amp, i, l_index])
+                if (Max_amp < amp)
+                    #  @info "Max_amp = $Max_amp and amp = $amp "
+                    Max_amp = amp
+                    first_index = i
+                    #  @info "first index = $i"
+                    last_index = l_index
+                    # @info "last index = $l_index"
+                end
+
+            end
+            # push!(AMP_START_END, [Max_amp, first_index, last_index])
+            FINAL_amp = Max_amp
+        end
+        
+        push!(AMP_START_END, [FINAL_amp, first_index, last_index])
+        push!(All_Amp_by_channel, All_Amp)
+        #  запоминаем, что на участке под номером OBL, амплитуду Max_amp, начало и конец first_index last_index
+    end
+    #push!(OBLAST_with_channel, AMP_START_END)
+
+    return AMP_START_END
+end
+
+
+#Сведение к 12 каналам
+#На вход: массив точек(Massiv_Points_channel), сигнал(signal), коэффициент(koeff), радиус (RADIUS)
+#На выход: массив из 12и отведений (Final_massiv)
+function amp_all_cannel_(Massiv_Points_channel, signal, koeff, RADIUS)
+    Final_massiv = []
+    
+    for channel in 1:12
+        push!(Final_massiv, amp_one_channel_(Massiv_Points_channel, signal, koeff, channel, RADIUS))
     end
     
     return Final_massiv
