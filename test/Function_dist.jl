@@ -87,7 +87,9 @@ function Min_dist_to_all_points(Massiv_Edge)
 end
 
 
-
+#Функция среднее квадратичное расстояние
+#Вход: массив границ (Massiv_Edge)
+#Выход: Наименьшее квадратичное расстояние (distance), индекс найденной точки (index_point), значение найденой точки (value_point)
 function Square_dist(Massiv_Edge)
     size_left = length(Massiv_Edge)
     Max = []
@@ -131,9 +133,12 @@ function Square_dist(Massiv_Edge)
     return distance, index_point, value_point
 end
 
+
+#Функция медиана
+#Вход: массив границ (Massiv_Edge)
+#Выход: Значение точки по алгоритму медианы
 function Mediana(Massiv_points)
     size_Massiv_points = length(Massiv_points)
-      
     Sort_massiv_points = sort(Massiv_points) 
     middle = floor(Int64, (size_Massiv_points / 2))
     
@@ -143,8 +148,8 @@ function Mediana(Massiv_points)
         Value = Sort_massiv_points[middle + 1]
     end
 
-      return Value
-  end
+    return Value
+end
 
 #Не использую
 #Функция по нахождению среднего значение, потом поиска ближайшей точки для данного числа
@@ -221,6 +226,7 @@ function Test2(Selection_Edge)
      return left, right
 end
 
+
 #Функции вычисления Дельта для разных филтров и алгоритмов
 function Test1_MV(Selection_Edge)
     Left_Edge_All, Right_Edge_All = Test1(Selection_Edge)
@@ -286,6 +292,7 @@ function Test2_Square(Selection_Edge)
     return Value_Left_edge_Filtr_MD, Value_Right_edge_Filtr_MD
 end
 
+
 #Функция вычисления Дельта граны от реферетной границы
 #Вход: Реферетные значения левой/правой границы (Ref_P_L/Ref_P_R), найденная левая/правая граница (P_L/P_R)
 #Выход:погрешность для левой/правой границы (delta_L/delta_R)
@@ -336,7 +343,7 @@ function Comparson_Delta_Edge(Name_Data_Base, Number_File)
     return Number_File, Names_files[Number_File], Left_Test_1, Right_Test_1, Left_Test_2, Right_Test_2
 end
 
-
+#=
 function Comparson_Delta_Edge2(Name_Data_Base, Number_File)
     channel = 1 #Здесь не имеет значение
     Names_files, signal_const, _, _, _, _, Ref_P, _, Massiv_Amp_all_channels, Massiv_Points_channel, _ = all_the(Name_Data_Base, Number_File)
@@ -374,9 +381,9 @@ function Comparson_Delta_Edge2(Name_Data_Base, Number_File)
 
     return Number_File, Names_files[Number_File], Left_Test_2, Right_Test_2, Left_Sq, Right_Sq
 end
+=#
 
-
-
+    #=
 
 function Comparson_Delta_Edge3(Name_Data_Base, Number_File)
     channel = 1 #Здесь не имеет значение
@@ -439,7 +446,7 @@ function function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
     Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = Test2_Square(Selection_Edge)
     return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana, Value_Left_Edge_Filtr_Mediana, Value_Right_Edge_Filtr_Mediana, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq
 end
-
+=#
 
 function My_Edge_P_All_Channel(All_points, Massiv_Amp)
     size = length(All_points[1])
