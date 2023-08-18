@@ -1,5 +1,5 @@
-
-function _read_ref(nr, reffile::String = raw"\\incart.local\FS\GUEST\Yuly\ГОСТ51\CSE\ref.csv" )
+include("../test/.env")
+function _read_ref(nr, reffile::String = Raw_CSE_Ref_Incart )
     df = CSV.read(reffile, DataFrame, delim = ';')
     #@info df
     row = df[nr, :]
@@ -82,13 +82,13 @@ function plot_vertical(channels...; label::String = "")
             # frame=:none,
             layout = (length(channels), 1),
             title = label,
-            # margin=0*Plots.mm,
+             margin=0*Plots.mm,
             # widen=false,
             # ticks = false,
             # frame=:none,
             # legend_position = :topright)
         )
-        plot!(size = (800, 500))
+        plot!(size = (1000, 600))
         return p
 end
 
@@ -100,7 +100,7 @@ function plot_vertical_ref(line, channels...; label::String = "")
             sig = channels[i]
             p = plot(sig, label = :none);
             push!(pls, p)
-            vline!([line])
+            vline!([line])#, lc=:black)#, ls=:dot)
         end
         p = plot(
             pls...,
@@ -168,6 +168,8 @@ function show_record(
 
 	_show_signals_mark(signals, ref)
 end
+
+
 
 function show_record_CTS(
     nr;

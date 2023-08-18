@@ -419,14 +419,14 @@ plot_vertical_ref(Ref_qrs, signal_without_qrs[1], signal_without_qrs[2], signal_
 
 #Функция определяющая приблезительные участки P зубца (+ график на 12 каналах)
 Left, Right = Segment_left_right_P(fs, Ref_qrs, ref.ibeg, ref.iend)
-All_left_right = [Left, Right ]
-plot_vertical_ref(All_left_right, signal_without_qrs[2], signal_without_qrs[2], signal_without_qrs[3], signal_without_qrs[4], signal_without_qrs[5], signal_without_qrs[6], signal_without_qrs[7], signal_without_qrs[8], signal_without_qrs[9], signal_without_qrs[10], signal_without_qrs[11], signal_without_qrs[12]; label="")
+Place_found_P_Left_and_Right = [Left, Right ]
+plot_vertical_ref(Place_found_P_Left_and_Right, signal_without_qrs[2], signal_without_qrs[2], signal_without_qrs[3], signal_without_qrs[4], signal_without_qrs[5], signal_without_qrs[6], signal_without_qrs[7], signal_without_qrs[8], signal_without_qrs[9], signal_without_qrs[10], signal_without_qrs[11], signal_without_qrs[12]; label="")
 
 #Проверка для 1го канала на первом участке pice (1 или 2)
 pice = 2
 
 plot(signal_without_qrs[2])
-vline!(All_left_right, label="~ P граница")
+vline!(Place_found_P_Left_and_Right, label="~ P граница")
 referent_p = [refrow.P_onset , refrow.P_end ]
 referent_p2 = [refrow.P_onset + ( ref.iend - ref.ibeg) , refrow.P_end + ( ref.iend - ref.ibeg) ]
 
@@ -444,7 +444,7 @@ end
 #18.05
 
 
-loc_min, loc_max = all_min_max(All_left_right, signal_without_qrs, midd, fs)
+loc_min, loc_max = all_min_max(Place_found_P_Left_and_Right, signal_without_qrs, midd, fs)
 
 chan = 5
 plot(signal_without_qrs[chan])
@@ -523,8 +523,8 @@ plot_vertical_ref(Ref_qrs, signal_without_qrs[1], signal_without_qrs[2], signal_
 
 #Функция определяющая приблезительные участки P зубца (+ график на 12 каналах)
 Left, Right = Segment_left_right_P(fs, Ref_qrs, ref.ibeg, ref.iend)
-All_left_right = [Left, Right ]
-plot_vertical_ref(All_left_right, signal_without_qrs[1], signal_without_qrs[2], signal_without_qrs[3], signal_without_qrs[4], signal_without_qrs[5], signal_without_qrs[6], signal_without_qrs[7], signal_without_qrs[8], signal_without_qrs[9], signal_without_qrs[10], signal_without_qrs[11], signal_without_qrs[12]; label="")
+Place_found_P_Left_and_Right = [Left, Right ]
+plot_vertical_ref(Place_found_P_Left_and_Right, signal_without_qrs[1], signal_without_qrs[2], signal_without_qrs[3], signal_without_qrs[4], signal_without_qrs[5], signal_without_qrs[6], signal_without_qrs[7], signal_without_qrs[8], signal_without_qrs[9], signal_without_qrs[10], signal_without_qrs[11], signal_without_qrs[12]; label="")
 #теперь по всем каналам my_butter
 all_graph_butter = Graph_my_butter(signal_without_qrs)
 #график
@@ -536,10 +536,10 @@ dist = floor(Int64, 20 / koef)
 all_graph_diff = Graph_diff(all_graph_butter, dist)
 plot_vertical(all_graph_diff[1], all_graph_diff[2], all_graph_diff[3], all_graph_diff[4], all_graph_diff[5], all_graph_diff[6], all_graph_diff[7], all_graph_diff[8], all_graph_diff[9], all_graph_diff[10], all_graph_diff[11], all_graph_diff[12]; label="")
 
-All_left_right
+Place_found_P_Left_and_Right
 
-st = All_left_right[1][1]
-en = All_left_right[2][1]
+st = Place_found_P_Left_and_Right[1][1]
+en = Place_found_P_Left_and_Right[2][1]
 xlims!(st, en)
 all_local_max = []
 
@@ -553,9 +553,9 @@ scatter!(mm, all_graph_diff[ch][mm])
 nm = [ss, mm]
 push!(kk, nm)
 
-Start = All_left_right
+Start = Place_found_P_Left_and_Right
 
-Massiv_Points_channel = Sort_points_with_channel(All_points_with_cannels_min_max(All_left_right, all_graph_diff))
+Massiv_Points_channel = Sort_points_with_channel(All_points_with_cannels_min_max(Place_found_P_Left_and_Right, all_graph_diff))
 Massiv_Points_channel[1]
 
 # [*] Алгоритм:
