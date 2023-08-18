@@ -75,6 +75,9 @@ function save_pictures_p(Selection)
         if (i == 10 || i == 18 || i == 45 || i == 52 || i == 57 || i == 89 || i == 92 || i == 93 || i == 100 || i == 111 || i == 120 )
             i = i + 1
         end
+        if (i == 93 || i == 111)
+            i = i + 1
+        end
 
         Name_Data_Base= "CSE";
         Number_File =  i;
