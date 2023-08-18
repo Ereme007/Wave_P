@@ -131,6 +131,20 @@ function Square_dist(Massiv_Edge)
     return distance, index_point, value_point
 end
 
+function Mediana(Massiv_points)
+    size_Massiv_points = length(Massiv_points)
+      
+    Sort_massiv_points = sort(Massiv_points) 
+    middle = floor(Int64, (size_Massiv_points / 2))
+    
+    if (iseven(size_Massiv_points))
+        Value = (Sort_massiv_points[middle + 1] + Sort_massiv_points[middle])/2
+    else
+        Value = Sort_massiv_points[middle + 1]
+    end
+
+      return Value
+  end
 
 #Не использую
 #Функция по нахождению среднего значение, потом поиска ближайшей точки для данного числа
@@ -238,6 +252,22 @@ function Test2_MD(Selection_Edge)
     _, Index_Right_edge_Filtr, Value_Right_edge_Filtr_MD = Min_dist_to_all_points(Right_edge_Filtr)
 
     return Value_Left_edge_Filtr_MD, Value_Right_edge_Filtr_MD
+end
+
+function Test1_Mediana(Selection_Edge)
+    Left_edge_Filtr, Right_edge_Filtr = Test1(Selection_Edge)
+    Value_Left_edge_All_Mediana = Mediana(Left_edge_Filtr)
+    Value_Right_edge_All_Mediana = Mediana(Right_edge_Filtr)
+
+    return Value_Left_edge_All_Mediana, Value_Right_edge_All_Mediana
+end
+
+function Test2_Mediana(Selection_Edge)
+    Left_edge_Filtr, Right_edge_Filtr = Test2(Selection_Edge)
+    Value_Left_edge_Filtr_Mediana = Mediana(Left_edge_Filtr)
+    Value_Right_edge_Filtr_Mediana = Mediana(Right_edge_Filtr)
+
+    return Value_Left_edge_Filtr_Mediana, Value_Right_edge_Filtr_Mediana
 end
 
 function Test1_Square(Selection_Edge)
@@ -402,10 +432,12 @@ function function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
 
     Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test1_MD(Selection_Edge)
     Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
+    Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana = Test1_Mediana(Selection_Edge)
+    Value_Left_Edge_Filtr_Mediana, Value_Right_Edge_Filtr_Mediana = Test2_Mediana(Selection_Edge) 
    # @info "Value_Right_Edge_Filtr_MD = $Value_Right_Edge_Filtr_MD"
     Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq = Test1_Square(Selection_Edge)
     Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = Test2_Square(Selection_Edge)
-    return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq
+    return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana, Value_Left_Edge_Filtr_Mediana, Value_Right_Edge_Filtr_Mediana, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq
 end
 
 
