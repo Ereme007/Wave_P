@@ -2,6 +2,8 @@
 include("Function_dist.jl")
 using DataFrames
 
+
+#=
 #Функция записи в файл Номер проекта; Имя проекта; дельта левой границы, дельта правой границы, In/out для тест1; дельта левой границы, дельта правой границы, In/out для тест2; 
 #Вход: наименование проекта (как хоти его записать в папку Project)
 #Выход: NULL
@@ -61,6 +63,8 @@ function Table_P(Name_Project)
     In_Out_2 = In_or_Out2)
     CSV.write("test/Projects/$(Name_Project).csv", text, delim = ';')
 end
+=#
+
 
 # Функция сохраняющая картинки (несделано, так как нужно без ploty(), но без него картинки "некрасивые")
 function save_pictures_p(Selection)
@@ -100,7 +104,7 @@ function save_pictures_p(Selection)
     end
 end
 
-
+#=
 #Сравнение TEST2 между Square и MD
 #Функция записи в файл Номер проекта; Имя проекта; дельта левой границы, дельта правой границы, In/out для тест1; дельта левой границы, дельта правой границы, In/out для тест2; 
 #Вход: наименование проекта (как хоти его записать в папку Project)
@@ -161,10 +165,10 @@ function Table_P_Sq(Name_Project)
     In_Out_Sq = In_or_Out2)
     CSV.write("test/Projects/$(Name_Project).csv", text, delim = ';')
 end
+=#
 
 
-
-
+#=
 #Сравнение  Square между Test1 и Test2
 #Rad**_GlEdge**_Sq_1and2
 #Функция записи в файл Номер проекта; Имя проекта; дельта левой границы, дельта правой границы, In/out для тест1; дельта левой границы, дельта правой границы, In/out для тест2; 
@@ -226,7 +230,7 @@ function Table_P_Sq_1and2(Name_Project)
     In_Out_Sq_2 = In_or_Out2)
     CSV.write("test/Projects/$(Name_Project).csv", text, delim = ';')
 end
-
+=#
 
 
 function Table_with_comparison(Obj1, Obj2, Name_Project)#, Name_Data_Base, Number_File)
