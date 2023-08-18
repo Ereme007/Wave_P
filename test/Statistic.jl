@@ -2,9 +2,13 @@
 
 include("Function_dist.jl")
 
+
+#Функция, выдающее значение дельта относительно левой и правой границы для 2х разных фитльтров (рассматриваем на 3ей секции)
+#Вход: Obj1, Obj2, Name_Data_Base, Number_File
+#Выход: Левая и правая дельта для 1го и 2го фильтра (Left1/Left2 для Right1/Right2)
 function comparison(Obj1, Obj2, Name_Data_Base, Number_File)
     channel = 1 #Здесь не имеет значение
-    Names_files, signal_const, _, _, _, _, Ref_P, _, Massiv_Amp_all_channels, Massiv_Points_channel, _ = all_the(Name_Data_Base, Number_File)
+    Names_files, _, _, _, _, _, Ref_P, _, Massiv_Amp_all_channels, Massiv_Points_channel, _ = all_the(Name_Data_Base, Number_File)
     
     Selection = 3 #Здесь не имеет значение, но по итогу рассматриваем на 3ем отсеке (все отсеки между собой одинаковы, кроме первого)
     Selection_Edge = []
@@ -29,6 +33,7 @@ function comparison(Obj1, Obj2, Name_Data_Base, Number_File)
     "T2_Med" => Test2_Mediana(Selection_Edge)
     _ => default_result
     end)
+
     Left1, Right1 = Delta(Left_p, Right_p, Obj1[1], Obj1[2])
 
     Obj2 = (
@@ -46,4 +51,5 @@ function comparison(Obj1, Obj2, Name_Data_Base, Number_File)
     return Left1, Right1, Left2, Right2
 end
 
-comparison("T1_Med", "T2_Med", "CSE", 2) #тут по X
+#Пример вызова
+#comparison("T1_Med", "T2_Med", "CSE", 2) #тут по X
