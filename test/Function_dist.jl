@@ -422,7 +422,7 @@ function Comparson_Delta_Edge3(Name_Data_Base, Number_File)
 
     return Number_File, Names_files[Number_File], Left_Sq_Test_1, Right_Sq_Test_1, Left_Sq_Test_2, Right_Sq_Test_2
 end
-
+=#
 
 #Функция, выдающая значение границ для двух фильтров метода сведения MD
 #Вход: Массив Амплитуд (Massiv_Amp_all_channels), Массив Точек (Massiv_Points_channel)
@@ -446,7 +446,41 @@ function function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
     Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = Test2_Square(Selection_Edge)
     return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana, Value_Left_Edge_Filtr_Mediana, Value_Right_Edge_Filtr_Mediana, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq
 end
-=#
+
+
+#Функция, выдающая значение границ для двух фильтров метода сведения MD
+#Вход: Массив Амплитуд (Massiv_Amp_all_channels), Массив Точек (Massiv_Points_channel)
+#Выход: Значение левой/правой границы для фильтра 1 и фильтра 2 (All & Filtr)
+function function_Points_fronts_Selection(Massiv_Amp_all_channels, Massiv_Points_channel)
+    Med_left = []
+    Med_right = []
+    for Selection in 1:length(Massiv_Amp_all_channels[1])
+
+    Selection_Edge = []
+
+    for Current_chanel in 1:12
+        Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Current_chanel][Selection], Massiv_Points_channel[Current_chanel][Selection])
+        #Тут Функцию по КАК РАЗ поканально в одной секции
+        push!(Selection_Edge, Points_fronts)
+    end
+
+   # Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test1_MD(Selection_Edge)
+   # Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
+    Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana = Test1_Mediana(Selection_Edge)
+   # Value_Left_Edge_Filtr_Mediana, Value_Right_Edge_Filtr_Mediana = Test2_Mediana(Selection_Edge) 
+   # @info "Value_Right_Edge_Filtr_MD = $Value_Right_Edge_Filtr_MD"
+   # Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq = Test1_Square(Selection_Edge)
+   # Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = Test2_Square(Selection_Edge)
+
+    push!(Med_left, Value_Left_Edge_All_Mediana)
+    push!(Med_right, Value_Right_Edge_All_Mediana)
+    end
+   
+    
+    #return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana, Value_Left_Edge_Filtr_Mediana, Value_Right_Edge_Filtr_Mediana, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq
+return Med_left, Med_right
+end
+
 
 function My_Edge_P_All_Channel(All_points, Massiv_Amp)
     size = length(All_points[1])

@@ -15,9 +15,9 @@ include("Plots_P.jl")
 include("Create_Table.jl")
 include("Statistic.jl")
 #Наименование базы данных и номер файла ("CSE")
-Name_Data_Base, Number_File = "CSE", 2
+Name_Data_Base, Number_File = "CSE", 1
 #Определённое отведение (channel)
-channel = 4
+channel = 1
 
 #Сигнал
 Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
@@ -60,6 +60,10 @@ title!("$(Names_files[Number_File]), $Name_Data_Base, Отведение $channe
 #График отфильрованного сигнала my_butter канала на всех отведениях с "занулением" QRS (P.S. к сожалению, имя файла не указать)
 plot_vertical(all_graph_butter[1], all_graph_butter[2], all_graph_butter[3], all_graph_butter[4], all_graph_butter[5], all_graph_butter[6], all_graph_butter[7], all_graph_butter[8], all_graph_butter[9], all_graph_butter[10], all_graph_butter[11], all_graph_butter[12]);
 plot!()
+
+#График исходного канала на определённом отведении с"занулением" QRS с референтной разметкой qrs
+plot_vertical_ref(Ref_qrs, signal_without_qrs[channel]);
+title!("$(Names_files[Number_File]), $Name_Data_Base, Отведение $channel")
 
 #График отфильрованного сигнала my_butter канала на определённом отведении с "занулением" QRS
 plot(all_graph_butter[channel], legend = false);
@@ -130,7 +134,7 @@ include("Function_dist.jl");
 include("Statistic.jl");
 #Наименование базы данных и номер файла ("CSE")
 
-Name_Data_Base, Number_File = "CSE", 2
+Name_Data_Base, Number_File = "CSE", 4
 #Определённое отведение (channel)
 channel = 1
 
@@ -153,7 +157,7 @@ Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value
 #Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = function_Points_fronts2(Massiv_Amp_all_channels, Massiv_Points_channel)
 
 Ref_P[channel][Selection] 
-include("Plots_P.jl")//Z..\
+include("Plots_P.jl")
 
 plot_all_channels_const_signal(signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
 xlims!(Ref_P[1][Selection][1]-50, Ref_P[1][Selection][2]+50)
@@ -178,7 +182,7 @@ Value_Right_Edge_Filtr_Sq
 
 #Функция, строящая график на дифференцированном сигнале, границы P из реферетного файла и найденные границы зубца Р
 plot_all_channels_points(Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Ref_P)
-xlims!(Ref_P[1][1][1] - 50, Ref_P[1][1][2] + 50)
+xlims!(Ref_P[1][3][1] - 50, Ref_P[1][3][2] + 50)
 
 #Функция строит исходный сигнал на заданном отведении
 plot_const_signal(Name_Data_Base, channel, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, Ref_P)
@@ -195,7 +199,7 @@ Charr = 'p'
 plot_channel_points(channel, Charr, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Ref_P)
 @info "Massiv_Amp_all_channels = $(Massiv_Amp_all_channels[4][3])"
 plot!()
-xlims!(Ref_P[1][1][1] - 50, Ref_P[1][1][2] + 50)
+xlims!(Ref_P[1][2][1] - 50, Ref_P[1][2][2] + 50)
 
 
 

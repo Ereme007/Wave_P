@@ -1,6 +1,6 @@
-using Plots, StructArrays, Tables, CSV#, PlotlyBase, PlotlyKaleido
+using Plots, StructArrays, Tables, CSV, Match#, PlotlyBase, PlotlyKaleido
 using XLSX, DataFrames
-using Match
+using Alert
 
 #Если хотим сохранить картинки - отключчаем ploty()
 plotly()
@@ -43,30 +43,31 @@ function amp_one_channel_(Massiv_Points_channel, singnal, koeff, channel, RADIUS
          @info "current_segment = $((Massiv_Points_channel[channel][current_segment]))" 
         Max_amp = 0
         @info "сегмент = $current_segment" 
-        for i in 1:length(Massiv_Points_channel[channel][current_segment])
-             @info "счетчик = $i" 
+        count_points = length(Massiv_Points_channel[channel][current_segment])
+        for left_points in 1:count_points
+             @info "СЧЕТЧИК = $left_points" 
             amp = 0
 
-            for k in (i+1):(i+3)
-                #  @info "значение K = $k" 
+            for right_points in (left_points + 1):(left_points + 3)
+                  @info "значение K = $right_points" 
                 
-                if (((k + 1) <= length(Massiv_Points_channel[channel][current_segment])) && abs(Massiv_Points_channel[channel][current_segment][i] - Massiv_Points_channel[channel][current_segment][k]) < RADIUS / koeff) #тут вылезет!
-                    #  @info "зашли внутрь" 
-                    before = Massiv_Points_channel[channel][current_segment][k-1]
-                    after = Massiv_Points_channel[channel][current_segment][k]
-                    #  @info "wtf k! = $k"                 
+                if (((right_points + 1) <= count_points) && abs(Massiv_Points_channel[channel][current_segment][left_points] - Massiv_Points_channel[channel][current_segment][right_points]) < RADIUS / koeff) #тут вылезет!
+                      @info "зашли внутрь" 
+                    before = Massiv_Points_channel[channel][current_segment][right_points-1]
+                    after = Massiv_Points_channel[channel][current_segment][right_points]
+                    #  @info "wtf k! = $right_points"                 
                     amp = amp + abs(singnal[channel][before] - singnal[channel][after])
-                    f_index = i
-                    l_index = k
+                    f_index = left_points
+                    l_index = right_points
                     #@info "inside amp = $amp" 
                 end
-                push!(All_Amp, [amp, i, l_index])
+                push!(All_Amp, [amp, left_points, l_index])
 
                 if (Max_amp < amp)
                     #  @info "Max_amp = $Max_amp and amp = $amp "
                     Max_amp = amp
-                    first_index = i
-                    #  @info "first index = $i"
+                    first_index = left_points
+                    #  @info "first index = $left_points"
                     last_index = l_index
                     # @info "last index = $l_index"
                 end
@@ -74,7 +75,7 @@ function amp_one_channel_(Massiv_Points_channel, singnal, koeff, channel, RADIUS
             end
             # push!(AMP_START_END, [Max_amp, first_index, last_index])
             FINAL_amp = Max_amp
-            @info "счетчик в конце = $i"
+            @info "счетчик в конце = $left_points"
 
         end
         
@@ -106,10 +107,10 @@ end
 #Наименование базы данных и номер файла ("CSE")
 Name_Data_Base, Number_File = "CSE", 2
 #Определённое отведение (channel)
-channel = 4
-
+channel = 1
+Selection = 1
 #Сигнал
-Names_files, signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
+Names_files, signal_const, signal_without_qrs, all_graph_butter, all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
 #Сигнал в виде массива для более удобного поканальной отрисовки
 Massiv_Signal = Sign_Channel(signal_const)
 Names_files, Signal_copy, Frequency, _, _, Ref_File = One_Case(Name_Data_Base, Number_File)
@@ -117,10 +118,113 @@ koef  = 1000/Frequency
 
 Massiv_Amp_all_channels_test = amp_all_cannel_(Massiv_Points_channel, all_graph_diff, koef, RADIUS)
 
-Massiv_Amp_all_channels_test[1][1][10:30]
+Massiv_Amp_all_channels_test[1][1][1:10]
 current_segment = 2
 length(Massiv_Points_channel[channel][current_segment])
 Massiv_Points_channel[channel][current_segment]
 length(Massiv_Points_channel[channel])
 length(Massiv_Points_channel[channel][current_segment])
 1:length(Massiv_Points_channel[channel][current_segment])
+plot(signal_const.I)
+amp_one_channel()
+
+length(Massiv_Points_channel[channel][current_segment])
+
+
+
+
+using Alert
+function Amp_index(mass_points)
+    size = length(mass_points)
+  #  if (size == 1)
+  #      alert("Одна точка")
+  #  end
+    count_amp = abs(mass_points[2] - mass_points[1])
+
+    for i in 3:4
+        if(i <= size)
+            count_amp = count_amp + abs(mass_points[i] - mass_points[i-1])
+        end
+    end
+
+    return count_amp
+end
+
+
+
+Amp_index([3, 2, 2])
+
+
+#(mass_points[Left_index + 3][2] - mass_points[Left_index][2]) < Radiuse
+function Massiv(mass_points)
+    size = length(mass_points)
+       # @info "size = $size"
+
+    Sovok = []
+    
+    for Left_index in 1:(size-1)
+        Mass_points = []
+        
+      #  @info "Here2  $Left_index"
+        if (Left_index + 2 > size)
+            end_index = 1
+        elseif (Left_index + 3 > size)
+            end_index = 2
+        else
+            end_index = 3 
+        end
+
+        @info "fir = $(mass_points[Left_index][1])"
+        @info "sec = $(mass_points[Left_index + end_index][1])"
+        dist = mass_points[Left_index + end_index][1] - mass_points[Left_index][1]
+        @info "dist  $dist"
+        while(dist > 6 && end_index != 1)
+            @info "no!"
+            @info "dist === $dist"
+            end_index = end_index - 1
+            dist = mass_points[Left_index + end_index][1] - mass_points[Left_index][1]
+        end
+
+        push!(Mass_points, mass_points[Left_index][2])#, Left_index, Left_index+1])
+       
+     #   @info "Mass_points = $Mass_points"
+     #   @info "Left_index  = $Left_index"
+      ##  if(Left_index == 6)
+      #      @info "MAO"
+      #  end
+        
+        for Right_index in (Left_index + 1) : (Left_index + end_index) 
+           # @info "mass_points[Right_index][2] = $(mass_points[Right_index][2])"
+            push!(Mass_points, mass_points[Right_index][2]) #, Left_index, Right_index])
+        end
+
+        push!(Sovok, Mass_points)
+       end
+       return Sovok
+    end
+
+function Link_mass_amp(massiv_po)
+    massiv = Massiv(massiv_po)
+    Mass = []
+    size = length(massiv)
+    for i in 1:size
+        push!(Mass, Amp_index(massiv[i]))
+    end
+
+    return Mass
+end
+
+
+
+##po = [3, 5, -6, 1, 4, 7]
+#Link_mass_amp(po)
+#po3 = [3, 5, -6]
+#Link_mass_amp(po3)
+#po2 = [3, 5]
+#Link_mass_amp(po2)
+
+new_po3 = [[1, 3], [5, 5], [7, -6], [8, -7]]
+Massiv(new_po3)
+Link_mass_amp(new_po3)
+
+Radiuse = 6
