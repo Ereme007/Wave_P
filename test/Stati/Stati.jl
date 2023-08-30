@@ -1,7 +1,16 @@
 module Stati
 using Match
-include("Function_dist.jl");
-include("Function_P_file.jl");
+using Dates, CSV, DataFrames, TOML #, FileUtils
+
+include("../../src/readfiles.jl")
+
+
+#Файл, содержащий функции для реферетной разметки QRS & P; Фильтр границ, которые нашли с помощью алгоритма (Test1, Test2); Способы сведения границ (Min_dist_to_all_points & Mean_value)
+include("Markup_function_P.jl")
+include("env.jl")
+
+include("Function_dist.jl")
+include("Function_P_file.jl")
 
 #Функция, выдающее значение дельта относительно левой и правой границы для 2х разных фитльтров (рассматриваем на 3ей секции)
 #Вход: Obj1, Obj2, Name_Data_Base, Number_File

@@ -7,7 +7,7 @@ function Position_Data_Base(Type_Data_base)
     if (Type_Data_base == "CSE")
         raw_base_data = Raw_CSE_MA_Data_Base_Incart # синтетические ЭКГ CSE_MA
         allbinfiles = getfileslist(raw_base_data) 
-    elseif(Type_Data_base == "CTS")
+    elseif (Type_Data_base == "CTS")
         raw_base_data = Raw_CTS_Data_Base_Incart # синтетические ЭКГ CTS
         allbinfiles = getfileslist(raw_base_data) 
     else

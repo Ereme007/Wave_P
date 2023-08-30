@@ -39,10 +39,10 @@ include("Statistic.jl");
 
 
 #Наименование базы данных и номер файла ("CSE")
-Name_Data_Base, Number_File = "CSE", 1
+Name_Data_Base, Number_File = "CSE", 35
 #Определённое отведение (channel)
 channel = 1
-Selection = 2
+Selection = 5
 #Сигнал
 Names_files, signal_const, signal_without_qrs, all_graph_butter, all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File = all_the(Name_Data_Base, Number_File)
 Names_files2, signal_const2, signal_without_qrs2, all_graph_butter2, all_graph_diff2, Ref_qrs2, Ref_P2, Place_found_P_Left_and_Right2, Massiv_Amp_all_channels2, Massiv_Points_channel2, Referents_by_File2 = all_the2(Name_Data_Base, Number_File)
@@ -57,6 +57,7 @@ plot_channel_points(channel, Charr, signal_const, Massiv_Amp_all_channels, Massi
 @info "Massiv_Amp_all_channels = $(Massiv_Amp_all_channels[4][3])"
 plot!()
 xlims!(Ref_P[1][Selection][1] - 50, Ref_P[1][Selection][2] + 50)
+
 
 
 all_test_plot(channel, Charr, signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Ref_P, Massiv_Amp_all_channels2, Massiv_Points_channel2)
