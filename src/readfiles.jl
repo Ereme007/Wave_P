@@ -206,3 +206,37 @@ function gettemplates(path_toml::String)
 
     return tmpl_dict
 end
+
+function _read_ref(nr, reffile::String = Raw_CSE_Ref_Incart )
+    df = CSV.read(reffile, DataFrame, delim = ';')
+    #@info df
+    row = df[nr, :]
+
+    # 0-индексы (?)
+    filename = row["File"]
+    ibeg = row["Onset"] + 1
+    iend = row["End"] + 1
+    P_onset = row["P-Onset"] + 1
+    P_offset = row["P-End"] + 1
+    Qrs_onset = row["Qrs-Onset"] + 1
+    Qrs_end = row["Qrs-End"] + 1
+    T_end = row["T-End"] + 1
+    P_dur = row["P-duration"]
+    PQ_int = row["PQ-interval"]
+    Qrs_dur = row["QRS-duration"]
+    QT_int = row["QT-interval"]
+    return (;
+        filename,
+        ibeg,
+        iend,
+        P_onset,
+        P_offset,
+        Qrs_onset,
+        Qrs_end,
+        T_end,
+        P_dur,
+        PQ_int,
+        Qrs_dur,
+        QT_int,
+    )
+end

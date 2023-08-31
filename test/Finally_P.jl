@@ -116,22 +116,22 @@ title!("Дифф+first_P, $(Names_files[Number_File]), $Name_Data_Base, Отве
 ########################################################################################################
 ########################################################################################################
 
-using Plots, StructArrays, Tables, CSV#, PlotlyBase, PlotlyKaleido
-using XLSX, DataFrames
-
+#using Plots, StructArrays, Tables, CSV#, PlotlyBase, PlotlyKaleido
+#using XLSX, DataFrames
+using CSV, DataFrames, Dates
 #Если хотим сохранить картинки - отключчаем ploty()
 plotly()
 
-include("Markup_function_P.jl");
-include("Function_P.jl");
-include(".env");
+include("Stati/Markup_function_P.jl");
+include("Stati/Function_P.jl");
+include("Stati/env.jl");
 include("../src/readfiles.jl");
 include("../src/plots.jl");
-include("Function_P_file.jl");
-include("Plots_P.jl");
-include("Create_Table.jl");
-include("Function_dist.jl");
-include("Statistic.jl");
+include("Stati/Function_P_file.jl");
+include("Stati/Plots_P.jl");
+include("Create_Table.jl"); #внтури ошибка
+include("Stati/Function_dist.jl");
+include("Statistic.jl"); #внутри ошибка
 #Наименование базы данных и номер файла ("CSE")
 
 Name_Data_Base, Number_File = "CSE", 4
@@ -153,7 +153,7 @@ Comparson_Delta_Edge("CSE", Number_File)
 #Table_P_Sq_1and2("Rad100_GlEdge42_Sq_1and2")
 #save_pictures_p(Selection)
 # savefig("pictures_edge_CSE/$(names_files).png")
-Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
+Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana =  function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
 #Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = function_Points_fronts2(Massiv_Amp_all_channels, Massiv_Points_channel)
 
 Ref_P[channel][Selection] 

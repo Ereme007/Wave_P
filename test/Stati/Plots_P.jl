@@ -2,7 +2,7 @@
 include("Function_P_file.jl")
 include("Markup_function_P.jl")
 include("Function_dist.jl")
-include(".env")
+include("env.jl")
 
 #Функция, строящая график исходного сигнала на 12 отведениях с реф разметкой и моей детекцией зубца Р.
 #Вход - Сигнал (Signal_const), Массив амплитуд (Massiv_Amp_all_channels), Массив точек (Massiv_Points_channel), Референтная разметка P(Ref_P)

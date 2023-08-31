@@ -1,7 +1,7 @@
 
 #Много вспомогательных функций
-include("../src/my_filt.jl")
-include(".env")
+include("../../src/my_filt.jl")
+include("env.jl")
 
 #Функция нахождения локального максимума с заданным радиусом 
 #Вход: сигнал(Signal), радиус(rad)
@@ -352,7 +352,7 @@ function amp_one_channel(Massiv_Points_channel, singnal, koeff, channel, RADIUS)
         #  запоминаем, что на участке под номером OBL, амплитуду Max_amp, начало и конец first_index last_index
     end
     #push!(OBLAST_with_channel, AMP_START_END)
-@info "AMP_START_END = $AMP_START_END"
+#@info "AMP_START_END = $AMP_START_END"
     return AMP_START_END
 end
 
@@ -507,7 +507,7 @@ function amp_one_channel2(Massiv_Points_channel, singnal, koeff, channel, RADIUS
         ll = Massiv_Points_channel[channel][current_segment][first_index]
         #@info "sig = $(singnal[channel][ll])"
         if(abs(singnal[channel][ll]) < 6.5 && last_index != (first_index+1))
-           @info "In"
+          # @info "In"
             first_index = first_index + 1
         end
 
@@ -515,7 +515,7 @@ function amp_one_channel2(Massiv_Points_channel, singnal, koeff, channel, RADIUS
         rr = Massiv_Points_channel[channel][current_segment][last_index]
         #@info "sig = $(singnal[channel][rr])"
         if(abs(singnal[channel][rr]) < 6.5 && (last_index - 1) != first_index)
-           @info "In"
+          # @info "In"
             last_index = last_index - 1
         end
     
@@ -524,6 +524,55 @@ function amp_one_channel2(Massiv_Points_channel, singnal, koeff, channel, RADIUS
         #  запоминаем, что на участке под номером OBL, амплитуду Max_amp, начало и конец first_index last_index
     end
     #push!(OBLAST_with_channel, AMP_START_END)
-@info "AMP_START_END = $AMP_START_END"
+#@info "AMP_START_END = $AMP_START_END"
     return AMP_START_END
 end
+
+
+
+
+#Функция составления реферетной разметки для волны Р
+#Вход - количество областей поисак P
+#Выход - Массив реферетных значений волны P на всём сигнале
+function Function_Ref_P(ALL_SELECTION, Referents_by_File)
+    Ref_P = []
+    
+    for Selection in 1:ALL_SELECTION
+        k = ([Referents_by_File.P_onset - 1 + (Selection - 1) * (Referents_by_File.iend - Referents_by_File.ibeg + 1), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg + 1) - 1 ]);
+        push!(Ref_P, k)
+    end
+    
+    return Ref_P
+end
+
+#Функция составления реферетной разметки для QRS
+#На вход границы qrs и границы сигнала, на выход все рефенетнаые границы qrs 
+#Верно только для искусственнного сигнала
+function All_Ref_QRS(signals, start_qrs, end_qrs, start_sig, end_sig)
+    #  @info "length(signals) = $(length(signals))"
+    #  @info "length(signals) = $(length(signals))"
+    #  @info "length(signals) = $(length(signals))"
+
+    Distance = end_sig - start_sig
+    dur_qrs = end_qrs - start_qrs
+    All_ref_qrs = Int64[]
+
+    push!(All_ref_qrs, start_qrs)
+    push!(All_ref_qrs, end_qrs)
+
+    index = start_qrs + Distance #+ 1
+
+    while (index < length(signals))
+        push!(All_ref_qrs, index)
+
+        if (index + dur_qrs < length(signals))
+            push!(All_ref_qrs, index + dur_qrs)
+        end
+        #  @info "index = $index"
+        index = index + Distance + 1
+        #  @info "index + Distance + 1 = $index"
+    end
+    
+    return All_ref_qrs
+end
+
