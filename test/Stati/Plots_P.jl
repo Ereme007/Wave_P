@@ -215,7 +215,7 @@ end
 
 
 
-function    (Current_channel, Charr, Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Ref_P, Massiv_Amp_all_channels2, Massiv_Points_channel2)
+function plot_channel_points(Current_channel, Charr, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Ref_P, Massiv_Amp_all_channels2, Massiv_Points_channel2)
     #Signal_const, Massiv_Amp_all_channels, Massiv_Points_channel, all_graph_diff, Referents_by_File = all_the(BaseName, N)    
 #Current_channel = 1
     Mass_plots = []

@@ -22,7 +22,7 @@ module Module_Signal
         start_qrs = floor(Int64, Ref_File.QRS_onset) #начало комплекса QRS (INT)
         end_qrs = floor(Int64, Ref_File.QRS_end) #конец комплекса QRS (INT) 
         #Неизменный сигнал (массив)
-            signal_const = Sign_Channel(Signal_const) #12 каналов
+        signal_const = Sign_Channel(Signal_const) #12 каналов
         #Сигнал для обработки (массив)
         signals_channel = Sign_Channel(Signal_copy) #12 каналов
 
@@ -52,7 +52,7 @@ module Module_Signal
             push!(Ref_P, Function_Ref_P(count_selections, Referents_by_File))
         end
 
-        return Names_files, Signal_const, signal_without_qrs, all_graph_butter,all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File
+        return Names_files, Signal_const, signal_without_qrs, all_graph_butter, all_graph_diff, Ref_qrs, Ref_P, Place_found_P_Left_and_Right, Massiv_Amp_all_channels, Massiv_Points_channel, Referents_by_File
     end
 
 
