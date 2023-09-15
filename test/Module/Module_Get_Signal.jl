@@ -31,7 +31,7 @@ module Module_Get_Signal
         count_selections = length(Ref_qrs)
         Ref_P = Function_Ref_P(count_selections, Referents_by_File)
 
-        return Names_files, signals_channel, Frequency, koef, Ref_qrs, Ref_P
+        return Names_files, signals_channel, Frequency, koef, Ref_qrs, Ref_P, start_signal, end_signal
     end
 
     export  Signal_all_channels
