@@ -95,3 +95,63 @@ function detrend(y::Vector)
 
     return y.-(x.*k.+b)
 end
+
+
+
+#Функция нахождения локального максимума с заданным радиусом 
+#Вход: сигнал(Signal), радиус(rad)
+#Выход: массив максимумов (Massiv_max)
+function new_localmax(Signal, rad)
+    Massiv_max = Int64[]
+    size_signal = length(Signal)
+    i = 1
+
+    while (i <= size_signal)
+        max = Signal[i]
+        
+        for j in (i-rad):(i+rad)
+            if (j >= 1 && j < size_signal && Signal[j] > max)
+                max = Signal[j]
+            end
+        end
+
+        if (Signal[i] == max)
+            push!(Massiv_max, i)
+            i = i + rad
+        else
+            i = i + 1
+        end
+
+    end
+
+    return Massiv_max
+end
+
+
+#Функция нахождения локального минимума с заданным радиусом 
+#Вход: сигнал(Signal), радиус(rad)
+#Выход: массив минимумов (Massiv_min)
+function new_localmin(Signal, rad)
+    Massiv_min = Int64[]
+    size_signal = length(Signal)
+    i = 1
+
+    while (i <= size_signal)
+        min = Signal[i]
+        for j in (i-rad):(i+rad)
+            if (j >= 1 && j < size_signal && Signal[j] < min)
+                min = Signal[j]
+                #    @info j
+            end
+        end
+
+        if (Signal[i] == min)
+            push!(Massiv_min, i)
+            i = i + rad - 1
+        else
+            i = i + 1
+        end
+    end
+
+    return Massiv_min
+end
