@@ -18,3 +18,4 @@ Dsit_Diff = 20
 #Window = 20
 Low_Hight = 75
 Global_Edge = 48 #78#48
+Diff_ZERO = 6.5

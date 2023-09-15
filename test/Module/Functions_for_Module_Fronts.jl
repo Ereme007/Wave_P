@@ -12,15 +12,12 @@ end
 function Line_qrs(All_ref_qrs, signals)
     i = 2
     size = length(All_ref_qrs)
-    #@info "size = $size"
 
     while (i <= size)
         for channel in 1:12
             rise = greed(All_ref_qrs[i-1], All_ref_qrs[i], signals[channel][All_ref_qrs[i-1]-1], signals[channel][All_ref_qrs[i]-1])
             coord_y = signals[channel][All_ref_qrs[i-1]-1]
             coord_x_1 = All_ref_qrs[i-1]
-            #@info "signals[channel][coord_1] = $(signals[channel][coord_1])"
-            #@info "coord_y = $(coord_y)"
             
             for coord_x in All_ref_qrs[i-1]:All_ref_qrs[i]
                 signals[channel][coord_x] = coord_y + rise
@@ -180,7 +177,9 @@ function Sort_points_with_channel(Massiv_Points)
 end
 
 
-
+#Значение AMP на одном канале
+#на выход:
+#На выход:
 function amp_one_channel(Massiv_Points_channel, singnal, koeff, channel, RADIUS)
     #@info "Start amp_one_channel"
     #@info "Rad = $RADIUS"
