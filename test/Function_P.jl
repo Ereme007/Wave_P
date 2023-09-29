@@ -1,7 +1,6 @@
 
 #Много вспомогательных функций
-include("../../src/my_filt.jl")
-include("env.jl")
+include("../src/my_filt.jl")
 
 #Функция нахождения локального максимума с заданным радиусом 
 #Вход: сигнал(Signal), радиус(rad)
@@ -352,7 +351,7 @@ function amp_one_channel(Massiv_Points_channel, singnal, koeff, channel, RADIUS)
         #  запоминаем, что на участке под номером OBL, амплитуду Max_amp, начало и конец first_index last_index
     end
     #push!(OBLAST_with_channel, AMP_START_END)
-#@info "AMP_START_END = $AMP_START_END"
+
     return AMP_START_END
 end
 
@@ -370,17 +369,6 @@ function amp_all_cannel(Massiv_Points_channel, signal, koeff, RADIUS)
     return Final_massiv
 end
 
-
-
-function amp_all_cannel2(Massiv_Points_channel, signal, koeff, RADIUS)
-    Final_massiv = []
-    
-    for channel in 1:12
-        push!(Final_massiv, amp_one_channel2(Massiv_Points_channel, signal, koeff, channel, RADIUS))
-    end
-    
-    return Final_massiv
-end
 
 
 #====================================================================#
@@ -451,128 +439,15 @@ function amp_one_channel_(Massiv_Points_channel, singnal, koeff, channel, RADIUS
 end
 
 
-
-
-
-
-
-function amp_one_channel2(Massiv_Points_channel, singnal, koeff, channel, RADIUS)
-    #@info "Start amp_one_channel"
-    #@info "Rad = $RADIUS"
-    f_index = first_index = 0
-    l_index = last_index = 0
-    #только 1ая облась
-    AMP_START_END = []
-    FINAL_amp = 0
-    #   OBLAST_with_channel = []
+#Сведение к 12 каналам
+#На вход: массив точек(Massiv_Points_channel), сигнал(signal), коэффициент(koeff), радиус (RADIUS)
+#На выход: массив из 12и отведений (Final_massiv)
+function amp_all_cannel_(Massiv_Points_channel, signal, koeff, RADIUS)
+    Final_massiv = []
     
-    for current_segment in 1:length(Massiv_Points_channel[channel]) # (цикл от 1 области зубца P, который возможен в сигнале до последней области - Amp_start_end)
-        # @info "current_segment = $current_segment" 
-        Max_amp = 0
-
-        for i in 1:length(Massiv_Points_channel[channel][current_segment])
-            # @info "счетчик = $i" 
-            amp = 0
-
-            for k in (i+1):(i+3)
-                #  @info "значение K = $k" 
-                
-                if (((k + 1) <= length(Massiv_Points_channel[channel][current_segment])) && abs(Massiv_Points_channel[channel][current_segment][i] - Massiv_Points_channel[channel][current_segment][k]) < RADIUS / koeff) #тут вылезет!
-                    #  @info "зашли внутрь" 
-                    before = Massiv_Points_channel[channel][current_segment][k-1]
-                    after = Massiv_Points_channel[channel][current_segment][k]
-                    #  @info "wtf k! = $k"                 
-                    amp = amp + abs(singnal[channel][before] - singnal[channel][after])
-                    f_index = i
-                    l_index = k
-                    #@info "inside amp = $amp" 
-                end
-                
-                if (Max_amp < amp)
-                    #  @info "Max_amp = $Max_amp and amp = $amp "
-                    Max_amp = amp
-                    first_index = i
-                    #  @info "first index = $i"
-                    last_index = l_index
-                    # @info "last index = $l_index"
-                end
-
-            end
-            # push!(AMP_START_END, [Max_amp, first_index, last_index])
-            FINAL_amp = Max_amp
-        end
-        
-
-        #@info "last_index = $(last_index)"
-        ll = Massiv_Points_channel[channel][current_segment][first_index]
-        #@info "sig = $(singnal[channel][ll])"
-        if(abs(singnal[channel][ll]) < 6.5 && last_index != (first_index+1))
-          # @info "In"
-            first_index = first_index + 1
-        end
-
-        #@info "last_index = $(last_index)"
-        rr = Massiv_Points_channel[channel][current_segment][last_index]
-        #@info "sig = $(singnal[channel][rr])"
-        if(abs(singnal[channel][rr]) < 6.5 && (last_index - 1) != first_index)
-          # @info "In"
-            last_index = last_index - 1
-        end
-    
-
-        push!(AMP_START_END, [FINAL_amp, first_index, last_index])
-        #  запоминаем, что на участке под номером OBL, амплитуду Max_amp, начало и конец first_index last_index
-    end
-    #push!(OBLAST_with_channel, AMP_START_END)
-#@info "AMP_START_END = $AMP_START_END"
-    return AMP_START_END
-end
-
-
-
-
-#Функция составления реферетной разметки для волны Р
-#Вход - количество областей поисак P
-#Выход - Массив реферетных значений волны P на всём сигнале
-function Function_Ref_P(ALL_SELECTION, Referents_by_File)
-    Ref_P = []
-    
-    for Selection in 1:ALL_SELECTION
-        k = ([Referents_by_File.P_onset - 1 + (Selection - 1) * (Referents_by_File.iend - Referents_by_File.ibeg + 1), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg + 1) - 1 ]);
-        push!(Ref_P, k)
+    for channel in 1:12
+        push!(Final_massiv, amp_one_channel_(Massiv_Points_channel, signal, koeff, channel, RADIUS))
     end
     
-    return Ref_P
+    return Final_massiv
 end
-
-#Функция составления реферетной разметки для QRS
-#На вход границы qrs и границы сигнала, на выход все рефенетнаые границы qrs 
-#Верно только для искусственнного сигнала
-function All_Ref_QRS(signals, start_qrs, end_qrs, start_sig, end_sig)
-    #  @info "length(signals) = $(length(signals))"
-    #  @info "length(signals) = $(length(signals))"
-    #  @info "length(signals) = $(length(signals))"
-
-    Distance = end_sig - start_sig
-    dur_qrs = end_qrs - start_qrs
-    All_ref_qrs = Int64[]
-
-    push!(All_ref_qrs, start_qrs)
-    push!(All_ref_qrs, end_qrs)
-
-    index = start_qrs + Distance #+ 1
-
-    while (index < length(signals))
-        push!(All_ref_qrs, index)
-
-        if (index + dur_qrs < length(signals))
-            push!(All_ref_qrs, index + dur_qrs)
-        end
-        #  @info "index = $index"
-        index = index + Distance + 1
-        #  @info "index + Distance + 1 = $index"
-    end
-    
-    return All_ref_qrs
-end
-

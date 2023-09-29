@@ -1,3 +1,52 @@
+#Файл, содержащий функции для реферетной разметки QRS & P; Фильтр границ, которые нашли с помощью алгоритма (Test1, Test2); Способы сведения границ (Min_dist_to_all_points & Mean_value)
+include("Markup_function_P.jl")
+include(".env")
+
+#Функция составления реферетной разметки для волны Р
+#Вход - количество областей поисак P
+#Выход - Массив реферетных значений волны P на всём сигнале
+function Function_Ref_P(ALL_SELECTION, Referents_by_File)
+    Ref_P = []
+    
+    for Selection in 1:ALL_SELECTION
+        k = ([Referents_by_File.P_onset - 1 + (Selection - 1) * (Referents_by_File.iend - Referents_by_File.ibeg + 1), Referents_by_File.P_offset + (Selection-1) *(Referents_by_File.iend - Referents_by_File.ibeg + 1) - 1 ]);
+        push!(Ref_P, k)
+    end
+    
+    return Ref_P
+end
+
+#Функция составления реферетной разметки для QRS
+#На вход границы qrs и границы сигнала, на выход все рефенетнаые границы qrs 
+#Верно только для искусственнного сигнала
+function All_Ref_QRS(signals, start_qrs, end_qrs, start_sig, end_sig)
+    #  @info "length(signals) = $(length(signals))"
+    #  @info "length(signals) = $(length(signals))"
+    #  @info "length(signals) = $(length(signals))"
+
+    Distance = end_sig - start_sig
+    dur_qrs = end_qrs - start_qrs
+    All_ref_qrs = Int64[]
+
+    push!(All_ref_qrs, start_qrs)
+    push!(All_ref_qrs, end_qrs)
+
+    index = start_qrs + Distance #+ 1
+
+    while (index < length(signals))
+        push!(All_ref_qrs, index)
+
+        if (index + dur_qrs < length(signals))
+            push!(All_ref_qrs, index + dur_qrs)
+        end
+        #  @info "index = $index"
+        index = index + Distance + 1
+        #  @info "index + Distance + 1 = $index"
+    end
+    
+    return All_ref_qrs
+end
+
 
 #Функция, которая ищет точку, которая равноудалена от всех остальных точек
 #Вход - Массив точек
@@ -177,38 +226,6 @@ function Test2(Selection_Edge)
      return left, right
 end
 
-
-#Фильтр, который рассматривает некоторые точки на 12ти отведениях (без "всплесков")
-#Вход - границы на всех отведениях
-#Выход - границы, разбитые на левую и правую часть с помощью данного фильтра
-function Test2_Mediana_new(Selection_Edge, Left, Right)
-    left = []
-    right = []
-        for Selection in 1:12
-            # @info "abs(left[Selection-1] - left[Selection]) = $(abs(left[Selection-1] - left[Selection-1]))"
-            # @info "Sel = $(left[Selection-1])"
-             if(abs(Selection_Edge[Selection].Left - Left) < Global_Edge)
-                push!(left, Selection_Edge[Selection].Left)
-                #Curr_Sel_left = Curr_Sel_left + 1
-             end
-             
-             if(abs(Selection_Edge[Selection].Right - Right) < Global_Edge)
-                push!(right, Selection_Edge[Selection].Right)
-                #Curr_Sel_right = Curr_Sel_right + 1
-             end
-         end 
-         
-         return left, right
-    end
-
-    function Tester_Sq_Filtr(left, right)
-
-        _, Index_Left_edge_Filtr, Value_Left_edge_Filtr = Square_dist(left)
-        _, Index_Right_edge_Filtr, Value_Right_edge_Filtr = Square_dist(right)
-    
-        return Value_Left_edge_Filtr, Value_Right_edge_Filtr
-    end
-    
 
 #Функции вычисления Дельта для разных филтров и алгоритмов
 function Test1_MV(Selection_Edge)
@@ -427,66 +444,7 @@ function function_Points_fronts(Massiv_Amp_all_channels, Massiv_Points_channel)
    # @info "Value_Right_Edge_Filtr_MD = $Value_Right_Edge_Filtr_MD"
     Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq = Test1_Square(Selection_Edge)
     Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = Test2_Square(Selection_Edge)
-    #return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana, Value_Left_Edge_Filtr_Mediana, Value_Right_Edge_Filtr_Mediana, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq
-    return Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana
-end
-
-function function_Points_fronts_new(Massiv_Amp_all_channels, Massiv_Points_channel, Selection)
-   # Selection = 3
-    Selection_Edge = []
-
-    for Current_chanel in 1:12
-        Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Current_chanel][Selection], Massiv_Points_channel[Current_chanel][Selection])
-        #Тут Функцию по КАК РАЗ поканально в одной секции
-        push!(Selection_Edge, Points_fronts)
-    end
-
-    Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test1_MD(Selection_Edge)
-    Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
-    Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana = Test1_Mediana(Selection_Edge)
-    Value_Left_Edge_Filtr_Mediana, Value_Right_Edge_Filtr_Mediana = Test2_Mediana(Selection_Edge) 
-   # @info "Value_Right_Edge_Filtr_MD = $Value_Right_Edge_Filtr_MD"
-    Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq = Test1_Square(Selection_Edge)
-    Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = Test2_Square(Selection_Edge)
-    #return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana, Value_Left_Edge_Filtr_Mediana, Value_Right_Edge_Filtr_Mediana, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq
-    return Selection_Edge,  Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana
-end
-
-
-
-
-
-#Функция, выдающая значение границ для двух фильтров метода сведения MD
-#Вход: Массив Амплитуд (Massiv_Amp_all_channels), Массив Точек (Massiv_Points_channel)
-#Выход: Значение левой/правой границы для фильтра 1 и фильтра 2 (All & Filtr)
-function function_Points_fronts_Selection(Massiv_Amp_all_channels, Massiv_Points_channel)
-    Med_left = []
-    Med_right = []
-    for Selection in 1:length(Massiv_Amp_all_channels[1])
-
-    Selection_Edge = []
-
-    for Current_chanel in 1:12
-        Points_fronts = Mark_Amp_Left_Right(Massiv_Amp_all_channels[Current_chanel][Selection], Massiv_Points_channel[Current_chanel][Selection])
-        #Тут Функцию по КАК РАЗ поканально в одной секции
-        push!(Selection_Edge, Points_fronts)
-    end
-
-   # Value_Left_Edge_All_MD, Value_Right_Edge_All_MD = Test1_MD(Selection_Edge)
-   # Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD = Test2_MD(Selection_Edge) 
-    Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana = Test1_Mediana(Selection_Edge)
-   # Value_Left_Edge_Filtr_Mediana, Value_Right_Edge_Filtr_Mediana = Test2_Mediana(Selection_Edge) 
-   # @info "Value_Right_Edge_Filtr_MD = $Value_Right_Edge_Filtr_MD"
-   # Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq = Test1_Square(Selection_Edge)
-   # Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq = Test2_Square(Selection_Edge)
-
-    push!(Med_left, Value_Left_Edge_All_Mediana)
-    push!(Med_right, Value_Right_Edge_All_Mediana)
-    end
-   
-    
-    #return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana, Value_Left_Edge_Filtr_Mediana, Value_Right_Edge_Filtr_Mediana, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq
-return Med_left, Med_right
+    return Value_Left_Edge_All_MD, Value_Right_Edge_All_MD, Value_Left_Edge_Filtr_MD, Value_Right_Edge_Filtr_MD, Value_Left_Edge_All_Mediana, Value_Right_Edge_All_Mediana, Value_Left_Edge_Filtr_Mediana, Value_Right_Edge_Filtr_Mediana, Value_Left_Edge_All_Sq, Value_Right_Edge_All_Sq, Value_Left_Edge_Filtr_Sq, Value_Right_Edge_Filtr_Sq
 end
 
 

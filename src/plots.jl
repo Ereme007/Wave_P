@@ -1,4 +1,3 @@
-include("../test/Stati/env.jl")
 function _read_ref(nr, reffile::String = Raw_CSE_Ref_Incart )
     df = CSV.read(reffile, DataFrame, delim = ';')
     #@info df
