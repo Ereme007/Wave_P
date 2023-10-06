@@ -113,8 +113,8 @@ title!("Дифф+first_P, $(Names_files[Number_File]), $Name_Data_Base, Отве
 ########################################################################################################
 ########################################################################################################
 
-#using Plots, StructArrays, Tables, CSV#, PlotlyBase, PlotlyKaleido
-#using XLSX, DataFrames
+using Plots, StructArrays, Tables, CSV#, PlotlyBase, PlotlyKaleido
+using XLSX, DataFrames
 
 #Если хотим сохранить картинки - отключчаем ploty()
 plotly()
@@ -131,7 +131,7 @@ include("Function_dist.jl");
 include("Statistic.jl");
 #Наименование базы данных и номер файла ("CSE")
 
-Name_Data_Base, Number_File = "CSE", 2
+Name_Data_Base, Number_File = "CSE", 10
 #Определённое отведение (channel)
 channel = 1
 

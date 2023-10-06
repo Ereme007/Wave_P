@@ -11,7 +11,8 @@ module Module_Fronts
     #Определение фронтов
     #На вход: начальный сигнал (signals_channel), частота (Frequency), коэффициент (koef), Референтная разметка QRS (Ref_qrs), Начало/Конец сигнала по референтной разметке (start_signal/end_signal)
     #На выход: Массив Amp (Massiv_Amp_all_channels), массив экстремумов (Massiv_Points_channel)
-    function Defenition_Fronts(signals_channel, Frequency, koef, Ref_qrs, start_signal, end_signal)
+    function Defenition_Fronts(signals_channel, Frequency, Ref_qrs)
+        koef = 1000/Frequency
         #Сигнал без QRS
         signal_without_qrs = Line_qrs(Ref_qrs, signals_channel)
         
@@ -23,7 +24,7 @@ module Module_Fronts
         all_graph_diff = Graph_diff(all_graph_butter, dist)    
 
         #Первоначальная детекция области посика зубца P зная разметку QRS (кодовое название Первая_Обл_Р)
-        Left, Right = Segment_left_right_P(Frequency, Ref_qrs, start_signal, end_signal)
+        Left, Right = Segment_left_right_P(Frequency, Ref_qrs)
         Place_found_P_Left_and_Right = [Left, Right]
 
         #Нахождение всех экстремумов на Первая_Обл_Р
@@ -40,7 +41,8 @@ module Module_Fronts
     
 
     #ещё одна эксперементальная
-    function Three(signals_channel, Frequency, koef, Ref_qrs, start_signal, end_signal)
+    function Three(signals_channel, Frequency, Ref_qrs)
+        koef = 1000/Frequency
         #Сигнал без QRS
         signal_without_qrs = Line_qrs(Ref_qrs, signals_channel)
         
@@ -52,7 +54,7 @@ module Module_Fronts
         all_graph_diff = Graph_diff(all_graph_butter, dist)    
 
         #Первоначальная детекция области посика зубца P зная разметку QRS (кодовое название Первая_Обл_Р)
-        Left, Right = Segment_left_right_P(Frequency, Ref_qrs, start_signal, end_signal)
+        Left, Right = Segment_left_right_P(Frequency, Ref_qrs)
         Place_found_P_Left_and_Right = [Left, Right]
 
         #Нахождение всех экстремумов на Первая_Обл_Р
@@ -89,9 +91,9 @@ module Module_Fronts
         Massiv_Points_channel = Sort_points_with_channel(All_Points_Min_Max)
         
         #Нахождение AMP на Первая_Обл_Р с учётом того, что уменьшаем фронт, если значение сигнала на дифф будет около 0 (Diff_ZERO)
-        Massiv_Amp_all_channels = All_amp02(Massiv_Points_channel, all_graph_diff, koef, RADIUS)
+        Massiv_Amp_all_channels, All = All_amp02(Massiv_Points_channel, all_graph_diff, koef, RADIUS)
 
-        return Massiv_Amp_all_channels, Massiv_Points_channel
+        return Massiv_Amp_all_channels, Massiv_Points_channel, All
     end
 
     export Defenition_Fronts, Three, All_amp #Three это эксперемментальня функция
@@ -106,7 +108,9 @@ module Module_Fronts
         #только 1ая облась
         AMP_START_END = []
         FINAL_amp = 0
-        All_AMP = []
+        All_AMP_2 =[] 
+        All_AMP_1 = []
+        #All_AMP_2 = []
         #   OBLAST_with_channel = []
 
         for current_segment in 1:length(Massiv_Points_channel[channel]) # (цикл от 1 области зубца P, который возможен в сигнале до последней области - Amp_start_end)
@@ -116,21 +120,19 @@ module Module_Fronts
             for i in 1:length(Massiv_Points_channel[channel][current_segment])
                 # @info "счетчик = $i" 
                 amp = 0
-
+                
                 for k in (i+1):(i+3)
                     #  @info "значение K = $k" 
 
                     if (((k + 1) <= length(Massiv_Points_channel[channel][current_segment])) && abs(Massiv_Points_channel[channel][current_segment][i] - Massiv_Points_channel[channel][current_segment][k]) < RADIUS / koeff) #тут вылезет!
-                        #  @info "зашли внутрь" 
                         before = Massiv_Points_channel[channel][current_segment][k-1]
-                        after = Massiv_Points_channel[channel][current_segment][k]
-                        #  @info "wtf k! = $k"                 
+                        after = Massiv_Points_channel[channel][current_segment][k]              
                         amp = amp + abs(singnal[channel][before] - singnal[channel][after])
                         f_index = i
                         l_index = k
-                        push!(All_AMP, [amp, f_index, l_index])
-                        #@info "inside amp = $amp" 
+                        push!(All_AMP_1, [amp, f_index, l_index])
                     end
+                   
 
                     if (Max_amp < amp)
                         #  @info "Max_amp = $Max_amp and amp = $amp "
@@ -140,12 +142,17 @@ module Module_Fronts
                         last_index = l_index
                         # @info "last index = $l_index"
                     end
-
+                   # push!(All_AMP_2, All_AMP_1)
                 end
+                
+               # push!(All_AMP_2, All_AMP_1)
+                #@info "next"
                 # push!(AMP_START_END, [Max_amp, first_index, last_index])
                 FINAL_amp = Max_amp
+                
             end
-
+            push!(All_AMP_2, All_AMP_1)
+            All_AMP_1 = []
 
             #@info "last_index = $(last_index)"
             ll = Massiv_Points_channel[channel][current_segment][first_index]
@@ -165,22 +172,25 @@ module Module_Fronts
         
 
             push!(AMP_START_END, [FINAL_amp, first_index, last_index])
+           # push!(All_AMP_2, All_AMP_1)
             #  запоминаем, что на участке под номером OBL, амплитуду Max_amp, начало и конец first_index last_index
         end
         #push!(OBLAST_with_channel, AMP_START_END)
     #@info "AMP_START_END = $AMP_START_END"
-        return AMP_START_END
+        return AMP_START_END, All_AMP_2
     end
 
 
     function All_amp02(Massiv_Points_channel, signal, koeff, RADIUS)
         Final_massiv = []
-
+        all_mass = []
             for channel in 1:12
-                push!(Final_massiv, All_amp01(Massiv_Points_channel, signal, koeff, channel, RADIUS))
+                one, All = All_amp01(Massiv_Points_channel, signal, koeff, channel, RADIUS)
+                push!(all_mass, All)
+                push!(Final_massiv, one)
             end
         
-        return Final_massiv
+        return Final_massiv, all_mass
     end
 
 
@@ -239,12 +249,13 @@ module Module_Fronts
     #Функция определяющая облатсь поиска P
     #Вход: частота (fs), реферетная разметка qrs (All_ref_qrs), начало/конец сигнала (all_strat/all_end)
     #Выход: левая/правая граница облатси поиска волны Р (left_p/right_p)
-    function Segment_left_right_P(fs, All_ref_qrs, all_strat, all_end)
-        koeff = 1000 / fs
+    function Segment_left_right_P(fs, All_ref_qrs)
+        koeff = 1000/fs
         left_p, right_p = Int64[], Int64[]
         #первая итерация!!
         first_P_right = All_ref_qrs[1]
-        first_P_left = floor(Int64, All_ref_qrs[1] - (all_end - all_strat) / 2)
+        delta = All_ref_qrs[3] - All_ref_qrs[1] 
+        first_P_left = floor(Int64, All_ref_qrs[1] - (delta) / 2)
 
         if (first_P_left < 0)
             first_P_left = 1
@@ -263,7 +274,7 @@ module Module_Fronts
 
         while (i < length(All_ref_qrs))
             #левая
-            center_qq = All_ref_qrs[i] - (all_end - all_strat) / 2
+            center_qq = All_ref_qrs[i] - (delta) / 2
             q_with_150 = All_ref_qrs[i-1] + 150 / koeff
 
             if (center_qq < q_with_150)

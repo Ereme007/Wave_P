@@ -1,7 +1,7 @@
 #Тестируем Module_Get_Signal
 include("Module_Get_Signal.jl")
 import .Module_Get_Signal as mg
-NUMBER = 107
+NUMBER = 3
 BaseName, N = "CSE", NUMBER
 
 now = mg.Signal_all_channels(BaseName, N)
@@ -66,14 +66,18 @@ import .Module_Edge as m_edge
 include("Module_Plots.jl")
 import .Module_Plots as m_plots
 
-
+NUMBER = 3
 BaseName3, N3 = "CSE", NUMBER
 Names_files3, signals_channel3, const_signal3,  Frequency3, koef3, Ref_qrs3, Ref_P3, start_signal3, end_signal3 = m_get_signal.Signal_all_channels(BaseName3, N3)
-Massiv_Amp_all_channels3, Massiv_Points_channel3 = m_fronts.Defenition_Fronts(signals_channel3, Frequency3, koef3, Ref_qrs3, start_signal3, end_signal3)
+Ref_qrs3
+b=copy(Ref_qrs3[3:34])
+
+Ref_P3
+Massiv_Amp_all_channels3, Massiv_Points_channel3 = m_fronts.Defenition_Fronts(signals_channel3, Frequency3, Ref_qrs3)
 left_right_one_selection3 = m_edge.function_edge(Massiv_Amp_all_channels3, Massiv_Points_channel3)
 m_plots.plot_all_channels_const_signal(const_signal3, Massiv_Amp_all_channels3, Massiv_Points_channel3, Ref_P3)
 
-Massiv_Amp_all_channelsThree, Massiv_Points_channelThree = m_fronts.Three(signals_channel3, Frequency3, koef3, Ref_qrs3, start_signal3, end_signal3)
+Massiv_Amp_all_channelsThree, Massiv_Points_channelThree = m_fronts.Three(signals_channel3, Frequency3, Ref_qrs3)
 left_right_one_selectionThree = m_edge.function_edge(Massiv_Amp_all_channelsThree, Massiv_Points_channelThree)
 m_plots.plot_all_channels_const_signal(const_signal3, Massiv_Amp_all_channelsThree, Massiv_Points_channelThree, Ref_P3)
 
@@ -100,5 +104,14 @@ import .Module_Amp_CSV as m_amp_csv
 #m_amp_csv.func(BaseName3, "test_THREE_amp")
 
 #=====#
+include("Module_Fronts.jl")
+NUMBER = 1
+BaseName3, N3 = "CSE", NUMBER
+Names_files3, signals_channel3, const_signal3,  Frequency3, koef3, Ref_qrs3, Ref_P3, start_signal3, end_signal3 = m_get_signal.Signal_all_channels(BaseName3, N3)
+Massiv_Amp_all_channels3, Massiv_Points_channel3, n = m_fronts.All_amp(signals_channel3, Frequency3, koef3, Ref_qrs3, start_signal3, end_signal3)
+Massiv_Amp_all_channels3, Massiv_Points_channel3 = m_fronts.Defenition_Fronts(signals_channel3, Frequency3, koef3, Ref_qrs3, start_signal3, end_signal3)
+n[12][2]
+Massiv_Amp_all_channels3[12][2]
+Massiv_Amp_all_channels3[12][2][1] - sort(n[12][2])[1][1]
 
-function
+plot(const_signal3[12])
